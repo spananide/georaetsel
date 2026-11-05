@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GeoRätsel: Das tägliche Geografie-Rätsel</title>
+  <meta name="description" content="Finde jeden Tag neun Länder für ein 3×3-Raster. Ein Geografie-Rätsel auf Deutsch.">
+  <meta property="og:title" content="GeoRätsel: Das tägliche Geografie-Rätsel">
+  <meta property="og:description" content="Finde jeden Tag neun Länder für ein 3×3-Raster. Ein Geografie-Rätsel auf Deutsch.">
+  <meta name="theme-color" content="#0B2C45">
+  <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try {
+      var t = localStorage.getItem('georaetsel.theme');
+      if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) t = 'light';
+      if (t === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', '#CFE6F2');
+      }
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <div class="page-container">
+    <header class="site-header">
+      <div class="header-top">
+        <h1 class="wordmark">GeoRätsel</h1>
+        <div class="header-actions">
+          <button type="button" class="icon-btn" id="btn-stats" aria-label="Statistik" title="Statistik">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/>
+              <line x1="12" y1="20" x2="12" y2="4"/>
+              <line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+          </button>
+          <button type="button" class="icon-btn" id="btn-help" aria-label="Anleitung" title="Anleitung">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </button>
+          <button type="button" class="icon-btn" id="btn-theme" aria-label="Hell/Dunkel" title="Hell/Dunkel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2 A10 10 0 0 0 12 22 Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="header-date" id="header-date"></div>
+      <nav class="tabs" role="tablist">
+        <button type="button" class="tab-btn" id="tab-daily" role="tab" aria-selected="true" aria-current="page">Tagesrätsel</button>
+        <button type="button" class="tab-btn" id="tab-practice" role="tab" aria-selected="false">Übung</button>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <section class="board-section" aria-label="Spielfeld">
+        <div class="board-grid">
+          <div class="corner-cell" aria-hidden="true"></div>
+          <div class="col-header col-header-0" id="col-h-0"></div>
+          <div class="col-header col-header-1" id="col-h-1"></div>
+          <div class="col-header col-header-2" id="col-h-2"></div>
+          <div class="row-header row-header-0" id="row-h-0"></div>
+          <div class="row-header row-header-1" id="row-h-1"></div>
+          <div class="row-header row-header-2" id="row-h-2"></div>
+
+          <div class="map-sheet" id="map-sheet">
+            <button type="button" class="cell cell-empty" data-cell="0"></button>
+            <button type="button" class="cell cell-empty" data-cell="1"></button>
+            <button type="button" class="cell cell-empty" data-cell="2"></button>
+            <button type="button" class="cell cell-empty" data-cell="3"></button>
+            <button type="button" class="cell cell-empty" data-cell="4"></button>
+            <button type="button" class="cell cell-empty" data-cell="5"></button>
+            <button type="button" class="cell cell-empty" data-cell="6"></button>
+            <button type="button" class="cell cell-empty" data-cell="7"></button>
+            <button type="button" class="cell cell-empty" data-cell="8"></button>
+          </div>
+
+          <div class="scale-section">
+            <div class="best-solution-caption" id="best-caption" aria-live="polite"></div>
+            <div class="scale-bar" id="scale-bar" role="img" aria-label="Noch 12 Versuche"></div>
+            <div class="scale-caption" id="scale-caption">Noch 12 Versuche</div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="side-column">
+        <div class="side-column-left">
+          <div class="score-block" aria-live="polite">
+            <div class="score-label">Punkte</div>
+            <div class="score-value" id="score-val">0</div>
+          </div>
+          <div class="game-over-actions" id="over-actions" hidden>
+            <button type="button" class="btn btn-secondary" id="btn-show-result">Ergebnis</button>
+            <button type="button" class="btn btn-secondary" id="btn-toggle-best">Beste Lösung</button>
+            <button type="button" class="btn btn-primary" id="btn-share-side">Teilen</button>
+          </div>
+        </div>
+
+        <div class="legend">
+          <h2 class="legend-heading">Legende</h2>
+          <ul class="legend-list">
+            <li class="legend-item">
+              <span class="legend-swatch swatch-sea" aria-hidden="true"></span>
+              <span>Noch offen</span>
+            </li>
+            <li class="legend-item">
+              <span class="legend-swatch swatch-tief" aria-hidden="true"></span>
+              <span>Tiefland, 5 bis 29 Punkte</span>
+            </li>
+            <li class="legend-item">
+              <span class="legend-swatch swatch-huegel" aria-hidden="true"></span>
+              <span>Hügelland, 30 bis 79 Punkte</span>
+            </li>
+            <li class="legend-item">
+              <span class="legend-swatch swatch-hoch" aria-hidden="true"></span>
+              <span>Hochgebirge, 80 bis 100 Punkte</span>
+            </li>
+          </ul>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="site-footer">
+      <button type="button" id="btn-sources">Quellen</button>
+      <button type="button" id="btn-privacy">Datenschutz</button>
+      <a href="https://spanani.de/impressum/" target="_blank" rel="noopener">Impressum</a>
+    </footer>
+  </div>
+
+  <!-- Search Dialog -->
+  <dialog id="search-dialog" aria-labelledby="search-heading">
+    <div class="dialog-header">
+      <div>
+        <h2 class="dialog-heading" id="search-heading">Feld A1</h2>
+        <div class="search-subheading" id="search-subheading"></div>
+      </div>
+      <button type="button" class="dialog-close" id="search-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <input type="text" class="search-input" id="search-input" aria-label="Land suchen" placeholder="Land eingeben" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+      <div class="search-hint" id="search-hint">Tippe den Namen eines Landes.</div>
+      <div class="search-results" id="search-results" role="listbox"></div>
+      <button type="button" class="btn btn-secondary" id="search-cancel">Abbrechen</button>
+    </div>
+  </dialog>
+
+  <!-- End Dialog -->
+  <dialog id="end-dialog" aria-labelledby="end-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="end-heading">Alle Felder gefüllt</h2>
+      <button type="button" class="dialog-close" id="end-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <div class="end-score-block">
+        <div class="end-score" id="end-score-num">0</div>
+        <div class="end-score-caption">von 900 Punkten</div>
+      </div>
+      <div class="mini-map" id="end-mini-map" role="img" aria-label="0 von 9 Feldern gefüllt"></div>
+      <div class="end-line" id="end-line">0 von 9 Feldern. Bestmöglich waren 0 Punkte.</div>
+      <div class="end-countdown" id="end-countdown" hidden></div>
+      <div class="end-session" id="end-session" hidden></div>
+      <div class="end-actions">
+        <button type="button" class="btn btn-primary" id="end-btn-share">Ergebnis teilen</button>
+        <button type="button" class="btn btn-secondary" id="end-btn-best">Beste Lösung zeigen</button>
+        <button type="button" class="btn btn-secondary" id="end-btn-practice" hidden>Übungsrunde spielen</button>
+        <button type="button" class="btn btn-primary" id="end-btn-next" hidden>Nächste Runde</button>
+        <button type="button" class="btn btn-secondary" id="end-btn-session-end" hidden>Sitzung beenden</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Stats Dialog -->
+  <dialog id="stats-dialog" aria-labelledby="stats-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="stats-heading">Statistik</h2>
+      <button type="button" class="dialog-close" id="stats-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <div class="stats-tabs" role="tablist">
+        <button type="button" class="stats-tab-btn" id="stats-tab-daily" role="tab" aria-selected="true" aria-current="page">Tagesrätsel</button>
+        <button type="button" class="stats-tab-btn" id="stats-tab-practice" role="tab" aria-selected="false">Übung</button>
+      </div>
+      <div class="stats-numbers" id="stats-numbers"></div>
+      <div class="stats-dist">
+        <h3 class="dist-heading">Punkteverteilung</h3>
+        <div id="stats-dist-list"></div>
+      </div>
+      <div class="stats-actions">
+        <button type="button" class="btn btn-secondary" id="btn-clear-stats">Statistik löschen</button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Anleitung Dialog -->
+  <dialog id="help-dialog" aria-labelledby="help-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="help-heading">So geht's</h2>
+      <button type="button" class="dialog-close" id="help-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p>Finde für jedes der 9 Felder ein Land, das zur Zeile und zur Spalte passt.</p>
+      <p>Du hast 12 Versuche. Richtige und falsche Tipps zählen beide.</p>
+      <p>Jedes Land darf nur einmal aufs Brett.</p>
+      <p>Jeden Tag gibt es ein neues Rätsel, für alle dasselbe. In der Übung spielst du so viele Runden, wie du willst.</p>
+
+      <h3>Punkte</h3>
+      <p>Jedes richtige Feld bringt 5 bis 100 Punkte. Es zählt, wie groß das Land im Vergleich zu allen anderen richtigen Antworten dieses Felds ist: Das Land mit den meisten Einwohnern bringt 5 Punkte, das mit den wenigsten 100.</p>
+      <p>Beispiel: Bei „In Europa“ und „Inselstaat“ bringt das Vereinigte Königreich wenig, Malta viel mehr.</p>
+      <p>Je mehr Punkte, desto höher wird dein Land auf der Karte: von Tiefland über Hügelland bis zum Hochgebirge.</p>
+
+      <h3>Fragen</h3>
+      <details>
+        <summary>Was zählt bei Flaggenfarben?</summary>
+        <p>Die Farben der Flächen, Streifen und einfachen Symbole. Farben in Wappen zählen nicht. Orange gilt als Gelb, Hellblau und Dunkelblau als Blau.</p>
+      </details>
+      <details>
+        <summary>Warum wurde meine Antwort abgelehnt?</summary>
+        <p>Das Land muss zu beiden Kategorien passen. Eine allein reicht nicht.</p>
+      </details>
+      <details>
+        <summary>Wie schreibe ich Ländernamen?</summary>
+        <p>Umlaute kannst du weglassen oder umschreiben: Österreich, Osterreich und Oesterreich gehen alle. Auch bekannte andere Namen wie Holland, USA oder Birma werden gefunden.</p>
+      </details>
+      <details>
+        <summary>Ist das Tagesrätsel für alle gleich?</summary>
+        <p>Ja. Es hängt nur vom Datum ab und wechselt um Mitternacht.</p>
+      </details>
+      <details>
+        <summary>Was bedeutet HDI?</summary>
+        <p>Der Human Development Index der Vereinten Nationen misst Lebenserwartung, Bildung und Einkommen auf einer Skala von 0 bis 1.</p>
+      </details>
+    </div>
+  </dialog>
+
+  <!-- Quellen Dialog -->
+  <dialog id="sources-dialog" aria-labelledby="sources-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="sources-heading">Quellen</h2>
+      <button type="button" class="dialog-close" id="sources-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p>Spielidee nach <a href="https://georiddle.org/" target="_blank" rel="noopener">georiddle.org</a>. Code, Daten und Texte dieser Seite sind eigenständig erstellt.</p>
+      <p>Ländernamen und Eckdaten: <a href="https://github.com/mledoze/countries" target="_blank" rel="noopener">mledoze/countries</a> (ODbL). Einwohner, Wirtschaftsleistung und erneuerbare Energie: Weltbank. HDI und Hauptstädte: Wikidata (CC0). UNESCO-Welterbe: Wikipedia (CC BY-SA). Flaggen: <a href="https://github.com/lipis/flag-icons" target="_blank" rel="noopener">flag-icons</a> (MIT).</p>
+      <p>Listen wie Mitgliedschaften, Flaggenmerkmale und Geschichte sind von Hand gepflegt. Fehler gefunden? Schreib an den Betreiber laut Impressum.</p>
+    </div>
+  </dialog>
+
+  <!-- Datenschutz Dialog -->
+  <dialog id="privacy-dialog" aria-labelledby="privacy-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="privacy-heading">Datenschutz</h2>
+      <button type="button" class="dialog-close" id="privacy-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p>Dieses Spiel setzt keine Cookies, nutzt kein Tracking und lädt nichts von fremden Diensten nach.</p>
+      <p>Spielstand, Statistik und dein Farbschema liegen nur in deinem Browser (localStorage) und werden nirgends hin übertragen. Du kannst sie jederzeit über deine Browsereinstellungen löschen.</p>
+      <p>Die Seite wird von GitHub Pages ausgeliefert (GitHub Inc., USA). Dabei verarbeitet GitHub technisch nötige Zugriffsdaten wie deine IP-Adresse.</p>
+      <p>Verantwortlicher und deine Rechte: siehe die <a href="https://spanani.de/datenschutz/" target="_blank" rel="noopener">Datenschutzerklärung von spanani.de</a>.</p>
+    </div>
+  </dialog>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite" popover="manual"></div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>

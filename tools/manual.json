@@ -19,7 +19,10 @@
     "dk": { "hdi": 0.962, "capPop": 0.66 },
     "ni": { "capPop": 1.05 },
     "so": { "hdi": 0.38 },
-    "nr": { "hdi": 0.7 }
+    "nr": { "hdi": 0.7 },
+    "my": { "capPop": 1.98 },
+    "lk": { "neighbours": 0 },
+    "it": { "hdi": 0.915 }, "cz": { "hdi": 0.915 }, "cy": { "hdi": 0.913 }, "gr": { "hdi": 0.908 }, "ee": { "hdi": 0.905 }
   },
   "flags": {
     "af":"krg|e","ao":"rky|se","al":"rk|a","ad":"byr|e","ae":"gwkr","ar":"bwy|s","am":"rby","ag":"rkbwy|s","au":"bwr|sx","at":"rw",

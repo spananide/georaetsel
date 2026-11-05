@@ -70,7 +70,7 @@ const countries = picked.map(c => {
     aliases: manual.aliases[id] ?? [],
     continent: CONTINENT[c.region],
     landlocked: id === 'xk' || c.landlocked,
-    neighbours: c.borders.length,
+    neighbours: over.neighbours ?? c.borders.length,
     pop: round(pop, pop < 1 ? 4 : 1),
     area: c.area < 10 ? c.area : Math.round(c.area),
     density: Math.round(pop * 1e6 / c.area) || 1,
