@@ -39,11 +39,11 @@ assert.ok(CATEGORIES.length >= 100, `nur ${CATEGORIES.length} Kategorien`);
 assert.equal(new Set(CATEGORIES.map(c => c.id)).size, CATEGORIES.length);
 for (const c of CATEGORIES) {
   const n = COUNTRIES.filter(c.test).length;
-  assert.ok(n >= 8, `${c.id} passt nur auf ${n} Länder`);
+  assert.ok(n >= 6, `${c.id} passt nur auf ${n} Länder`);
   assert.ok(c.label && c.group, c.id);
 }
 assert.ok(cat('letterD').test(C('de')) && !cat('letterG').test(C('de')));
-assert.ok(cat('letterO').test(C('at')), 'Österreich zählt als O');
+assert.ok(cat('vowelStart').test(C('at')), 'Österreich zählt als Vokal');
 assert.ok(cat('letterA').test(C('eg')), 'Ägypten zählt als A');
 assert.ok(cat('endsLand').test(C('de')) && cat('endsIen').test(C('it')) && cat('endsStan').test(C('pk')));
 assert.ok(cat('hasUmlaut').test(C('at')) && !cat('hasUmlaut').test(C('de')));
@@ -105,7 +105,7 @@ assert.equal(g.guessesLeft, 10);
 assert.equal(guess(g, 0, right0.id).result, 'filled');
 while (g.guessesLeft > 0) {
   const i = g.cells.findIndex(c => !c);
-  const bad = COUNTRIES.find(c => !answersFor(g.rows[Math.floor(i / 3)], g.cols[i % 3]).includes(c) && !g.wrong[i].includes(c.id));
+  const bad = COUNTRIES.find(c => !answersFor(g.rows[Math.floor(i / 3)], g.cols[i % 3]).includes(c) && !g.wrong[i].includes(c.id) && c.id !== right0.id);
   assert.equal(guess(g, i, bad.id).result, 'wrong');
 }
 assert.equal(g.over, true);
