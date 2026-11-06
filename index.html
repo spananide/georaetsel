@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Geo-Spiele</title>
+  <meta name="description" content="Kleine Geografie-Spiele auf Deutsch.">
+  <meta name="theme-color" content="#0B2C45">
+  <link rel="icon" href="georaetsel/assets/icon.svg" type="image/svg+xml">
+  <script>
+    try {
+      var t = localStorage.getItem('georaetsel.theme');
+      if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) t = 'light';
+      if (t === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', '#CFE6F2');
+      }
+    } catch (e) {}
+  </script>
+  <style>
+    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:500;font-display:swap;src:url('georaetsel/assets/fonts/barlow-condensed-latin-500-normal.woff2') format('woff2');}
+    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('georaetsel/assets/fonts/barlow-condensed-latin-700-normal.woff2') format('woff2');}
+    @font-face{font-family:'Source Serif 4';font-style:normal;font-weight:400;font-display:swap;src:url('georaetsel/assets/fonts/source-serif-4-latin-400-normal.woff2') format('woff2');}
+    @font-face{font-family:'Source Serif 4';font-style:italic;font-weight:400;font-display:swap;src:url('georaetsel/assets/fonts/source-serif-4-latin-400-italic.woff2') format('woff2');}
+
+    :root {
+      --page: #0B2C45; --sea: #134A6E; --line: #2A6C94; --ink: #EAF3F7; --soft: #A9C8D8; --panel: #0F3854;
+      --tief: #5E9E4E; --huegel: #E3C65A; --hoch: #A8612F;
+    }
+    :root[data-theme="light"] {
+      --page: #CFE6F2; --sea: #A9D3E8; --line: #6FAECF; --ink: #0E2F45; --soft: #3A6379; --panel: #E4F1F8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      min-height: 100dvh;
+      background: var(--page);
+      color: var(--ink);
+      font-family: 'Source Serif 4', serif;
+      overflow-x: hidden;
+    }
+
+    .bg-contours {
+      position: fixed; inset: 0; width: 100%; height: 100%;
+      pointer-events: none; z-index: 0;
+    }
+    .bg-contours path { stroke: var(--line); fill: none; stroke-width: 1.5; opacity: 0.35; }
+
+    .wrap {
+      position: relative; z-index: 1; max-width: 920px;
+      margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 28px;
+    }
+
+    header { display: flex; flex-direction: column; gap: 4px; }
+    .wordmark {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 2.75rem; letter-spacing: -0.01em;
+      line-height: 1.05; margin: 0; color: var(--ink);
+    }
+    @media (min-width: 720px) { .wordmark { font-size: 4rem; } }
+    .subtitle {
+      font-family: 'Source Serif 4', serif; font-style: italic;
+      font-size: 1.1rem; color: var(--soft); margin: 0;
+    }
+
+    main { display: grid; gap: 16px; grid-template-columns: 1fr; }
+    @media (min-width: 640px) { main { grid-template-columns: repeat(2, 1fr); } }
+
+    .card {
+      background: var(--panel); border: 2px solid var(--line);
+      border-radius: 14px; padding: 20px; display: flex;
+      flex-direction: column; gap: 12px; color: inherit;
+      text-decoration: none; transition: border-color 120ms ease, transform 120ms ease;
+    }
+    a.card:hover, a.card:focus-visible { border-color: var(--huegel); transform: translateY(-2px); }
+    .card:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
+    @media (prefers-reduced-motion: reduce) {
+      .card, a.card:hover, a.card:focus-visible { transition: none; transform: none; }
+    }
+
+    .preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 96px; }
+    .preview span { aspect-ratio: 1; border-radius: 6px; }
+    .preview .t { background: var(--tief); }
+    .preview .h { background: var(--huegel); }
+    .preview .r { background: var(--hoch); }
+    .preview .s { background: var(--sea); }
+
+    .soon-mark {
+      width: 96px; height: 96px; display: flex; align-items: center; justify-content: flex-start;
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 3rem; line-height: 1; color: var(--line);
+    }
+
+    .card-title {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
+      font-size: 2rem; line-height: 1.1; margin: 0; color: var(--ink);
+    }
+    .card-desc {
+      font-family: 'Source Serif 4', serif; font-size: 1rem;
+      line-height: 1.45; color: var(--soft); margin: 0;
+    }
+
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tag {
+      font-family: 'Barlow Condensed', sans-serif; font-weight: 500;
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em;
+      border: 1px solid var(--line); border-radius: 9999px;
+      padding: 2px 10px; color: var(--ink); line-height: 1.4;
+    }
+
+    .cta {
+      margin-top: auto; font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700; font-size: 1.25rem; color: var(--huegel);
+    }
+    :root[data-theme="light"] .cta { color: #8C6500; }
+
+    .card.soon { border-style: dashed; opacity: 0.8; cursor: default; }
+
+    footer {
+      text-align: center; color: var(--soft); font-size: 0.9rem; padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <svg class="bg-contours" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <path d="M 800 360 C 800 395, 785 425, 760 430 C 725 435, 685 425, 660 410 C 645 395, 635 375, 640 350 C 645 320, 655 295, 670 290 C 700 280, 735 280, 760 290 C 785 300, 800 325, 800 360 Z"/>
+    <path d="M 870 360 C 870 425, 855 480, 820 490 C 770 505, 640 490, 600 465 C 570 440, 555 390, 565 345 C 575 290, 585 245, 615 235 C 665 215, 765 215, 810 235 C 850 255, 870 305, 870 360 Z"/>
+    <path d="M 955 360 C 955 455, 935 545, 890 560 C 820 585, 590 565, 535 530 C 485 490, 465 410, 480 340 C 495 260, 510 185, 550 170 C 625 140, 810 140, 875 170 C 930 200, 955 275, 955 360 Z"/>
+    <path d="M 1055 360 C 1055 490, 1030 620, 970 640 C 880 675, 525 650, 455 605 C 390 550, 365 435, 385 335 C 405 220, 425 115, 475 95 C 580 55, 865 55, 950 95 C 1025 135, 1055 235, 1055 360 Z"/>
+    <path d="M 1170 360 C 1170 535, 1135 700, 1060 730 C 945 775, 450 745, 365 690 C 285 620, 250 470, 275 330 C 300 170, 330 35, 390 10 C 525 -40, 930 -40, 1035 10 C 1130 60, 1170 190, 1170 360 Z"/>
+    <path d="M 1295 360 C 1295 590, 1250 795, 1160 830 C 1020 885, 365 850, 265 785 C 170 700, 125 510, 155 320 C 185 110, 225 -55, 295 -85 C 465 -150, 1005 -150, 1130 -85 C 1245 -20, 1295 135, 1295 360 Z"/>
+  </svg>
+
+  <div class="wrap">
+    <header>
+      <h1 class="wordmark">Geo-Spiele</h1>
+      <p class="subtitle">Kleine Geografie-Spiele auf Deutsch.</p>
+    </header>
+
+    <main>
+      <a class="card" href="georaetsel/">
+        <div class="preview" aria-hidden="true">
+          <span class="t"></span><span class="h"></span><span class="r"></span>
+          <span class="h"></span><span class="t"></span><span class="s"></span>
+          <span class="s"></span><span class="h"></span><span class="t"></span>
+        </div>
+        <h2 class="card-title">GeoRätsel</h2>
+        <p class="card-desc">Jeden Tag ein neues 3×3-Raster: Finde neun Länder, die zu je zwei Kategorien passen.</p>
+        <div class="tags">
+          <span class="tag">Täglich</span>
+          <span class="tag">Übungsmodus</span>
+        </div>
+        <span class="cta">Spielen →</span>
+      </a>
+
+      <div class="card soon">
+        <div class="soon-mark" aria-hidden="true">?</div>
+        <h2 class="card-title">Weitere Spiele</h2>
+        <p class="card-desc">Hier kommen bald neue Rätsel dazu.</p>
+      </div>
+    </main>
+
+    <footer>spanani.de</footer>
+  </div>
+</body>
+</html>
