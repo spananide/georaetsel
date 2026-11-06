@@ -1,0 +1,278 @@
+/* Header specifics */
+.header-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.back-link {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--soft);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.game-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Progress */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-text {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--sea);
+  box-sizing: border-box;
+  transition: background-color 150ms ease;
+}
+
+.dot.current {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.dot.correct {
+  background-color: var(--tief);
+}
+
+.dot.wrong {
+  background-color: var(--warn);
+}
+
+/* Flag Stage (fixed 200px high box like flaggen) */
+.flag-stage {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.flag-stage img {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border: 2px solid var(--line);
+  display: block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Question text */
+.question-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--ink);
+  text-align: center;
+  margin: 0;
+}
+
+/* Options Grid */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+@media (max-width: 480px) {
+  .options-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 14px;
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  color: var(--ink);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  cursor: pointer;
+  border-radius: 4px;
+  min-height: 52px;
+  text-align: center;
+  transition: background-color 120ms ease, border-color 120ms ease;
+  word-break: break-word;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: var(--ink);
+  background-color: var(--sea);
+}
+
+.option-btn:disabled {
+  cursor: default;
+}
+
+/* Chosen / correct / wrong states */
+.option-btn.correct {
+  border-color: var(--tief);
+  background-color: rgba(94, 158, 78, 0.22);
+  color: var(--ink);
+}
+
+.option-btn.wrong {
+  border-color: var(--warn);
+  background-color: rgba(255, 122, 102, 0.22);
+  color: var(--ink);
+}
+
+:root[data-theme="light"] .option-btn.correct,
+[data-theme="light"] .option-btn.correct {
+  background-color: rgba(94, 158, 78, 0.18);
+}
+
+:root[data-theme="light"] .option-btn.wrong,
+[data-theme="light"] .option-btn.wrong {
+  background-color: rgba(179, 38, 30, 0.15);
+}
+
+/* Status & Feedback message */
+.status-msg {
+  text-align: center;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.35rem;
+  line-height: 1.2;
+}
+
+.status-msg:empty {
+  display: none;
+}
+
+.status-msg.correct {
+  color: var(--tief);
+}
+
+.status-msg.wrong {
+  color: var(--warn);
+}
+
+/* Revealed controls */
+.revealed-controls {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-large {
+  width: 100%;
+  max-width: 320px;
+  font-size: 1.3rem;
+  min-height: 48px;
+}
+
+/* End view */
+.end-view {
+  width: 100%;
+}
+
+.end-card {
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.end-score-block {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  justify-content: center;
+}
+
+.end-score-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.end-score-max {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 1.8rem;
+  color: var(--soft);
+}
+
+.end-grid-emojis {
+  font-size: 2.2rem;
+  line-height: 1.25;
+  letter-spacing: 6px;
+  white-space: pre-line;
+  font-family: monospace, sans-serif;
+  margin: 4px 0;
+}
+
+.end-note {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.end-note:empty {
+  display: none;
+}
+
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}

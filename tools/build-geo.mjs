@@ -266,7 +266,7 @@ for (const g of topo.objects.countries.geometries) {
   ringsByCountry.get(id).push(...decodeGeometry(g));
 }
 
-const round1 = v => +v.toFixed(1);
+const round1 = v => +v.toFixed(2); // zwei Nachkommastellen, trotz Namen
 
 function buildShapes(dpTolerance) {
   const SHAPES = {};
@@ -287,7 +287,9 @@ function buildShapes(dpTolerance) {
       const b = bboxes[i];
       const isSmall = b.w < 0.4 && b.h < 0.4;
       if (!isSmall || i === maxIdx) {
-        let simp = douglasPeucker(rings[i], dpTolerance);
+        // kleine Länder feiner vereinfachen, sonst sehen Umrisse wie Albanien eckig aus
+        const tol = Math.max(0.01, Math.min(dpTolerance, 0.004 * Math.max(bboxes[maxIdx].w, bboxes[maxIdx].h)));
+        let simp = douglasPeucker(rings[i], tol);
         if (simp.length < 4) simp = rings[i];
         keptRings.push(simp);
       }
