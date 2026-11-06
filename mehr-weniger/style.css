@@ -1,0 +1,234 @@
+/* Header specifics */
+.header-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.back-link {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--soft);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Score bar */
+.score-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.score-text {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.score-text strong {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--ink);
+  font-size: 1.15rem;
+}
+
+/* Question */
+.question {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink);
+  margin: 4px 0;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Card Button */
+.card-btn {
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  color: var(--ink);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: border-color 150ms ease;
+  width: 100%;
+}
+
+.card-btn:hover:not(:disabled) {
+  border-color: var(--huegel);
+}
+
+.card-btn:disabled {
+  cursor: default;
+}
+
+.card-btn.is-correct {
+  border-color: var(--tief);
+}
+
+.card-btn.is-wrong {
+  border-color: var(--warn);
+}
+
+.card-flag {
+  max-width: 100%;
+  height: 90px;
+  object-fit: contain;
+  border: 1px solid var(--line);
+  display: block;
+}
+
+.card-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.15;
+  text-align: center;
+  color: var(--ink);
+}
+
+.card-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  line-height: 1.2;
+  text-align: center;
+  color: var(--ink);
+}
+
+.card-val[hidden] {
+  display: none !important;
+}
+
+/* Status message */
+.status-msg {
+  text-align: center;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.status-msg:empty {
+  display: none;
+}
+
+.status-msg.correct {
+  color: var(--tief);
+}
+
+.status-msg.wrong {
+  color: var(--warn);
+}
+
+/* Revealed controls */
+.revealed-controls {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-large {
+  width: 100%;
+  max-width: 320px;
+  font-size: 1.3rem;
+  min-height: 48px;
+}
+
+/* End view / End panel */
+.end-panel {
+  width: 100%;
+}
+
+.end-card {
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.end-streak-block {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 8px;
+}
+
+.end-streak-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--soft);
+}
+
+.end-score-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.end-new-record {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--tief);
+  letter-spacing: 0.02em;
+}
+
+.end-record-line {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--soft);
+}
+
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+  margin-top: 4px;
+}

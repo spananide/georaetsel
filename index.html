@@ -89,6 +89,13 @@
     .preview .r { background: var(--hoch); }
     .preview .s { background: var(--sea); }
 
+    .preview-flag { width: 96px; height: 96px; display: flex; align-items: center; }
+    .preview-flag img { width: 96px; height: 64px; object-fit: cover; border: 2px solid var(--line); border-radius: 6px; }
+    .preview-bars { width: 96px; height: 96px; display: flex; align-items: flex-end; gap: 10px; }
+    .preview-bars span { flex: 1; border-radius: 6px 6px 0 0; }
+    .preview-bars .hi { height: 90%; background: var(--tief); }
+    .preview-bars .lo { height: 50%; background: var(--hoch); }
+
     .soon-mark {
       width: 96px; height: 96px; display: flex; align-items: center; justify-content: flex-start;
       font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
@@ -153,6 +160,28 @@
         <div class="tags">
           <span class="tag">Täglich</span>
           <span class="tag">Übungsmodus</span>
+        </div>
+        <span class="cta">Spielen →</span>
+      </a>
+
+      <a class="card" href="flaggen/">
+        <div class="preview-flag" aria-hidden="true"><img src="georaetsel/assets/flags/fr.svg" alt=""></div>
+        <h2 class="card-title">Flaggenjagd</h2>
+        <p class="card-desc">Zehn Flaggen am Tag. Drei Versuche pro Flagge, mit Tipps, wenn es knapp wird.</p>
+        <div class="tags">
+          <span class="tag">Täglich</span>
+          <span class="tag">Übungsmodus</span>
+        </div>
+        <span class="cta">Spielen →</span>
+      </a>
+
+      <a class="card" href="mehr-weniger/">
+        <div class="preview-bars" aria-hidden="true"><span class="hi"></span><span class="lo"></span></div>
+        <h2 class="card-title">Mehr oder weniger</h2>
+        <p class="card-desc">Welches Land liegt vorn? Baue eine möglichst lange Serie, ein Fehler beendet sie.</p>
+        <div class="tags">
+          <span class="tag">Endlos</span>
+          <span class="tag">Rekord</span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
