@@ -8,7 +8,7 @@ export const byId = id => COUNTRY.get(id);
 export const categoryById = id => CATEGORY.get(id);
 export const dailySeed = d => d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
 
-function mulberry32(a) {
+export function mulberry32(a) {
   return () => {
     a = (a + 0x6D2B79F5) | 0;
     let t = Math.imul(a ^ (a >>> 15), 1 | a);
