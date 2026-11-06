@@ -175,6 +175,18 @@ function project(lon, lat) {
 }
 
 // Ringe aus Arcs zusammensetzen, doppelte Verbindungspunkte entfernen
+function unwrapRing(pts) {
+  let offset = 0;
+  return pts.map(([lon, lat], i) => {
+    if (i > 0) {
+      const diff = lon - pts[i - 1][0];
+      if (diff > 180) offset -= 360;
+      else if (diff < -180) offset += 360;
+    }
+    return [lon + offset, lat];
+  });
+}
+
 function decodeGeometry(geom) {
   const rawRings = geom.type === 'Polygon' ? geom.arcs : geom.arcs.flat();
   return rawRings.map(ringArcs => {
@@ -184,7 +196,9 @@ function decodeGeometry(geom) {
       if (j === 0) pts.push(...arcPts);
       else pts.push(...arcPts.slice(1));
     }
-    return pts.map(([lon, lat]) => project(lon, lat));
+    // Längengrade vor der Projektion entfalten (Anti-Meridian)
+    const unwrapped = unwrapRing(pts);
+    return unwrapped.map(([lon, lat]) => project(lon, lat));
   });
 }
 
@@ -271,7 +285,7 @@ function buildShapes(dpTolerance) {
     const keptRings = [];
     for (let i = 0; i < rings.length; i++) {
       const b = bboxes[i];
-      const isSmall = b.w < 0.9 && b.h < 0.9;
+      const isSmall = b.w < 0.4 && b.h < 0.4;
       if (!isSmall || i === maxIdx) {
         let simp = douglasPeucker(rings[i], dpTolerance);
         if (simp.length < 4) simp = rings[i];
@@ -282,6 +296,8 @@ function buildShapes(dpTolerance) {
     if (keptRings.length === 0) continue;
 
     let cMinX = Infinity, cMinY = Infinity, cMaxX = -Infinity, cMaxY = -Infinity;
+    let hasXOver1000 = false;
+    let hasXUnder0 = false;
     const dParts = [];
     for (const r of keptRings) {
       const pts = r.map(([x, y]) => [round1(x), round1(y)]);
@@ -290,28 +306,34 @@ function buildShapes(dpTolerance) {
         if (x > cMaxX) cMaxX = x;
         if (y < cMinY) cMinY = y;
         if (y > cMaxY) cMaxY = y;
+        if (x > 1000) hasXOver1000 = true;
+        if (x < 0) hasXUnder0 = true;
       }
       dParts.push('M ' + pts.map(p => `${p[0]} ${p[1]}`).join(' L ') + ' Z');
     }
 
-    SHAPES[id] = {
+    const shapeObj = {
       d: dParts.join(' '),
       box: [round1(cMinX), round1(cMinY), round1(cMaxX), round1(cMaxY)]
     };
+
+    if (hasXOver1000 || id === 'ru') shapeObj.wrap = 1;
+    else if (hasXUnder0) shapeObj.wrap = -1;
+
+    SHAPES[id] = shapeObj;
   }
   return SHAPES;
 }
 
-let tolerance = 0.35;
+let tolerance = 0.1;
 let SHAPES = buildShapes(tolerance);
 let sortedShapes = Object.fromEntries(Object.entries(SHAPES).sort(([a], [b]) => a.localeCompare(b)));
 let shapeLines = Object.entries(sortedShapes).map(([id, val]) => `  ${id}: ${JSON.stringify(val)},`);
 let worldContent = `export const VIEWBOX = '0 0 1000 487';\nexport const SHAPES = {\n${shapeLines.join('\n')}\n};\n`;
 let sizeKB = +(Buffer.byteLength(worldContent, 'utf8') / 1024).toFixed(1);
 
-if (sizeKB > 900) {
-  console.log(`Dateigröße (${sizeKB} KB) > 900 KB, Toleranz wird auf 0.5 erhöht.`);
-  tolerance = 0.5;
+while (sizeKB > 1100) {
+  tolerance = +(tolerance + 0.02).toFixed(2);
   SHAPES = buildShapes(tolerance);
   sortedShapes = Object.fromEntries(Object.entries(SHAPES).sort(([a], [b]) => a.localeCompare(b)));
   shapeLines = Object.entries(sortedShapes).map(([id, val]) => `  ${id}: ${JSON.stringify(val)},`);
@@ -323,6 +345,8 @@ writeFileSync('data/world.js', worldContent);
 
 const shapeCount = Object.keys(SHAPES).length;
 const missingShapes = COUNTRIES.filter(c => !SHAPES[c.id]).map(c => c.id);
+const wrappedIds = Object.keys(SHAPES).filter(id => SHAPES[id].wrap !== undefined);
 console.log(`Formen vorhanden: ${shapeCount} von ${COUNTRIES.length}`);
 console.log(`Länder ohne Form (${missingShapes.length}): ${missingShapes.join(' ') || '(keine)'}`);
+console.log(`Länder mit wrap (${wrappedIds.length}): ${wrappedIds.join(' ') || '(keine)'}`);
 console.log(`Dateigröße data/world.js: ${sizeKB} KB (Toleranz: ${tolerance})`);

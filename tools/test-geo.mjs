@@ -1,6 +1,7 @@
 // node tools/test-geo.mjs
 // Prüfskript für die generierten Daten in data/geo.js und data/world.js.
 import assert from 'node:assert/strict';
+import { statSync } from 'node:fs';
 import { COUNTRIES } from '../georaetsel/data/countries.js';
 import { GEO } from '../data/geo.js';
 import { VIEWBOX, SHAPES } from '../data/world.js';
@@ -58,9 +59,51 @@ for (const [id, s] of Object.entries(SHAPES)) {
 
   assert.ok(Array.isArray(s.box) && s.box.length === 4, `Box für ${id} muss 4 Werte haben`);
   const [x0, y0, x1, y1] = s.box;
-  assert.ok(x0 >= -5 && y0 >= -5 && x1 <= 1005 && y1 <= 492, `Box für ${id} liegt außerhalb: ${s.box}`);
+  const minAllowedX = s.wrap !== undefined ? -400 : -5;
+  const maxAllowedX = s.wrap !== undefined ? 1400 : 1005;
+  assert.ok(
+    x0 >= minAllowedX && y0 >= -5 && x1 <= maxAllowedX && y1 <= 492,
+    `Box für ${id} liegt außerhalb: ${s.box} (erlaubtes X: [${minAllowedX}, ${maxAllowedX}])`
+  );
   assert.ok(x0 <= x1 && y0 <= y1, `Box für ${id} ist invertiert: ${s.box}`);
+
+  // Keine zwei aufeinanderfolgenden Punkte innerhalb eines Rings dürfen horizontal mehr als 500 Einheiten entfernt sein
+  const rings = s.d.trim().split(/\s*Z\s*/).filter(Boolean);
+  for (const rStr of rings) {
+    const tokens = rStr.trim().split(/\s+/);
+    const pts = [];
+    let i = 0;
+    while (i < tokens.length) {
+      const cmd = tokens[i];
+      if (cmd === 'M' || cmd === 'L') {
+        pts.push([parseFloat(tokens[i + 1]), parseFloat(tokens[i + 2])]);
+        i += 3;
+      } else {
+        i++;
+      }
+    }
+    for (let j = 1; j < pts.length; j++) {
+      const dx = Math.abs(pts[j][0] - pts[j - 1][0]);
+      assert.ok(dx <= 500, `Horizontalsprung > 500 in ${id}: ${pts[j - 1][0]} -> ${pts[j][0]} (dx=${dx})`);
+    }
+  }
 }
+
+// wrap-Prüfung: ru muss 1 sein, fj falls definiert ebenfalls prüfen
+assert.equal(SHAPES.ru.wrap, 1, 'SHAPES.ru.wrap muss 1 sein');
+if (SHAPES.fj.wrap !== undefined) {
+  assert.equal(SHAPES.fj.wrap, 1, 'SHAPES.fj.wrap muss 1 sein, wenn definiert');
+}
+const wrappedIds = Object.keys(SHAPES).filter(id => SHAPES[id].wrap !== undefined);
+console.log(`Länder mit wrap (${wrappedIds.length}): ${wrappedIds.join(' ') || '(keine)'}`);
+
+// Deutschland muss mindestens 60 Koordinatenpaare haben
+const dePairs = SHAPES.de.d.match(/[-0-9.]+\s+[-0-9.]+/g) || [];
+assert.ok(dePairs.length >= 60, `SHAPES.de.d muss mindestens 60 Koordinatenpaare haben, hat: ${dePairs.length}`);
+
+// Dateigröße unter 1100 KB
+const worldSizeKB = +(statSync('data/world.js').size / 1024).toFixed(1);
+assert.ok(worldSizeKB < 1100, `data/world.js muss unter 1100 KB sein, ist: ${worldSizeKB} KB`);
 
 // Pflichtländer müssen eine Form haben
 const required = ['de', 'fr', 'us', 'ru', 'br', 'au', 'jp', 'cn', 'in', 'za', 'eg', 'mx', 'ar', 'id', 'it', 'gb', 'ie', 'nz', 'is', 'kr'];
