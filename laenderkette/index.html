@@ -6,6 +6,18 @@
   <title>Länderkette: Finde den Weg über die Grenzen</title>
   <meta name="description" content="Verbinde zwei Länder über ihre Nachbarn. Das tägliche Geografie-Rätsel auf Deutsch.">
   <meta name="theme-color" content="#0B2C45">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:site_name" content="Geo-Spiele">
+  <meta property="og:title" content="Länderkette: Finde den Weg über die Grenzen">
+  <meta property="og:description" content="Verbinde zwei Länder über ihre Nachbarn. Das tägliche Geografie-Rätsel auf Deutsch.">
+  <meta property="og:url" content="https://geo.spanani.de/laenderkette/">
+  <meta property="og:image" content="https://geo.spanani.de/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="../georaetsel/assets/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../common.css">
   <link rel="stylesheet" href="style.css">
@@ -138,5 +150,6 @@
   <div id="toast" class="toast" role="status" aria-live="polite" popover="manual"></div>
 
   <script type="module" src="app.js"></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});</script>
 </body>
 </html>
