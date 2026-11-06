@@ -56,6 +56,14 @@
         <button type="button" class="tab-btn" id="tab-daily" role="tab" aria-selected="true" aria-current="page">Tagesrätsel</button>
         <button type="button" class="tab-btn" id="tab-practice" role="tab" aria-selected="false">Übung</button>
       </nav>
+      <div class="practice-bar" id="practice-bar" hidden>
+        <div class="level-group" role="group" aria-label="Schwierigkeit">
+          <button type="button" class="level-btn" data-level="leicht" aria-pressed="false">Leicht</button>
+          <button type="button" class="level-btn" data-level="mittel" aria-pressed="true">Mittel</button>
+          <button type="button" class="level-btn" data-level="schwer" aria-pressed="false">Schwer</button>
+        </div>
+        <button type="button" class="btn btn-secondary reroll-btn" id="btn-reroll">Neu würfeln</button>
+      </div>
     </header>
 
     <main class="main-content">
@@ -228,7 +236,7 @@
       <p>Finde für jedes der 9 Felder ein Land, das zur Zeile und zur Spalte passt.</p>
       <p>Du hast 12 Versuche. Richtige und falsche Tipps zählen beide.</p>
       <p>Jedes Land darf nur einmal aufs Brett.</p>
-      <p>Jeden Tag gibt es ein neues Rätsel, für alle dasselbe. In der Übung spielst du so viele Runden, wie du willst.</p>
+      <p>Jeden Tag gibt es ein neues Rätsel, für alle dasselbe. In der Übung spielst du so viele Runden, wie du willst. Du kannst die Schwierigkeit wählen (je weniger Länder in ein Feld passen, desto schwerer) und das Raster jederzeit neu würfeln.</p>
 
       <h3>Punkte</h3>
       <p>Jedes richtige Feld bringt 5 bis 100 Punkte. Es zählt, wie groß das Land im Vergleich zu allen anderen richtigen Antworten dieses Felds ist: Das Land mit den meisten Einwohnern bringt 5 Punkte, das mit den wenigsten 100.</p>

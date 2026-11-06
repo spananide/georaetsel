@@ -10,6 +10,7 @@ import {
   bestBoard,
   shareText,
   search,
+  LEVELS,
 } from './game.js';
 
 let mode = 'daily';
@@ -42,6 +43,32 @@ function removeStorage(key) {
   } catch (e) {}
 }
 
+let level = 'mittel';
+const storedLevel = readStorage('georaetsel.level', 'mittel');
+if (LEVELS.includes(storedLevel)) level = storedLevel;
+
+function updateLevelUI() {
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    btn.setAttribute('aria-pressed', btn.dataset.level === level ? 'true' : 'false');
+  });
+}
+
+function practiceUrl() {
+  return `?uebung=${practiceId}${level && level !== 'mittel' ? `&stufe=${level}` : ''}`;
+}
+
+function isGameInProgress() {
+  if (!game || game.over) return false;
+  return game.cells.some(Boolean) || game.wrong.some(w => w.length > 0);
+}
+
+function confirmDiscardIfInProgress() {
+  if (isGameInProgress()) {
+    return window.confirm('Aktuelles Rätsel verwerfen und neu würfeln?');
+  }
+  return true;
+}
+
 function getStats() {
   const def = {
     daily: { played: 0, total: 0, best: 0, dist: Array(10).fill(0), streak: 0, maxStreak: 0, lastSeed: null },
@@ -66,12 +93,12 @@ function saveCurrentGame() {
   }
 }
 
-function createPracticeGame(id) {
+function createPracticeGame(id, lvl = level) {
   let curId = id;
   for (let attempt = 0; attempt < 25; attempt++) {
     try {
       const s = parseInt(curId, 36);
-      const g = newGame(s);
+      const g = newGame(s, lvl);
       return { id: curId, game: g };
     } catch (e) {
       curId = Math.floor(Math.random() * (36 ** 6)).toString(36);
@@ -94,12 +121,15 @@ function loadPracticeGame(id) {
   const saved = readStorage('georaetsel.practice');
   if (saved && saved.id === id) {
     game = saved;
+    level = saved.level || 'mittel';
+    writeStorage('georaetsel.level', level);
   } else {
-    const created = createPracticeGame(id);
+    const created = createPracticeGame(id, level);
     practiceId = created.id;
     game = created.game;
     writeStorage('georaetsel.practice', { ...game, id: practiceId });
   }
+  updateLevelUI();
 }
 
 function recordGameEnd() {
@@ -506,7 +536,7 @@ function doShare() {
     : 'Übung';
   const url = mode === 'daily'
     ? `${window.location.origin}${window.location.pathname}`
-    : `${window.location.origin}${window.location.pathname}?uebung=${practiceId}`;
+    : `${window.location.origin}${window.location.pathname}${practiceUrl()}`;
   const text = shareText(game, label, url);
 
   if (navigator.share && window.matchMedia('(pointer:coarse)').matches) {
@@ -626,12 +656,14 @@ function setMode(newMode) {
 
   const tabDaily = document.getElementById('tab-daily');
   const tabPractice = document.getElementById('tab-practice');
+  const practiceBar = document.getElementById('practice-bar');
 
   if (mode === 'daily') {
     tabDaily.setAttribute('aria-selected', 'true');
     tabDaily.setAttribute('aria-current', 'page');
     tabPractice.setAttribute('aria-selected', 'false');
     tabPractice.removeAttribute('aria-current');
+    if (practiceBar) practiceBar.hidden = true;
 
     history.replaceState(null, '', window.location.pathname);
     loadDailyGame();
@@ -640,12 +672,13 @@ function setMode(newMode) {
     tabPractice.setAttribute('aria-current', 'page');
     tabDaily.setAttribute('aria-selected', 'false');
     tabDaily.removeAttribute('aria-current');
+    if (practiceBar) practiceBar.hidden = false;
 
     if (!practiceId) {
       practiceId = readStorage('georaetsel.practice')?.id || Math.floor(Math.random() * (36 ** 6)).toString(36);
     }
-    history.replaceState(null, '', `?uebung=${practiceId}`);
     loadPracticeGame(practiceId);
+    history.replaceState(null, '', practiceUrl());
   }
 
   renderBoard();
@@ -654,11 +687,10 @@ function setMode(newMode) {
 
 function startNextPracticeRound() {
   const newId = Math.floor(Math.random() * (36 ** 6)).toString(36);
-  practiceId = newId;
-  history.replaceState(null, '', `?uebung=${practiceId}`);
-  const created = createPracticeGame(practiceId);
+  const created = createPracticeGame(newId, level);
   practiceId = created.id;
   game = created.game;
+  history.replaceState(null, '', practiceUrl());
   writeStorage('georaetsel.practice', { ...game, id: practiceId });
   showingBest = false;
   document.getElementById('end-dialog').close();
@@ -729,16 +761,23 @@ function init() {
 
   const params = new URLSearchParams(window.location.search);
   const uebungParam = params.get('uebung');
+  const stufeParam = params.get('stufe');
+  const practiceBar = document.getElementById('practice-bar');
 
   if (uebungParam !== null) {
     mode = 'practice';
+    if (practiceBar) practiceBar.hidden = false;
+    if (LEVELS.includes(stufeParam)) {
+      level = stufeParam;
+      writeStorage('georaetsel.level', level);
+    }
     if (/^[0-9a-z]{1,8}$/.test(uebungParam)) {
       practiceId = uebungParam;
     } else {
       practiceId = Math.floor(Math.random() * (36 ** 6)).toString(36);
     }
-    history.replaceState(null, '', `?uebung=${practiceId}`);
     loadPracticeGame(practiceId);
+    history.replaceState(null, '', practiceUrl());
 
     const tabDaily = document.getElementById('tab-daily');
     const tabPractice = document.getElementById('tab-practice');
@@ -747,8 +786,10 @@ function init() {
     tabPractice.setAttribute('aria-selected', 'true');
     tabPractice.setAttribute('aria-current', 'page');
   } else {
+    if (practiceBar) practiceBar.hidden = true;
     loadDailyGame();
   }
+  updateLevelUI();
 
   renderBoard();
   renderScaleBar();
@@ -917,6 +958,24 @@ function init() {
   });
   document.getElementById('privacy-close').addEventListener('click', () => {
     document.getElementById('privacy-dialog').close();
+  });
+
+  // Practice bar
+  document.querySelectorAll('.level-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetLevel = btn.dataset.level;
+      if (targetLevel === level) return;
+      if (!confirmDiscardIfInProgress()) return;
+      level = targetLevel;
+      writeStorage('georaetsel.level', level);
+      updateLevelUI();
+      startNextPracticeRound();
+    });
+  });
+
+  document.getElementById('btn-reroll').addEventListener('click', () => {
+    if (!confirmDiscardIfInProgress()) return;
+    startNextPracticeRound();
   });
 
   // Tabs

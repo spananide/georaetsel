@@ -71,6 +71,8 @@ const mehrdeutig = [];
 const ohneDeutschenNamen = [];
 const round2 = v => v == null ? null : +v.toFixed(2);
 const GEO = {};
+// Von Hand korrigiert: englische Reste, Mehrdeutiges, deutsche Schreibweise
+const CAPITAL_FIX = { dk: 'Kopenhagen', ye: 'Sanaa', ki: 'Tarawa', gq: 'Malabo', tm: 'Aschgabat', ag: 'Saint John’s' };
 
 for (const country of COUNTRIES) {
   const id = country.id;
@@ -101,7 +103,7 @@ for (const country of COUNTRIES) {
   }
 
   GEO[id] = {
-    c: capital,
+    c: CAPITAL_FIX[id] ?? capital,
     lat: round2(mle.latlng[0]),
     lng: round2(mle.latlng[1]),
     b: []

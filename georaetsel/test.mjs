@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { existsSync } from 'node:fs';
 import { COUNTRIES } from './data/countries.js';
 import { CATEGORIES } from './categories.js';
-import { dailySeed, pickBoard, answersFor, points, solve, newGame, guess, score, tier, shareText, search, byId, bestBoard } from './game.js';
+import { dailySeed, pickBoard, answersFor, points, solve, newGame, guess, score, tier, shareText, search, byId, bestBoard, LEVELS } from './game.js';
 
 const C = id => byId(id);
 const has = (id, tag) => C(id).tags.includes(tag);
@@ -135,5 +135,28 @@ assert.equal(search('').length, 0);
 assert.ok(search('a').length <= 8);
 assert.equal(search('Holland')[0].via, 'Holland');
 assert.equal(search('Niederlande')[0].via, null);
+
+// Schwierigkeit
+for (const s of [1, 2, 3, 20260101, 20261106]) {
+  assert.deepEqual(pickBoard(s), pickBoard(s, 'mittel'));
+}
+for (let i = 1; i <= 20; i++) {
+  const s = i * 7919;
+  const leicht = pickBoard(s, 'leicht');
+  const cellsL = leicht.rows.flatMap(r => leicht.cols.map(c => answersFor(r, c)));
+  const nL = cellsL.map(a => a.length);
+  const avgL = nL.reduce((sum, x) => sum + x, 0) / 9;
+  assert.ok(Math.min(...nL) >= 6, `leicht min < 6: ${s}`);
+  assert.ok(avgL >= 14, `leicht avg < 14: ${s}`);
+
+  const schwer = pickBoard(s, 'schwer');
+  const cellsS = schwer.rows.flatMap(r => schwer.cols.map(c => answersFor(r, c)));
+  const nS = cellsS.map(a => a.length);
+  const avgS = nS.reduce((sum, x) => sum + x, 0) / 9;
+  assert.ok(avgS <= 10, `schwer avg > 10: ${s}`);
+  assert.ok(Math.min(...nS) >= 3, `schwer min < 3: ${s}`);
+}
+assert.equal(newGame(5, 'schwer').level, 'schwer');
+assert.equal(newGame(5).level, 'mittel');
 
 console.log('alles ok');

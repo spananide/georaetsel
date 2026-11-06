@@ -71,7 +71,9 @@ export function solve(cells) {
   return { total: dp[full], picks };
 }
 
-export function pickBoard(seed) {
+export const LEVELS = ['leicht', 'mittel', 'schwer'];
+
+export function pickBoard(seed, level = 'mittel') {
   const rand = mulberry32(seed);
   const pool = [...CATEGORIES];
   for (let attempt = 0; attempt < 5000; attempt++) {
@@ -84,14 +86,18 @@ export function pickBoard(seed) {
     const rows = six.slice(0, 3).map(c => c.id), cols = six.slice(3).map(c => c.id);
     const cells = rows.flatMap(r => cols.map(c => answersFor(r, c)));
     if (cells.some(a => a.length < 3)) continue;
+    const n = cells.map(a => a.length);
+    const avg = n.reduce((s, x) => s + x, 0) / 9;
+    if (level === 'leicht' && !(Math.min(...n) >= 6 && avg >= 14)) continue;
+    if (level === 'schwer' && !(avg <= 10)) continue;
     if (solve(cells.map(a => a.map(c => ({ id: c.id, pts: 1 }))))) return { rows, cols };
   }
   throw new Error(`Kein Rätsel für Seed ${seed}`);
 }
 
-export function newGame(seed) {
-  const { rows, cols } = pickBoard(seed);
-  return { seed, rows, cols, cells: Array(9).fill(null), wrong: Array.from({ length: 9 }, () => []), guessesLeft: 12, over: false };
+export function newGame(seed, level = 'mittel') {
+  const { rows, cols } = pickBoard(seed, level);
+  return { seed, level, rows, cols, cells: Array(9).fill(null), wrong: Array.from({ length: 9 }, () => []), guessesLeft: 12, over: false };
 }
 
 export const cellAnswers = (game, cell) => answersFor(game.rows[Math.floor(cell / 3)], game.cols[cell % 3]);

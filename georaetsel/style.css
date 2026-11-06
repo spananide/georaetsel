@@ -200,6 +200,51 @@ body {
   margin-bottom: -3px;
 }
 
+/* Practice Bar */
+.practice-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.level-group {
+  display: flex;
+  border: 1px solid var(--line);
+}
+
+.level-btn {
+  background: none;
+  border: none;
+  color: var(--soft);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 8px 14px;
+  min-height: 40px;
+  cursor: pointer;
+}
+
+.level-btn:hover {
+  color: var(--ink);
+}
+
+.level-btn[aria-pressed="true"] {
+  background: var(--ink);
+  color: var(--page);
+}
+
+.level-btn:not(:first-child) {
+  border-left: 1px solid var(--line);
+}
+
+.level-btn:focus-visible {
+  position: relative;
+  z-index: 1;
+}
+
 /* Main Layout */
 .main-content {
   display: flex;
@@ -665,6 +710,12 @@ body {
   background: transparent;
   color: var(--ink);
   border: 1px solid var(--soft);
+}
+
+.reroll-btn {
+  min-height: 40px;
+  padding: 8px 14px;
+  font-size: 1rem;
 }
 
 /* Footer */
