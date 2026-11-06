@@ -112,6 +112,20 @@ body {
   gap: 4px;
 }
 
+.back-link {
+  align-self: flex-start;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--soft);
+  text-decoration: none;
+  padding: 8px 0;
+}
+
+.back-link:hover {
+  color: var(--ink);
+}
+
 .header-top {
   display: flex;
   align-items: center;
