@@ -6,6 +6,8 @@ import {
   showToast,
   shareText as copyOrShare,
   initPrivacy,
+  startClock,
+  withTime,
 } from '../common.js';
 import {
   MAX_GUESSES,
@@ -370,7 +372,7 @@ function doShare() {
     : 'Übung';
   const url = `${window.location.origin}${window.location.pathname}`;
   const text = formatShareText(round, label, url);
-  copyOrShare(text);
+  copyOrShare(withTime(text, round.ms));
 }
 
 function checkMidnight() {
@@ -455,6 +457,12 @@ function init() {
   setInterval(checkMidnight, 30000);
 
   setMode('daily');
+
+  startClock({
+    getRound: getActiveRound,
+    isOver: r => r.state !== 'playing',
+    save: saveIfDaily,
+  });
 }
 
 if (document.readyState === 'loading') {

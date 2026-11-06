@@ -4,6 +4,8 @@ import {
   writeStorage,
   shareText as copyOrShare,
   initPrivacy,
+  startClock,
+  withTime,
 } from '../common.js';
 import {
   TYPES,
@@ -59,7 +61,7 @@ function handleShare() {
   if (!game) return;
   const url = `${window.location.origin}${window.location.pathname}`;
   const text = `Mehr oder weniger: Serie ${game.streak}\n${url}`;
-  copyOrShare(text);
+  copyOrShare(withTime(text, game.ms));
 }
 
 function render() {
@@ -198,6 +200,12 @@ function init() {
   document.getElementById('btn-theme').addEventListener('click', toggleTheme);
 
   startNewGame();
+
+  startClock({
+    getRound: () => game,
+    isOver: g => g.over,
+    save: () => {},
+  });
 }
 
 if (document.readyState === 'loading') {

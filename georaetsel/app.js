@@ -12,6 +12,7 @@ import {
   search,
   LEVELS,
 } from './game.js';
+import { startClock, withTime } from '../common.js';
 
 let mode = 'daily';
 let practiceId = null;
@@ -537,7 +538,7 @@ function doShare() {
   const url = mode === 'daily'
     ? `${window.location.origin}${window.location.pathname}`
     : `${window.location.origin}${window.location.pathname}${practiceUrl()}`;
-  const text = shareText(game, label, url);
+  const text = withTime(shareText(game, label, url), game.ms);
 
   if (navigator.share && window.matchMedia('(pointer:coarse)').matches) {
     navigator.share({ text }).catch(e => {
@@ -981,6 +982,12 @@ function init() {
   // Tabs
   document.getElementById('tab-daily').addEventListener('click', () => setMode('daily'));
   document.getElementById('tab-practice').addEventListener('click', () => setMode('practice'));
+
+  startClock({
+    getRound: () => game,
+    isOver: g => g.over,
+    save: saveCurrentGame,
+  });
 }
 
 window.addEventListener('DOMContentLoaded', init);

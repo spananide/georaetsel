@@ -437,23 +437,33 @@
       }
     };
 
+    function fmt(ms) {
+      const s = Math.floor(ms / 1000);
+      const h = Math.floor(s / 3600);
+      const m = Math.floor((s % 3600) / 60);
+      const sec = String(s % 60).padStart(2, '0');
+      return h > 0 ? `${h}:${String(m).padStart(2, '0')}:${sec}` : `${m}:${sec}`;
+    }
+
+    const roundOf = (game, S) => (game === 'georaetsel' ? read('georaetsel.daily') : read(game + '.daily.' + S));
+
     const CHECKS = {
-      flaggen: S => read('flaggen.daily.' + S)?.state === 'done',
-      hauptstaedte: S => read('hauptstaedte.daily.' + S)?.state === 'done',
+      flaggen: S => roundOf('flaggen', S)?.state === 'done',
+      hauptstaedte: S => roundOf('hauptstaedte', S)?.state === 'done',
       umriss: S => {
-        const s = read('umriss.daily.' + S)?.state;
+        const s = roundOf('umriss', S)?.state;
         return s === 'won' || s === 'lost';
       },
       laenderkette: S => {
-        const s = read('laenderkette.daily.' + S)?.state;
+        const s = roundOf('laenderkette', S)?.state;
         return s === 'won' || s === 'lost';
       },
       heisskalt: S => {
-        const s = read('heisskalt.daily.' + S)?.state;
+        const s = roundOf('heisskalt', S)?.state;
         return s === 'won' || s === 'lost';
       },
       georaetsel: S => {
-        const g = read('georaetsel.daily');
+        const g = roundOf('georaetsel', S);
         return Boolean(g && g.seed === S && g.over === true);
       }
     };
@@ -528,7 +538,8 @@
           const done = finished(game, currentSeed);
           if (done) {
             badge.className = 'badge done';
-            badge.textContent = '✓ Heute gelöst';
+            const r = roundOf(game, currentSeed);
+            badge.textContent = r && r.ms >= 1000 ? '✓ Heute gelöst · ' + fmt(r.ms) : '✓ Heute gelöst';
           } else {
             badge.className = 'badge';
             badge.textContent = 'Heute offen';

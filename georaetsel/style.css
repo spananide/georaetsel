@@ -1144,3 +1144,34 @@ dialog::backdrop {
 .toast.toast-visible {
   opacity: 1;
 }
+
+.clock {
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 4.4em;
+  height: 32px;
+  margin-right: 4px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 9999px;
+  color: var(--ink);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 480px) {
+  .clock { min-width: 0; margin-right: 0; padding: 0 8px; font-size: 1rem; }
+}
+
+@media (max-width: 400px) {
+  .wordmark { font-size: 2.1rem; }
+}
+
+@media (max-width: 340px) {
+  .header-actions { gap: 0; }
+  .header-actions .icon-btn { width: 36px; }
+}
