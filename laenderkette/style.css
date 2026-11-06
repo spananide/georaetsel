@@ -1,0 +1,332 @@
+/* Header specifics */
+.header-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.back-link {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--soft);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Main Content & Game View */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.game-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Headline Row */
+.route-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 4px 0;
+  text-align: center;
+}
+
+.route-endpoint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.endpoint-flag {
+  width: 32px;
+  height: 24px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  display: block;
+  flex-shrink: 0;
+}
+
+.endpoint-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.route-arrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--soft);
+  user-select: none;
+}
+
+/* Attempts & Progress */
+.attempts-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.attempts-text {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.attempts-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--sea);
+  box-sizing: border-box;
+  transition: background-color 150ms ease;
+}
+
+.dot.dot-right {
+  background-color: var(--tief);
+}
+
+.dot.dot-wrong {
+  background-color: var(--hoch);
+}
+
+.dot.dot-current {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+/* Map Stage */
+.map-stage {
+  width: 100%;
+  height: 280px;
+  background-color: var(--page);
+  border: 2px solid var(--line);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#map-svg {
+  width: 100%;
+  height: 280px;
+  display: block;
+  background-color: var(--page);
+}
+
+#map-svg path.map-country {
+  fill: var(--panel);
+  stroke: var(--line);
+  stroke-width: 0.3;
+  transition: fill 200ms ease, stroke 200ms ease;
+}
+
+#map-svg path.map-country.map-endpoint {
+  fill: var(--huegel);
+}
+
+#map-svg path.map-country.map-right {
+  fill: var(--tief);
+}
+
+#map-svg path.map-country.map-wrong {
+  fill: var(--hoch);
+}
+
+#map-svg path.map-country.map-missed {
+  fill: var(--sea);
+  stroke: var(--warn);
+  stroke-width: 0.5;
+}
+
+/* Guesses List */
+.guesses-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+.guesses-list:empty {
+  display: none;
+}
+
+.guess-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background-color: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+
+.guess-item.guess-right {
+  border-left: 4px solid var(--tief);
+}
+
+.guess-item.guess-wrong {
+  border-left: 4px solid var(--hoch);
+}
+
+.guess-flag {
+  width: 28px;
+  height: 21px;
+  object-fit: cover;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+  display: block;
+}
+
+.guess-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.guess-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.guess-status {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.95rem;
+  font-style: italic;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.guess-right .guess-status {
+  color: var(--tief);
+}
+
+.guess-wrong .guess-status {
+  color: var(--soft);
+}
+
+/* Play Controls */
+.play-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.search-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+.input-row .search-input {
+  flex: 1;
+}
+
+/* End View */
+.end-view {
+  width: 100%;
+}
+
+.end-card {
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.end-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.end-title.end-title-won {
+  color: var(--tief);
+}
+
+.end-title.end-title-lost {
+  color: var(--warn);
+}
+
+.end-route {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 1.35rem;
+  color: var(--ink);
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+.end-emojis {
+  font-size: 2rem;
+  line-height: 1.25;
+  letter-spacing: 6px;
+  white-space: pre-line;
+  font-family: monospace, sans-serif;
+  margin: 2px 0;
+}
+
+.end-note {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.end-note:empty {
+  display: none;
+}
+
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}
