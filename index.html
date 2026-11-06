@@ -34,6 +34,8 @@
 
     *, *::before, *::after { box-sizing: border-box; }
 
+    [hidden] { display: none !important; }
+
     body {
       margin: 0;
       padding: 16px;
@@ -67,8 +69,25 @@
       font-size: 1.1rem; color: var(--soft); margin: 0;
     }
 
+    .daybar {
+      background: var(--panel);
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
     main { display: grid; gap: 16px; grid-template-columns: 1fr; }
-    @media (min-width: 640px) { main { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 640px) {
+      main { grid-template-columns: repeat(2, 1fr); }
+      main > .card:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    }
 
     .card {
       background: var(--panel); border: 2px solid var(--line);
@@ -108,12 +127,6 @@
     .preview-heat { width: 96px; height: 96px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
     .preview-heat span { border-radius: 6px; }
 
-    .soon-mark {
-      width: 96px; height: 96px; display: flex; align-items: center; justify-content: flex-start;
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-      font-size: 3rem; line-height: 1; color: var(--line);
-    }
-
     .card-title {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
       font-size: 2rem; line-height: 1.1; margin: 0; color: var(--ink);
@@ -124,11 +137,21 @@
     }
 
     .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag {
+    .tag, .badge {
       font-family: 'Barlow Condensed', sans-serif; font-weight: 500;
       font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em;
       border: 1px solid var(--line); border-radius: 9999px;
-      padding: 2px 10px; color: var(--ink); line-height: 1.4;
+      padding: 2px 10px; line-height: 1.4;
+    }
+    .tag { color: var(--ink); }
+    .badge {
+      color: var(--soft);
+      border-color: var(--line);
+    }
+    .badge.done {
+      border-color: var(--tief);
+      color: var(--ink);
+      background: color-mix(in srgb, var(--tief) 30%, transparent);
     }
 
     .cta {
@@ -137,10 +160,121 @@
     }
     :root[data-theme="light"] .cta { color: #8C6500; }
 
-    .card.soon { border-style: dashed; opacity: 0.8; cursor: default; }
+    @media (max-width: 639px) {
+      .card {
+        display: grid;
+        grid-template-columns: 56px 1fr;
+        column-gap: 14px;
+        row-gap: 2px;
+        padding: 14px 16px;
+        align-items: start;
+      }
+      .preview, .preview-flag, .preview-bars, .preview-shape, .preview-list, .preview-chain, .preview-heat {
+        width: 56px;
+        height: 56px;
+        grid-column: 1;
+        grid-row: 1 / span 3;
+      }
+      .preview-flag img { width: 56px; height: 38px; }
+      .preview-shape svg, .preview-chain { width: 56px; height: 56px; }
+      .preview { gap: 4px; }
+      .preview-heat, .preview-list { gap: 4px; }
+      .preview-bars { gap: 6px; }
+      .card-title { font-size: 1.5rem; }
+      .card-desc {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .tags .tag { display: none; }
+      .cta { display: none; }
+    }
 
     footer {
-      text-align: center; color: var(--soft); font-size: 0.9rem; padding-top: 8px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 8px 20px;
+      color: var(--soft);
+      font-size: 0.9rem;
+      padding-top: 8px;
+    }
+    footer a, footer button {
+      background: none;
+      border: none;
+      font: inherit;
+      color: inherit;
+      text-decoration: underline;
+      cursor: pointer;
+      padding: 8px 4px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+    }
+    footer a:focus-visible, footer button:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+
+    dialog {
+      background: var(--panel);
+      color: var(--ink);
+      border: 2px solid var(--line);
+      border-radius: 14px;
+      padding: 0;
+      width: min(92vw, 520px);
+    }
+    dialog::backdrop {
+      background: rgb(0 0 0 / 0.6);
+    }
+    .dialog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+    }
+    .dialog-heading {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      margin: 0;
+      color: var(--ink);
+    }
+    .dialog-close {
+      background: none;
+      border: none;
+      width: 44px;
+      height: 44px;
+      color: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border-radius: 6px;
+    }
+    .dialog-close:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+    }
+    .dialog-body {
+      padding: 0 20px 20px;
+      line-height: 1.5;
+    }
+    .dialog-body p {
+      margin: 0 0 12px;
+    }
+    .dialog-body p:last-child {
+      margin-bottom: 0;
+    }
+    .dialog-body a {
+      color: var(--huegel);
+    }
+    :root[data-theme="light"] .dialog-body a {
+      color: #8C6500;
     }
   </style>
 </head>
@@ -160,8 +294,14 @@
       <p class="subtitle">Kleine Geografie-Spiele auf Deutsch.</p>
     </header>
 
+    <div class="daybar">
+      <span id="day-count"></span>
+      <span id="day-streak" hidden></span>
+      <span id="day-timer"></span>
+    </div>
+
     <main>
-      <a class="card" href="georaetsel/">
+      <a class="card" href="georaetsel/" data-game="georaetsel">
         <div class="preview" aria-hidden="true">
           <span class="t"></span><span class="h"></span><span class="r"></span>
           <span class="h"></span><span class="t"></span><span class="s"></span>
@@ -172,84 +312,301 @@
         <div class="tags">
           <span class="tag">Täglich</span>
           <span class="tag">Übungsmodus</span>
+          <span class="badge" hidden></span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
 
-      <a class="card" href="flaggen/">
+      <a class="card" href="flaggen/" data-game="flaggen">
         <div class="preview-flag" aria-hidden="true"><img src="georaetsel/assets/flags/fr.svg" alt=""></div>
         <h2 class="card-title">Flaggenjagd</h2>
         <p class="card-desc">Zehn Flaggen am Tag. Drei Versuche pro Flagge, mit Tipps, wenn es knapp wird.</p>
         <div class="tags">
           <span class="tag">Täglich</span>
           <span class="tag">Übungsmodus</span>
+          <span class="badge" hidden></span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
 
-      <a class="card" href="umriss/">
+      <a class="card" href="umriss/" data-game="umriss">
         <div class="preview-shape" aria-hidden="true"><svg viewBox="513.78 76.08 33.7 37.03" preserveAspectRatio="xMidYMid meet"><path d="M 516.6 81.59 L 516.87 81.73 L 517.82 81.43 L 518.42 81.6 L 518.89 81.32 L 519.18 80.87 L 519.09 80.54 L 519.84 80.01 L 519.95 80.61 L 520.41 81.03 L 520.83 81.13 L 520.75 81.38 L 521.19 81.89 L 521.4 81.74 L 521.27 81.32 L 521.82 80.49 L 521.91 79.85 L 522.2 79.9 L 522.47 80.43 L 523.42 80.26 L 523.79 80.67 L 523.94 80.59 L 523.64 79.89 L 523.73 79.54 L 523.99 79.47 L 524.55 79.69 L 524.55 78.73 L 525.83 79 L 526.13 78.52 L 526.38 78.4 L 527.62 78.37 L 528.53 78.08 L 528.53 78.52 L 529.13 79.23 L 532.25 79.78 L 531.56 80.57 L 532.18 80.83 L 531.88 81.4 L 532.15 81.42 L 532.15 81.94 L 532.89 82.55 L 532.53 82.63 L 532.66 82.5 L 532.26 82.07 L 531.89 82.25 L 531.27 82.06 L 530.88 82.48 L 529.5 82.99 L 529.73 82.76 L 529.62 82.75 L 529.13 83.06 L 529.05 83.69 L 529.82 84.53 L 529.53 85.06 L 529.27 84.95 L 529.22 85.3 L 529.68 86.84 L 530.43 87.56 L 532.62 88.88 L 533.89 91.65 L 535.29 93.06 L 536.88 94.05 L 538.82 94.03 L 539.32 94.17 L 539.32 94.61 L 538.78 95.04 L 538.77 95.39 L 541.82 96.83 L 542.79 97.54 L 544.02 98.14 L 545.38 99.54 L 545.48 99.91 L 545.21 100.83 L 544.52 100.45 L 543.91 99.35 L 542.94 99.24 L 542.38 98.96 L 542.17 98.63 L 541.79 98.59 L 541.56 98.77 L 541.01 99.81 L 540.74 101.07 L 540.96 101.42 L 541.53 101.62 L 542.29 102.26 L 542.54 103.5 L 542.38 103.76 L 542.01 103.7 L 541.21 104.15 L 541.09 104.43 L 541.13 105.43 L 540.51 105.95 L 540.03 106.97 L 539.2 106.97 L 538.99 106.66 L 538.95 106.2 L 539.07 105.91 L 539.36 105.78 L 539.52 105.18 L 539.43 104.76 L 539.63 104.44 L 540.19 104.29 L 540.17 103.69 L 539.9 103.42 L 539.6 102.35 L 538.64 100.29 L 538.36 100.08 L 537.64 100.03 L 536.75 99.48 L 536.7 98.74 L 536.2 98.1 L 535.17 98.32 L 535.44 97.9 L 535.05 97.63 L 534.4 97.63 L 533.54 96.27 L 532.35 96.1 L 531.85 96.18 L 531.35 95.72 L 530.81 95.53 L 529.36 94.03 L 528.68 93.58 L 528.23 92.92 L 527.38 92.49 L 527.01 92.6 L 527.05 92.14 L 526.11 91.29 L 525.86 90.88 L 525.39 90.78 L 525.36 90.03 L 524.83 89.06 L 524.6 88 L 524.08 87.48 L 523.31 87.23 L 522.22 86.55 L 520.95 86.23 L 520.45 86.46 L 519.21 87.93 L 518 88.27 L 517.96 87.96 L 518.4 87.28 L 518.29 87.03 L 517.53 87.11 L 516.5 86.49 L 516.35 85.95 L 516.77 85.31 L 516.67 84.97 L 516.05 84.68 L 515.78 84.22 L 515.91 83.99 L 516.27 84.02 L 516.83 83.7 L 516.97 83.26 L 516.08 82.16 L 516.11 81.93 L 516.6 81.59 Z M 525.12 91.12 L 525.21 91.58 L 524.99 91.42 L 524.5 91.48 L 524.48 91.27 L 525.12 91.12 Z M 538.77 106.05 L 538.01 107.48 L 537.75 108.56 L 537.82 108.96 L 538.12 109.26 L 537.99 109.38 L 538.33 109.89 L 537.92 110.61 L 537.95 111.11 L 537.1 111.03 L 536.39 110.74 L 536.02 110.16 L 535.43 109.73 L 534.84 109.74 L 532.92 108.49 L 532.28 108.19 L 531.58 108.11 L 531.03 107.37 L 531.26 106.6 L 531.7 106.17 L 532.15 106.66 L 532.5 106.5 L 532.76 106.15 L 533.24 106.18 L 533.33 106.36 L 534.37 106.84 L 535 106.64 L 536.14 106.62 L 536.82 106.23 L 537.64 106.27 L 538.56 105.82 L 538.9 105.9 L 538.77 106.05 Z M 523.58 97.41 L 524.06 98.64 L 523.7 99.38 L 523.9 100.2 L 523.67 102.96 L 523.48 103.05 L 522.4 102.72 L 522.22 103.62 L 522.02 103.78 L 521.44 103.74 L 520.83 102.83 L 520.75 101.93 L 520.84 101.15 L 521.06 101.12 L 521.07 100.77 L 520.71 100.52 L 520.82 99.3 L 520.08 98.15 L 520.08 97.44 L 520.13 97.31 L 520.74 97.56 L 521.3 97.36 L 522.54 96.21 L 523.52 96.98 L 523.38 97.25 L 523.58 97.41 Z M 521 103.28 L 520.87 103.6 L 520.72 103.12 L 521 103.28 Z M 520.26 96.9 L 520.08 97.04 L 520.34 96.64 L 520.26 96.9 Z"/></svg></div>
         <h2 class="card-title">Umriss</h2>
         <p class="card-desc">Erkenne ein Land an seiner Form. Sechs Versuche, mit Entfernung und Richtung als Hilfe.</p>
         <div class="tags">
           <span class="tag">Täglich</span>
           <span class="tag">Übungsmodus</span>
+          <span class="badge" hidden></span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
 
-      <a class="card" href="hauptstaedte/">
+      <a class="card" href="hauptstaedte/" data-game="hauptstaedte">
         <div class="preview-list" aria-hidden="true"><span></span><span class="ok"></span><span></span><span></span></div>
         <h2 class="card-title">Hauptstädte</h2>
         <p class="card-desc">Zehn Länder, vier Antworten: Welche Stadt ist die Hauptstadt?</p>
         <div class="tags">
           <span class="tag">Täglich</span>
           <span class="tag">Übungsmodus</span>
+          <span class="badge" hidden></span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
 
-      <a class="card" href="laenderkette/">
+      <a class="card" href="laenderkette/" data-game="laenderkette">
         <svg class="preview-chain" viewBox="0 0 96 96" aria-hidden="true"><line x1="14" y1="72" x2="44" y2="30"/><line x1="44" y1="30" x2="82" y2="58"/><circle cx="14" cy="72" r="11" fill="#E3C65A"/><circle cx="44" cy="30" r="11" fill="#5E9E4E"/><circle cx="82" cy="58" r="11" fill="#E3C65A"/></svg>
         <h2 class="card-title">Länderkette</h2>
         <p class="card-desc">Verbinde zwei Länder über ihre Nachbarn, mit möglichst wenigen Fehlern.</p>
         <div class="tags">
           <span class="tag">Täglich</span>
           <span class="tag">Übungsmodus</span>
+          <span class="badge" hidden></span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
 
-      <a class="card" href="heiss-kalt/">
+      <a class="card" href="heiss-kalt/" data-game="heisskalt">
         <div class="preview-heat" aria-hidden="true"><span style="background:#C0392B"></span><span style="background:#E8641B"></span><span style="background:#F0B429"></span><span style="background:#9CCB6B"></span><span style="background:#4FA3A5"></span><span style="background:#5C6BC0"></span></div>
         <h2 class="card-title">Heiß oder kalt</h2>
         <p class="card-desc">Ein Land ist geheim. Jeder Tipp färbt die Karte, je heißer, desto näher.</p>
         <div class="tags">
           <span class="tag">Täglich</span>
           <span class="tag">Übungsmodus</span>
+          <span class="badge" hidden></span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
 
-      <a class="card" href="mehr-weniger/">
+      <a class="card" href="mehr-weniger/" data-game="mehrweniger">
         <div class="preview-bars" aria-hidden="true"><span class="hi"></span><span class="lo"></span></div>
         <h2 class="card-title">Mehr oder weniger</h2>
         <p class="card-desc">Welches Land liegt vorn? Baue eine möglichst lange Serie, ein Fehler beendet sie.</p>
         <div class="tags">
           <span class="tag">Endlos</span>
           <span class="tag">Rekord</span>
+          <span class="badge" hidden></span>
         </div>
         <span class="cta">Spielen →</span>
       </a>
-
-      <div class="card soon">
-        <div class="soon-mark" aria-hidden="true">?</div>
-        <h2 class="card-title">Weitere Spiele</h2>
-        <p class="card-desc">Hier kommen bald neue Rätsel dazu.</p>
-      </div>
     </main>
 
-    <footer>spanani.de</footer>
+    <footer>
+      <a href="https://spanani.de/" target="_blank" rel="noopener">spanani.de</a>
+      <button type="button" id="btn-privacy">Datenschutz</button>
+      <a href="https://spanani.de/impressum/" target="_blank" rel="noopener">Impressum</a>
+      <button type="button" id="btn-theme">Hell/Dunkel</button>
+    </footer>
   </div>
+
+  <dialog id="privacy-dialog" aria-labelledby="privacy-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="privacy-heading">Datenschutz</h2>
+      <button type="button" class="dialog-close" id="privacy-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p>Diese Seite setzt keine Cookies, nutzt kein Tracking und lädt nichts von fremden Diensten nach.</p>
+      <p>Spielstände und dein Farbschema liegen nur in deinem Browser (localStorage) und werden nirgends hin übertragen. Du kannst sie jederzeit über deine Browsereinstellungen löschen.</p>
+      <p>Die Seite wird von GitHub Pages ausgeliefert (GitHub Inc., USA). Dabei verarbeitet GitHub technisch nötige Zugriffsdaten wie deine IP-Adresse.</p>
+      <p>Verantwortlicher und deine Rechte: siehe die <a href="https://spanani.de/datenschutz/" target="_blank" rel="noopener">Datenschutzerklärung von spanani.de</a>.</p>
+    </div>
+  </dialog>
+
+  <script>
+    const seed = d => d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+
+    const read = key => {
+      try {
+        const v = localStorage.getItem(key);
+        return v ? JSON.parse(v) : null;
+      } catch (e) {
+        return null;
+      }
+    };
+
+    const CHECKS = {
+      flaggen: S => read('flaggen.daily.' + S)?.state === 'done',
+      hauptstaedte: S => read('hauptstaedte.daily.' + S)?.state === 'done',
+      umriss: S => {
+        const s = read('umriss.daily.' + S)?.state;
+        return s === 'won' || s === 'lost';
+      },
+      laenderkette: S => {
+        const s = read('laenderkette.daily.' + S)?.state;
+        return s === 'won' || s === 'lost';
+      },
+      heisskalt: S => {
+        const s = read('heisskalt.daily.' + S)?.state;
+        return s === 'won' || s === 'lost';
+      },
+      georaetsel: S => {
+        const g = read('georaetsel.daily');
+        return Boolean(g && g.seed === S && g.over === true);
+      }
+    };
+
+    function finished(game, S) {
+      const fn = CHECKS[game];
+      return fn ? Boolean(fn(S)) : false;
+    }
+
+    const DAILY_GAMES = ['georaetsel', 'flaggen', 'umriss', 'hauptstaedte', 'laenderkette', 'heisskalt'];
+    const DATED_GAMES = ['flaggen', 'umriss', 'hauptstaedte', 'laenderkette', 'heisskalt'];
+
+    function getStreak(now, todaySeed) {
+      const y = now.getFullYear();
+      const m = now.getMonth();
+      const d = now.getDate();
+      const todayFinished = DAILY_GAMES.some(g => finished(g, todaySeed));
+      let streak = 0;
+      const startDay = todayFinished ? 0 : 1;
+
+      for (let i = startDay; i < startDay + 400; i++) {
+        const curSeed = seed(new Date(y, m, d - i));
+        const done = (i === 0) ? todayFinished : DATED_GAMES.some(g => finished(g, curSeed));
+        if (done) {
+          streak++;
+        } else {
+          break;
+        }
+      }
+      return streak;
+    }
+
+    function updateTimer(now = new Date()) {
+      const dayTimerEl = document.getElementById('day-timer');
+      if (!dayTimerEl) return;
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+      const diffSec = Math.max(0, Math.floor((midnight - now) / 1000));
+      const hours = Math.floor(diffSec / 3600);
+      const mins = Math.floor((diffSec % 3600) / 60);
+
+      if (hours > 0) {
+        dayTimerEl.textContent = 'Neue Rätsel in ' + hours + ' h ' + mins + ' min';
+      } else {
+        dayTimerEl.textContent = 'Neue Rätsel in ' + mins + ' min';
+      }
+    }
+
+    let currentSeed = seed(new Date());
+
+    function fill() {
+      const now = new Date();
+      currentSeed = seed(now);
+
+      const cards = document.querySelectorAll('.card[data-game]');
+      cards.forEach(card => {
+        const game = card.getAttribute('data-game');
+        const badge = card.querySelector('.badge');
+        if (!badge) return;
+
+        if (game === 'mehrweniger') {
+          const best = read('mehrweniger.best');
+          const num = typeof best === 'number' ? best : Number(best);
+          if (typeof num === 'number' && !isNaN(num) && num > 0) {
+            badge.className = 'badge';
+            badge.textContent = 'Rekord: ' + num;
+            badge.hidden = false;
+          } else {
+            badge.className = 'badge';
+            badge.hidden = true;
+          }
+        } else {
+          const done = finished(game, currentSeed);
+          if (done) {
+            badge.className = 'badge done';
+            badge.textContent = '✓ Heute gelöst';
+          } else {
+            badge.className = 'badge';
+            badge.textContent = 'Heute offen';
+          }
+          badge.hidden = false;
+        }
+      });
+
+      const solvedCount = DAILY_GAMES.filter(g => finished(g, currentSeed)).length;
+      const dayCountEl = document.getElementById('day-count');
+      if (dayCountEl) {
+        dayCountEl.textContent = solvedCount + ' von 6 Tagesrätseln gelöst';
+      }
+
+      const streak = getStreak(now, currentSeed);
+      const dayStreakEl = document.getElementById('day-streak');
+      if (dayStreakEl) {
+        if (streak > 0) {
+          dayStreakEl.textContent = streak === 1 ? '1 Tag in Folge' : streak + ' Tage in Folge';
+          dayStreakEl.hidden = false;
+        } else {
+          dayStreakEl.hidden = true;
+        }
+      }
+
+      updateTimer(now);
+    }
+
+    function tick() {
+      const now = new Date();
+      const s = seed(now);
+      if (s !== currentSeed) {
+        fill();
+      } else {
+        updateTimer(now);
+      }
+    }
+
+    setInterval(tick, 30000);
+    window.addEventListener('pageshow', () => {
+      fill();
+    });
+    fill();
+
+    const btnTheme = document.getElementById('btn-theme');
+    if (btnTheme) {
+      btnTheme.addEventListener('click', () => {
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const meta = document.querySelector('meta[name="theme-color"]');
+        if (isLight) {
+          document.documentElement.removeAttribute('data-theme');
+          if (meta) meta.setAttribute('content', '#0B2C45');
+          try {
+            localStorage.setItem('georaetsel.theme', 'dark');
+          } catch (e) {}
+        } else {
+          document.documentElement.setAttribute('data-theme', 'light');
+          if (meta) meta.setAttribute('content', '#CFE6F2');
+          try {
+            localStorage.setItem('georaetsel.theme', 'light');
+          } catch (e) {}
+        }
+      });
+    }
+
+    const privacyDlg = document.getElementById('privacy-dialog');
+    const btnPrivacy = document.getElementById('btn-privacy');
+    const privacyClose = document.getElementById('privacy-close');
+
+    if (btnPrivacy && privacyDlg) {
+      btnPrivacy.addEventListener('click', () => privacyDlg.showModal());
+    }
+    if (privacyClose && privacyDlg) {
+      privacyClose.addEventListener('click', () => privacyDlg.close());
+    }
+    if (privacyDlg) {
+      privacyDlg.addEventListener('click', e => {
+        if (e.target === privacyDlg) {
+          const rect = privacyDlg.getBoundingClientRect();
+          if (
+            e.clientX < rect.left ||
+            e.clientX > rect.right ||
+            e.clientY < rect.top ||
+            e.clientY > rect.bottom
+          ) {
+            privacyDlg.close();
+          }
+        }
+      });
+    }
+  </script>
 </body>
 </html>
