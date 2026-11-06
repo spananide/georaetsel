@@ -274,6 +274,7 @@ function renderBoard() {
   const overActions = document.getElementById('over-actions');
   if (game.over) {
     overActions.hidden = false;
+    document.getElementById('btn-next-side').hidden = mode !== 'practice';
     document.getElementById('btn-toggle-best').textContent = showingBest ? 'Meine Lösung' : 'Beste Lösung';
   } else {
     overActions.hidden = true;
@@ -861,6 +862,7 @@ function init() {
     renderScaleBar();
   });
   document.getElementById('btn-share-side').addEventListener('click', doShare);
+  document.getElementById('btn-next-side').addEventListener('click', startNextPracticeRound);
 
   // Header buttons
   document.getElementById('btn-stats').addEventListener('click', () => {
