@@ -1,0 +1,423 @@
+/* Typefaces */
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('georaetsel/assets/fonts/barlow-condensed-latin-500-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('georaetsel/assets/fonts/barlow-condensed-latin-700-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('georaetsel/assets/fonts/source-serif-4-latin-400-normal.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Source Serif 4';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: url('georaetsel/assets/fonts/source-serif-4-latin-400-italic.woff2') format('woff2');
+}
+
+/* Tokens */
+:root {
+  --page: #0B2C45;
+  --sea: #134A6E;
+  --line: #2A6C94;
+  --ink: #EAF3F7;
+  --soft: #A9C8D8;
+  --panel: #0F3854;
+  --warn: #FF7A66;
+
+  --tief: #5E9E4E;
+  --tief-ink: #10260C;
+  --huegel: #E3C65A;
+  --huegel-ink: #2C2406;
+  --hoch: #A8612F;
+  --hoch-ink: #FFF6EC;
+}
+
+:root[data-theme="light"],
+[data-theme="light"] {
+  --page: #CFE6F2;
+  --sea: #A9D3E8;
+  --line: #6FAECF;
+  --ink: #0E2F45;
+  --soft: #3A6379;
+  --panel: #E4F1F8;
+  --warn: #B3261E;
+}
+
+/* Base reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+body {
+  background-color: var(--page);
+  color: var(--ink);
+  font-family: 'Source Serif 4', serif;
+  font-size: 1rem;
+  line-height: 1.4;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  overflow-x: hidden;
+}
+
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Page container */
+.page-container {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Header */
+.site-header {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wordmark {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 2.75rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.header-actions {
+  display: flex;
+  gap: 4px;
+}
+
+/* Icon button */
+.icon-btn {
+  background: none;
+  border: none;
+  color: var(--ink);
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 0;
+}
+
+.icon-btn svg {
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 24px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 2px;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--soft);
+  cursor: pointer;
+  padding: 6px 0;
+  position: relative;
+}
+
+.tab-btn[aria-current="page"] {
+  color: var(--ink);
+  border-bottom: 3px solid var(--ink);
+  margin-bottom: -3px;
+}
+
+/* Buttons */
+.btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  min-height: 44px;
+  border-radius: 2px;
+  padding: 8px 16px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--ink);
+  color: var(--page);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--soft);
+}
+
+/* Footer */
+.site-footer {
+  margin-top: auto;
+  padding: 32px 0 16px;
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  color: var(--soft);
+}
+
+.site-footer button,
+.site-footer a {
+  background: none;
+  border: none;
+  color: var(--soft);
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+/* Dialogs */
+dialog {
+  background-color: var(--panel);
+  color: var(--ink);
+  border: 2px solid var(--line);
+  border-radius: 0;
+  max-width: 480px;
+  width: calc(100% - 32px);
+  max-height: 85dvh;
+  padding: 24px;
+  margin: auto;
+  overflow-y: auto;
+}
+
+dialog::backdrop {
+  background-color: rgba(5, 20, 32, 0.6);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.dialog-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+.dialog-close {
+  background: none;
+  border: none;
+  color: var(--ink);
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin: -8px -8px 0 0;
+}
+
+.dialog-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.dialog-body p {
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.dialog-body h3 {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  margin-top: 8px;
+}
+
+.dialog-body a {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+.dialog-body details {
+  border-bottom: 1px solid var(--line);
+  padding: 8px 0;
+}
+
+.dialog-body summary {
+  cursor: pointer;
+  font-weight: 700;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+}
+
+.dialog-body details[open] summary {
+  margin-bottom: 8px;
+}
+
+.dialog-body details p {
+  font-size: 0.95rem;
+}
+
+/* Search input */
+.search-input {
+  width: 100%;
+  height: 44px;
+  padding: 8px 12px;
+  background-color: var(--page);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.15rem;
+  border-radius: 0;
+}
+
+.search-input:focus {
+  outline: 3px solid var(--ink);
+  outline-offset: -1px;
+}
+
+/* Search results & Result buttons */
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.result-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  background-color: var(--page);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  text-align: left;
+  cursor: pointer;
+  border-radius: 0;
+  width: 100%;
+}
+
+.result-btn:focus-visible,
+.result-btn:hover:not(:disabled) {
+  outline: 2px solid var(--ink);
+  outline-offset: -2px;
+}
+
+.result-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.result-flag {
+  width: 28px;
+  height: 21px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.result-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px;
+  flex: 1;
+}
+
+.result-name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 1.15rem;
+}
+
+.result-via,
+.result-disabled-reason {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.85rem;
+  color: var(--soft);
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  inset: auto auto 24px 50%;
+  margin: 0;
+  border: 0;
+  max-width: calc(100% - 32px);
+  text-align: center;
+  transform: translateX(-50%);
+  background-color: var(--ink);
+  color: var(--page);
+  padding: 10px 18px;
+  border-radius: 2px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  z-index: 1000;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 150ms ease-in-out;
+}
+
+.toast.toast-visible {
+  opacity: 1;
+}

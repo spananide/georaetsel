@@ -1,0 +1,273 @@
+/* Header specifics */
+.header-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.back-link {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--soft);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.game-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Progress */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.progress-text {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--sea);
+  box-sizing: border-box;
+  transition: background-color 150ms ease;
+}
+
+.dot.current {
+  outline: 2px solid var(--ink);
+  outline-offset: 1px;
+}
+
+.dot.pts-3 { background-color: var(--tief); }
+.dot.pts-2 { background-color: var(--huegel); }
+.dot.pts-1 { background-color: var(--hoch); }
+.dot.pts-0 { background-color: var(--warn); }
+
+/* Flag Stage */
+.flag-stage {
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.flag-stage img {
+  max-width: 100%;
+  max-height: 240px;
+  object-fit: contain;
+  border: 2px solid var(--line);
+  display: block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Status & Feedback message */
+.status-msg {
+  text-align: center;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.status-msg:empty {
+  display: none;
+}
+
+.status-msg.correct {
+  color: var(--tief);
+}
+
+.status-msg.lost {
+  color: var(--ink);
+  background-color: var(--panel);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 2px;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+/* Hints */
+.hints-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  text-align: center;
+}
+
+.hints-list:empty {
+  display: none;
+}
+
+.hint-item {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+/* Wrong guesses */
+.wrong-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  justify-content: center;
+  align-items: center;
+  min-height: 24px;
+}
+
+.wrong-list:empty {
+  display: none;
+}
+
+.wrong-item {
+  font-family: 'Source Serif 4', serif;
+  font-size: 0.95rem;
+  color: var(--soft);
+  text-decoration: line-through;
+}
+
+/* Play Controls */
+.play-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.search-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--ink);
+}
+
+.input-row {
+  display: flex;
+  gap: 8px;
+}
+
+.input-row .search-input {
+  flex: 1;
+}
+
+#btn-giveup {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.revealed-controls {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.btn-large {
+  width: 100%;
+  max-width: 320px;
+  font-size: 1.3rem;
+  min-height: 48px;
+}
+
+/* End view */
+.end-view {
+  width: 100%;
+}
+
+.end-card {
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.end-score-block {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  justify-content: center;
+}
+
+.end-score-val {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.end-score-max {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 500;
+  font-size: 1.8rem;
+  color: var(--soft);
+}
+
+.end-grid-emojis {
+  font-size: 2.2rem;
+  line-height: 1.25;
+  letter-spacing: 6px;
+  white-space: pre-line;
+  font-family: monospace, sans-serif;
+  margin: 4px 0;
+}
+
+.end-note {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.end-note:empty {
+  display: none;
+}
+
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}

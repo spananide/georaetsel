@@ -113,17 +113,19 @@ body {
 }
 
 .back-link {
-  align-self: flex-start;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 500;
-  font-size: 1.1rem;
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.95rem;
   color: var(--soft);
   text-decoration: none;
+  width: fit-content;
   padding: 8px 0;
 }
 
-.back-link:hover {
+.back-link:hover,
+.back-link:focus-visible {
   color: var(--ink);
+  text-decoration: underline;
 }
 
 .header-top {
