@@ -124,4 +124,6 @@ assert.ok(
 const missingShapes = COUNTRIES.filter(c => !SHAPES[c.id]).map(c => c.id);
 console.log(`Länder ohne Form (${missingShapes.length}): ${missingShapes.join(' ') || '(keine)'}`);
 
+assert.ok(!GEO.in.b.includes('lk') && GEO.lk.b.length === 0, 'Indien und Sri Lanka haben keine Landgrenze');
+
 console.log('alles ok');

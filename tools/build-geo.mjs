@@ -113,6 +113,7 @@ for (const country of COUNTRIES) {
 // Nachbarschaften symmetrisch und alphabetisch sortiert aufbauen
 const adj = new Map(COUNTRIES.map(c => [c.id, new Set()]));
 for (const country of COUNTRIES) {
+  if (country.id === 'lk') continue; // Seegrenze zu Indien, keine Landgrenze
   const mle = cca2ToMle.get(country.id);
   const borders = mle.borders || [];
   for (const cca3 of borders) {

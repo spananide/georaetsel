@@ -46,6 +46,7 @@ for (const b of await sparql('hdi', 'SELECT ?iso ?hdi ?date WHERE { ?c wdt:P297 
 }
 
 const CONTINENT = { Europe: 'Europa', Asia: 'Asien', Africa: 'Afrika', Americas: 'Amerika', Oceania: 'Ozeanien' };
+const ALSO = { ru: ['Asien'], tr: ['Europa'], kz: ['Europa'], ge: ['Europa'], az: ['Europa'], eg: ['Asien'] };
 const COLOR = { r: 'red', w: 'white', b: 'blue', g: 'green', y: 'yellow', k: 'black' };
 const round = (v, d) => v == null ? null : +v.toFixed(d);
 
@@ -53,7 +54,19 @@ const picked = raw.filter(c => c.unMember || ['PS', 'XK', 'TW'].includes(c.cca2)
 const known = new Set(picked.map(c => c.cca2.toLowerCase()));
 const sets = Object.fromEntries(Object.entries(manual.sets).map(([k, v]) => [k, new Set(v.split(' '))]));
 for (const [k, s] of Object.entries(sets)) for (const id of s) if (!known.has(id)) throw new Error(`${k}: unbekannt ${id}`);
-for (const part of ['names', 'aliases', 'overrides', 'flags']) for (const id of Object.keys(manual[part])) if (!known.has(id)) throw new Error(`${part}: unbekannt ${id}`);
+for (const part of ['names', 'aliases', 'overrides', 'flags', 'langs']) for (const id of Object.keys(manual[part])) if (!known.has(id)) throw new Error(`${part}: unbekannt ${id}`);
+
+const neigh = new Map(picked.map(c => [c.cca3, new Set()]));
+for (const c of picked) {
+  if (c.cca3 === 'LKA') continue; // Seegrenze zu Indien, keine Landgrenze
+  for (const b of c.borders) {
+    const n = { GUF: 'FRA', GIB: 'GBR' }[b] ?? b;
+    if (neigh.has(n) && n !== c.cca3) {
+      neigh.get(c.cca3).add(n);
+      neigh.get(n).add(c.cca3);
+    }
+  }
+}
 
 const countries = picked.map(c => {
   const id = c.cca2.toLowerCase();
@@ -69,8 +82,9 @@ const countries = picked.map(c => {
     name: manual.names[id] ?? c.translations.deu.common,
     aliases: manual.aliases[id] ?? [],
     continent: CONTINENT[c.region],
+    also: ALSO[id] ?? [],
     landlocked: id === 'xk' || c.landlocked,
-    neighbours: over.neighbours ?? c.borders.length,
+    neighbours: over.neighbours ?? neigh.get(c.cca3).size,
     pop: round(pop, pop < 1 ? 4 : 1),
     area: c.area < 10 ? c.area : Math.round(c.area),
     density: Math.round(pop * 1e6 / c.area) || 1,
@@ -79,11 +93,11 @@ const countries = picked.map(c => {
     renew: over.renew ?? round(renewWB[code] ?? null, 1),
     capPop: over.capPop ?? round(capital[id] != null ? capital[id] / 1e6 : null, 3),
     heritage: heritage[id] ?? 0,
-    langs: Object.keys(c.languages ?? {}),
+    langs: manual.langs[id] ?? Object.keys(c.languages ?? {}),
     flag: {
       colors: [...colors].map(k => COLOR[k]),
       star: symbols.includes('s'), animal: symbols.includes('a'), emblem: symbols.includes('e'),
-      crescent: symbols.includes('c'), cross: symbols.includes('x'),
+      crescent: symbols.includes('c'), cross: symbols.includes('x'), other: symbols.includes('o'),
     },
     tags: Object.keys(sets).filter(k => sets[k].has(id)),
   };

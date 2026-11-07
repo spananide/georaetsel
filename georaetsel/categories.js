@@ -1,6 +1,7 @@
 const base = s => s.normalize('NFD').replace(/[̀-ͯ]/g, '');
 const letters = c => c.name.replace(/[^\p{L}]/gu, '').length;
 const oneWord = c => !/[\s-]/.test(c.name);
+const on = k => c => c.continent === k || c.also.includes(k);
 const tag = t => c => c.tags.includes(t);
 const num = (f, test) => c => c[f] != null && test(c[f]);
 const color = k => c => c.flag.colors.includes(k);
@@ -10,11 +11,11 @@ const group = (group, list) => list.map(([id, label, test]) => ({ id, label, gro
 
 export const CATEGORIES = [
   ...group('continent', [
-    ['inEuropa', 'In Europa', c => c.continent === 'Europa'],
-    ['inAsien', 'In Asien', c => c.continent === 'Asien'],
-    ['inAfrika', 'In Afrika', c => c.continent === 'Afrika'],
-    ['inAmerika', 'In Amerika', c => c.continent === 'Amerika'],
-    ['inOzeanien', 'In Ozeanien', c => c.continent === 'Ozeanien'],
+    ['inEuropa', 'In Europa', on('Europa')],
+    ['inAsien', 'In Asien', on('Asien')],
+    ['inAfrika', 'In Afrika', on('Afrika')],
+    ['inAmerika', 'In Amerika', on('Amerika')],
+    ['inOzeanien', 'In Ozeanien', on('Ozeanien')],
   ]),
   ...group('geo', [
     ['island', 'Inselstaat', tag('island')],
@@ -132,18 +133,18 @@ export const CATEGORIES = [
     ['flagEmblem', 'Wappen auf der Flagge', c => c.flag.emblem],
     ['flagCrescent', 'Halbmond auf der Flagge', c => c.flag.crescent],
     ['flagCross', 'Kreuz auf der Flagge', c => c.flag.cross],
-    ['flagPlain', 'Nur Farbflächen auf der Flagge', c => !(c.flag.star || c.flag.animal || c.flag.emblem || c.flag.crescent || c.flag.cross)],
+    ['flagPlain', 'Nur Farbflächen auf der Flagge', c => !(c.flag.star || c.flag.animal || c.flag.emblem || c.flag.crescent || c.flag.cross || c.flag.other)],
   ]),
   ...group('letter', [
     ...[...'ABDGIKLMNPSTV'].map(l => [`letter${l}`, `Beginnt mit ${l}`, c => base(c.name)[0] === l]),
     ['vowelStart', 'Beginnt mit Vokal', c => 'AEIOU'.includes(base(c.name)[0])],
   ]),
   ...group('length', [
-    ['lenShort', 'Name mit höchstens 5 Buchstaben', c => oneWord(c) && letters(c) <= 5],
-    ['len6', 'Name mit 6 Buchstaben', c => oneWord(c) && letters(c) === 6],
-    ['len7', 'Name mit 7 Buchstaben', c => oneWord(c) && letters(c) === 7],
-    ['len8', 'Name mit 8 Buchstaben', c => oneWord(c) && letters(c) === 8],
-    ['len11', 'Name mit 10+ Buchstaben', c => oneWord(c) && letters(c) >= 10],
+    ['lenShort', 'Name mit höchstens 5 Buchstaben', c => letters(c) <= 5],
+    ['len6', 'Name mit 6 Buchstaben', c => letters(c) === 6],
+    ['len7', 'Name mit 7 Buchstaben', c => letters(c) === 7],
+    ['len8', 'Name mit 8 Buchstaben', c => letters(c) === 8],
+    ['len11', 'Name mit 10+ Buchstaben', c => letters(c) >= 10],
     ['multiWord', 'Name mit mehreren Wörtern', c => !oneWord(c)],
   ]),
   ...group('ending', [

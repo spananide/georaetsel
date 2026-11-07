@@ -159,4 +159,19 @@ for (let i = 1; i <= 20; i++) {
 assert.equal(newGame(5, 'schwer').level, 'schwer');
 assert.equal(newGame(5).level, 'mittel');
 
+// Bug sweep 2026-11
+assert.ok(answersFor('inAfrika', 'len11').some(c => c.id === 'cd'), 'DR Kongo gehört zu Afrika × 10+ Buchstaben');
+assert.ok(cat('len11').test(C('lk')) === false && cat('lenShort').test(C('lk')) === false && cat('len8').test(C('lk')), 'Sri Lanka hat 8 Buchstaben');
+assert.ok(cat('inAsien').test(C('ru')) && cat('inEuropa').test(C('ru')), 'Russland zählt zu Europa und Asien');
+assert.ok(cat('inEuropa').test(C('tr')) && cat('inAsien').test(C('tr')) && cat('inAsien').test(C('eg')) && cat('inAfrika').test(C('eg')));
+assert.ok(!cat('flagPlain').test(C('ca')) && !cat('flagPlain').test(C('in')) && cat('flagPlain').test(C('de')));
+assert.ok(C('gt').flag.animal && C('bo').flag.animal);
+assert.equal(C('cn').neighbours, 14);
+assert.ok(C('fr').neighbours >= 10);
+assert.ok(!has('kz', 'multiTZ'));
+assert.ok(!cat('capSmall').test(C('gq')));
+assert.ok(!cat('langFr').test(C('lb')) && !cat('langEs').test(C('bz')) && !cat('langEn').test(C('my')) && !cat('langAr').test(C('il')));
+assert.ok(has('li', 'roman') && has('ua', 'ottoman'));
+assert.ok(search('Kapverden').some(r => r.country.id === 'cv') && search('ZAR').some(r => r.country.id === 'cf'));
+
 console.log('alles ok');
