@@ -138,8 +138,8 @@ export const GAME_INFO = {
   'mehr-weniger': { name: 'Mehr oder weniger', unit: 'Serie' },
   woertel:      { name: 'Wörtel',          unit: 'Versuche' },
   rechnel:      { name: 'Rechnel',         unit: 'Versuche' },
-  kronen:       { name: 'Kronen',          unit: 'Versuche' },
-  'sonne-mond': { name: 'Sonne & Mond',    unit: 'Versuche' },
+  kronen:       { name: 'Kronen',          unit: 'Züge' },
+  'sonne-mond': { name: 'Sonne & Mond',    unit: 'Züge' },
 };
 
 export const dayOf = x => {

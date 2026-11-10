@@ -62,6 +62,8 @@ function showBoard(name) {
   loggedNameEl.textContent = name;
 }
 
+const UNIT_SHORT = { Punkte: 'P.', Züge: 'Z.', Fehler: 'F.', Wörter: 'W.' };
+
 function renderChip(gameId, gameData) {
   const info = GAME_INFO[gameId] || { name: gameId, unit: 'Versuche' };
   const chip = document.createElement('span');
@@ -71,8 +73,8 @@ function renderChip(gameId, gameData) {
   let val = '';
   if (!won) {
     val = '✗';
-  } else if (info.unit === 'Punkte') {
-    val = `${gameData.tries} P.`;
+  } else if (UNIT_SHORT[info.unit]) {
+    val = `${gameData.tries} ${UNIT_SHORT[info.unit]}`;
   } else {
     val = `${gameData.tries}`;
   }
