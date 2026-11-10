@@ -136,6 +136,7 @@ export const GAME_INFO = {
   laenderkette: { name: 'Länderkette',     unit: 'Versuche' },
   heisskalt:    { name: 'Heiß oder kalt',  unit: 'Versuche' },
   'mehr-weniger': { name: 'Mehr oder weniger', unit: 'Serie' },
+  woertel:      { name: 'Wörtel',          unit: 'Versuche' },
 };
 
 export const dayOf = x => {
@@ -201,6 +202,12 @@ export function summarize(game, round) {
       const over = round.over === true;
       const tries = round.streak ?? 0;
       return { over, tries, won: true };
+    }
+    case 'woertel': {
+      const over = round.state === 'won' || round.state === 'lost';
+      const tries = (round.guesses || []).length;
+      const won = round.state === 'won';
+      return { over, tries, won };
     }
     default:
       return null;
