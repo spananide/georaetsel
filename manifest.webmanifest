@@ -1,7 +1,7 @@
 {
-  "name": "Geo-Spiele",
-  "short_name": "Geo-Spiele",
-  "description": "Kleine Geografie-Spiele auf Deutsch.",
+  "name": "Tagesspiele",
+  "short_name": "Tagesspiele",
+  "description": "Tägliche Rätsel auf Deutsch: Geo, Wörter und Logik.",
   "lang": "de",
   "start_url": "/",
   "scope": "/",
