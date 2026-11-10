@@ -137,6 +137,7 @@ export const GAME_INFO = {
   heisskalt:    { name: 'Heiß oder kalt',  unit: 'Versuche' },
   'mehr-weniger': { name: 'Mehr oder weniger', unit: 'Serie' },
   woertel:      { name: 'Wörtel',          unit: 'Versuche' },
+  wabe:         { name: 'Wabe',            unit: 'Wörter' },
   rechnel:      { name: 'Rechnel',         unit: 'Versuche' },
   kronen:       { name: 'Kronen',          unit: 'Züge' },
   'sonne-mond': { name: 'Sonne & Mond',    unit: 'Züge' },
@@ -211,6 +212,12 @@ export function summarize(game, round) {
       const over = round.state === 'won' || round.state === 'lost';
       const tries = (round.guesses || []).length;
       const won = round.state === 'won';
+      return { over, tries, won };
+    }
+    case 'wabe': {
+      const over = round.state === 'done';
+      const tries = Math.min(99, (round.found || []).length);
+      const won = Boolean(round.pangram);
       return { over, tries, won };
     }
     case 'rechnel': {

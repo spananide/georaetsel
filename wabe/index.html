@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wabe: Das tägliche Buchstabenrätsel</title>
+  <meta name="description" content="Finde möglichst viele Wörter aus sieben Buchstaben. Täglich neu, auf Deutsch.">
+  <meta name="theme-color" content="#0B2C45">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:site_name" content="Geo-Spiele">
+  <meta property="og:title" content="Wabe: Das tägliche Buchstabenrätsel">
+  <meta property="og:description" content="Finde möglichst viele Wörter aus sieben Buchstaben. Täglich neu, auf Deutsch.">
+  <meta property="og:url" content="https://geo.spanani.de/wabe/">
+  <meta property="og:image" content="https://geo.spanani.de/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../georaetsel/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try {
+      var t = localStorage.getItem('georaetsel.theme');
+      if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) t = 'light';
+      if (t === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', '#CFE6F2');
+      }
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <div class="page-container">
+    <header class="site-header">
+      <div class="header-top">
+        <div class="header-title-group">
+          <a href="../" class="back-link">← Alle Spiele</a>
+          <h1 class="wordmark">Wabe</h1>
+        </div>
+        <div class="header-actions">
+          <span id="clock" class="clock" role="timer" aria-label="Spielzeit">0:00</span>
+          <button type="button" class="icon-btn" id="btn-theme" aria-label="Hell/Dunkel" title="Hell/Dunkel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2 A10 10 0 0 0 12 22 Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <nav class="tabs" role="tablist">
+        <button type="button" class="tab-btn" id="tab-daily" role="tab" aria-selected="true" aria-current="page">Tagesrätsel</button>
+        <button type="button" class="tab-btn" id="tab-practice" role="tab" aria-selected="false">Unbegrenzt</button>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <section class="game-progress" aria-label="Spielstand">
+        <div class="rank-status">
+          <div class="rank-badge">
+            <span id="rank-name" class="rank-name">Anfänger</span>
+            <span class="rank-sep">·</span>
+            <span id="rank-score" class="rank-score">0 Punkte</span>
+          </div>
+          <div id="words-count" class="words-count">0 von 0 Wörtern</div>
+        </div>
+        <div id="rank-dots" class="rank-dots" role="progressbar" aria-label="Rang-Fortschritt" aria-valuemin="0" aria-valuemax="8" aria-valuenow="0"></div>
+        <div id="recent-words" class="recent-words" aria-label="Zuletzt gefundene Wörter"></div>
+      </section>
+
+      <details id="found-details" class="found-details">
+        <summary id="found-summary">Gefundene Wörter (0)</summary>
+        <div id="found-list" class="found-list" aria-live="polite"></div>
+      </details>
+
+      <div id="play-view" class="play-view">
+        <div id="word-display" class="word-display" aria-live="polite" aria-label="Eingegebenes Wort">
+          <span id="word-text" class="word-text"></span>
+          <span class="caret" aria-hidden="true"></span>
+        </div>
+
+        <div id="honeycomb" class="honeycomb" role="group" aria-label="Buchstabenwabe">
+          <div class="hex-row hex-row-2">
+            <button type="button" class="hex-btn" id="hex-0" data-pos="0"></button>
+            <button type="button" class="hex-btn" id="hex-1" data-pos="1"></button>
+          </div>
+          <div class="hex-row hex-row-3">
+            <button type="button" class="hex-btn" id="hex-5" data-pos="5"></button>
+            <button type="button" class="hex-btn hex-center" id="hex-center"></button>
+            <button type="button" class="hex-btn" id="hex-2" data-pos="2"></button>
+          </div>
+          <div class="hex-row hex-row-2">
+            <button type="button" class="hex-btn" id="hex-4" data-pos="4"></button>
+            <button type="button" class="hex-btn" id="hex-3" data-pos="3"></button>
+          </div>
+        </div>
+
+        <div class="action-buttons">
+          <button type="button" class="btn btn-secondary action-btn" id="btn-delete">Löschen</button>
+          <button type="button" class="btn btn-secondary action-btn" id="btn-shuffle" aria-label="Buchstaben mischen">Mischen</button>
+          <button type="button" class="btn btn-primary action-btn" id="btn-submit">Eingabe</button>
+        </div>
+
+        <div class="finish-group">
+          <button type="button" class="btn btn-secondary btn-finish" id="btn-finish">Beenden</button>
+        </div>
+      </div>
+
+      <section id="end-view" class="end-view" hidden>
+        <div class="end-card">
+          <h2 class="end-title" id="end-title"></h2>
+          <p class="end-score" id="end-score"></p>
+          <p class="end-note" id="end-note"></p>
+          <div class="end-actions">
+            <button type="button" class="btn btn-primary" id="btn-share">Ergebnis teilen</button>
+            <button type="button" class="btn btn-secondary" id="btn-end-practice" hidden>Übungsrunde starten</button>
+            <button type="button" class="btn btn-secondary" id="btn-end-new-round" hidden>Neue Runde</button>
+          </div>
+          <details class="all-words" id="end-all-words">
+            <summary id="end-words-summary">Alle Wörter</summary>
+            <div id="end-words-list" class="words-grid"></div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <button type="button" id="btn-privacy">Datenschutz</button>
+      <a href="https://spanani.de/impressum/" target="_blank" rel="noopener">Impressum</a>
+    </footer>
+  </div>
+
+  <dialog id="privacy-dialog" aria-labelledby="privacy-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="privacy-heading">Datenschutz</h2>
+      <button type="button" class="dialog-close" id="privacy-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p>Diese Seite setzt keine Cookies, nutzt kein Tracking und lädt nichts von fremden Diensten nach.</p>
+      <p>Dein Name, das Datum, das Spiel, deine Versuche und deine Zeit werden an unseren Server (Cloudflare, USA) gesendet und für alle sichtbar in der Rangliste angezeigt, sobald du hier einen Namen eingibst. Wähle keinen echten Namen, wenn du das nicht willst. Spielstände und Farbschema bleiben sonst in deinem Browser (localStorage).</p>
+      <p>Die Seite wird von GitHub Pages ausgeliefert (GitHub Inc., USA). Dabei verarbeitet GitHub technisch nötige Zugriffsdaten wie deine IP-Adresse.</p>
+      <p>Verantwortlicher und deine Rechte: siehe die <a href="https://spanani.de/datenschutz/" target="_blank" rel="noopener">Datenschutzerklärung von spanani.de</a>.</p>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" popover="manual"></div>
+
+  <script type="module" src="app.js"></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});</script>
+</body>
+</html>

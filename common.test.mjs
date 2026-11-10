@@ -133,6 +133,20 @@ assert.deepEqual(
   { over: true, tries: 6, won: false }
 );
 
+// wabe
+assert.deepEqual(
+  summarize('wabe', { state: 'playing', found: ['WORT', 'TEST'], pangram: false }),
+  { over: false, tries: 2, won: false }
+);
+assert.deepEqual(
+  summarize('wabe', { state: 'done', found: ['WORT', 'PANGRAM'], pangram: true }),
+  { over: true, tries: 2, won: true }
+);
+assert.deepEqual(
+  summarize('wabe', { state: 'done', found: new Array(120).fill('A'), pangram: false }),
+  { over: true, tries: 99, won: false }
+);
+
 // 9. rechnel
 assert.deepEqual(
   summarize('rechnel', { state: 'playing', guesses: ['12+35=47'] }),
