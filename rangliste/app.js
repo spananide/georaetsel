@@ -213,7 +213,8 @@ async function runBackfill() {
     await reportRound('georaetsel', geoRound, 'daily');
   }
 
-  const datedGames = ['flaggen', 'hauptstaedte', 'umriss', 'laenderkette', 'heisskalt'];
+  // every game with a dated daily round stored under `<id>.daily.<seed>`
+  const datedGames = Object.keys(GAME_INFO).filter(g => g !== 'georaetsel' && g !== 'mehr-weniger');
   for (const g of datedGames) {
     const round = readStorage(`${g}.daily.${todaySeed}`);
     if (round) {
