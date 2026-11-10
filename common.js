@@ -138,6 +138,8 @@ export const GAME_INFO = {
   'mehr-weniger': { name: 'Mehr oder weniger', unit: 'Serie' },
   woertel:      { name: 'Wörtel',          unit: 'Versuche' },
   rechnel:      { name: 'Rechnel',         unit: 'Versuche' },
+  kronen:       { name: 'Kronen',          unit: 'Versuche' },
+  'sonne-mond': { name: 'Sonne & Mond',    unit: 'Versuche' },
 };
 
 export const dayOf = x => {
@@ -215,6 +217,12 @@ export function summarize(game, round) {
       const tries = (round.guesses || []).length;
       const won = round.state === 'won';
       return { over, tries, won };
+    }
+    case 'kronen':
+    case 'sonne-mond': {
+      const over = round.state === 'won';
+      const tries = round.placed ?? 0;
+      return { over, tries, won: true };
     }
     default:
       return null;
