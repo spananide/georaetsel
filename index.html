@@ -192,6 +192,76 @@
       width: 100%;
     }
 
+    .featured {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .section-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--soft);
+      margin: 0;
+      line-height: 1.2;
+    }
+    .featured-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .card-featured {
+      border-color: var(--huegel);
+      background: color-mix(in srgb, var(--huegel) 8%, var(--panel));
+      gap: 12px;
+      min-width: 0;
+    }
+    :root[data-theme="light"] .card-featured {
+      border-color: #8C6500;
+      background: color-mix(in srgb, #8C6500 8%, var(--panel));
+    }
+    a.card-featured:hover,
+    a.card-featured:focus-visible {
+      border-color: var(--huegel);
+      transform: translateY(-2px);
+    }
+    :root[data-theme="light"] a.card-featured:hover,
+    :root[data-theme="light"] a.card-featured:focus-visible {
+      border-color: #8C6500;
+    }
+    .card-featured:focus-visible {
+      outline: 3px solid var(--ink);
+      outline-offset: 2px;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .card-featured,
+      a.card-featured:hover,
+      a.card-featured:focus-visible {
+        transition: none;
+        transform: none;
+      }
+    }
+    .card-featured .card-title {
+      min-width: 0;
+      word-break: break-word;
+      hyphens: auto;
+    }
+    .card-featured .card-desc {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-featured .badge {
+      margin-top: auto;
+      align-self: flex-start;
+      min-width: 0;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
     .preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 96px; }
     .preview span { aspect-ratio: 1; border-radius: 6px; }
     .preview .t { background: var(--tief); }
@@ -305,6 +375,41 @@
       }
       .tags .tag { display: none; }
       .cta { display: none; }
+
+      .card.card-featured {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 6px;
+        gap: 6px;
+        align-items: flex-start;
+      }
+      .card-featured .preview,
+      .card-featured .preview-woertel,
+      .card-featured .preview-tiefsee {
+        width: 56px;
+        height: 56px;
+        grid-column: auto;
+        grid-row: auto;
+      }
+      .card-featured .card-title {
+        font-size: 1.25rem;
+        line-height: 1.15;
+        margin: 0;
+      }
+      .card-featured .card-desc {
+        display: none;
+      }
+      .card-featured .badge {
+        margin-top: auto;
+        align-self: stretch;
+        text-align: center;
+        font-size: 0.72rem;
+        padding: 3px 4px;
+        letter-spacing: 0.03em;
+        line-height: 1.2;
+        white-space: normal;
+        word-break: break-word;
+      }
     }
 
     footer {
@@ -392,6 +497,9 @@
     :root[data-theme="light"] .dialog-body a {
       color: #8C6500;
     }
+    @media (max-width: 359px) {
+      .card-featured .card-title { font-size: 1.05rem; hyphens: manual; }
+    }
   </style>
 </head>
 <body>
@@ -417,6 +525,60 @@
     </div>
 
     <main>
+      <section class="featured" aria-labelledby="featured-title">
+        <h2 id="featured-title" class="section-title">Empfohlen</h2>
+        <div class="featured-grid">
+          <a class="card card-featured" href="woertel/" data-game="woertel">
+            <svg class="preview-woertel" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
+              <rect x="3.0" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="22.5" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="42.0" y="18" width="15" height="16" rx="4" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="61.5" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="81.0" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="3.0" y="38" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="22.5" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="42.0" y="38" width="15" height="16" rx="4" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="61.5" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="81.0" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="3.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="22.5" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="42.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="61.5" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
+              <rect x="81.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
+            </svg>
+            <h3 class="card-title">Wörtel</h3>
+            <p class="card-desc">Errate das Wort mit fünf Buchstaben in sechs Versuchen.</p>
+            <span class="badge" hidden></span>
+          </a>
+
+          <a class="card card-featured" href="tiefsee/" data-game="tiefsee">
+            <svg class="preview-tiefsee" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
+              <path d="M4 20 q8 -7 16 0 t16 0 t16 0 t16 0 t16 0 t12 0" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M4 32 q8 -6 16 0 t16 0 t16 0 t16 0 t16 0 t12 0" fill="none" stroke="var(--soft)" stroke-width="2" stroke-linecap="round" opacity=".6"/>
+              <line x1="20" y1="34" x2="20" y2="88" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 4"/>
+              <rect x="50" y="52" width="12" height="9" rx="3" fill="var(--huegel)"/>
+              <ellipse cx="56" cy="68" rx="25" ry="12" fill="var(--huegel)"/>
+              <circle cx="45" cy="68" r="3.5" fill="var(--sea)"/><circle cx="56" cy="68" r="3.5" fill="var(--sea)"/><circle cx="67" cy="68" r="3.5" fill="var(--sea)"/>
+              <circle cx="22" cy="58" r="2.5" fill="var(--soft)"/><circle cx="14" cy="48" r="2" fill="var(--soft)"/><circle cx="26" cy="44" r="1.8" fill="var(--soft)"/>
+            </svg>
+            <h3 class="card-title">Tiefsee</h3>
+            <p class="card-desc">Je seltener deine Antwort, desto tiefer tauchst du.</p>
+            <span class="badge" hidden></span>
+          </a>
+
+          <a class="card card-featured" href="georaetsel/" data-game="georaetsel">
+            <div class="preview" aria-hidden="true">
+              <span class="t"></span><span class="h"></span><span class="r"></span>
+              <span class="h"></span><span class="t"></span><span class="s"></span>
+              <span class="s"></span><span class="h"></span><span class="t"></span>
+            </div>
+            <h3 class="card-title">GeoRätsel</h3>
+            <p class="card-desc">Jeden Tag ein neues 3×3-Raster: Finde neun Länder, die zu je zwei Kategorien passen.</p>
+            <span class="badge" hidden></span>
+          </a>
+        </div>
+      </section>
+
       <a class="card card-wide" href="rangliste/">
         <svg class="preview-podium" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
           <rect x="8" y="42" width="22" height="46" rx="4" fill="var(--soft)"/>
@@ -951,7 +1113,7 @@
       });
     });
 
-    document.querySelectorAll('.card .tag[data-tag]').forEach(pill => {
+    document.querySelectorAll('.grid .card .tag[data-tag]').forEach(pill => {
       const tag = pill.getAttribute('data-tag');
       const selectTag = e => {
         e.preventDefault();
@@ -972,7 +1134,7 @@
       const now = new Date();
       currentSeed = seed(now);
 
-      cards.forEach(card => {
+      document.querySelectorAll('.card[data-game]').forEach(card => {
         const game = card.getAttribute('data-game');
         const badge = card.querySelector('.badge');
         if (!badge) return;
