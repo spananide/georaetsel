@@ -140,6 +140,7 @@ export const GAME_INFO = {
   rechnel:      { name: 'Rechnel',         unit: 'Versuche' },
   kronen:       { name: 'Kronen',          unit: 'Züge' },
   'sonne-mond': { name: 'Sonne & Mond',    unit: 'Züge' },
+  sudoku:       { name: 'Sudoku',          unit: 'Fehler' },
 };
 
 export const dayOf = x => {
@@ -222,6 +223,11 @@ export function summarize(game, round) {
     case 'sonne-mond': {
       const over = round.state === 'won';
       const tries = round.placed ?? 0;
+      return { over, tries, won: true };
+    }
+    case 'sudoku': {
+      const over = round.state === 'won';
+      const tries = Math.min(99, round.mistakes ?? 0);
       return { over, tries, won: true };
     }
     default:
