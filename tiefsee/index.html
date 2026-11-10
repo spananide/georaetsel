@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tiefsee: Wie selten ist deine Antwort?</title>
+  <meta name="description" content="Drei Fragen pro Tag. Je seltener deine Antwort, desto tiefer tauchst du. Täglich neu, auf Deutsch.">
+  <meta name="theme-color" content="#0B2C45">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:site_name" content="Tagesspiele">
+  <meta property="og:title" content="Tiefsee: Wie selten ist deine Antwort?">
+  <meta property="og:description" content="Drei Fragen pro Tag. Je seltener deine Antwort, desto tiefer tauchst du. Täglich neu, auf Deutsch.">
+  <meta property="og:url" content="https://geo.spanani.de/tiefsee/">
+  <meta property="og:image" content="https://geo.spanani.de/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../georaetsel/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try {
+      var t = localStorage.getItem('georaetsel.theme');
+      if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) t = 'light';
+      if (t === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+        var m = document.querySelector('meta[name="theme-color"]');
+        if (m) m.setAttribute('content', '#CFE6F2');
+      }
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <div class="page-container">
+    <header class="site-header">
+      <div class="header-top">
+        <div class="header-title-group">
+          <a href="../" class="back-link">← Alle Spiele</a>
+          <h1 class="wordmark">Tiefsee</h1>
+        </div>
+        <div class="header-actions">
+          <span id="clock" class="clock" role="timer" aria-label="Spielzeit">0:00</span>
+          <button type="button" class="icon-btn" id="btn-theme" aria-label="Hell/Dunkel" title="Hell/Dunkel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2 A10 10 0 0 0 12 22 Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <nav class="tabs" role="tablist">
+        <button type="button" class="tab-btn" id="tab-daily" role="tab" aria-selected="true" aria-current="page">Tagesrätsel</button>
+        <button type="button" class="tab-btn" id="tab-practice" role="tab" aria-selected="false">Unbegrenzt</button>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <div class="sea-container">
+        <div class="sea-header">
+          <span class="sea-badge">Tauchgang</span>
+          <span id="total-depth" class="total-depth">Gesamttiefe: 0 m</span>
+        </div>
+        <div id="sea-scene" class="sea-scene" role="img" aria-label="Querschnitt des Meeres mit Taucher">
+          <div class="depth-scale" aria-hidden="true">
+            <span class="depth-mark" style="top: 0%">0 m</span>
+            <span class="depth-mark" style="top: 30.3%">10 m</span>
+            <span class="depth-mark" style="top: 60.6%">20 m</span>
+            <span class="depth-mark" style="top: 90.9%">30 m</span>
+            <span class="depth-mark" style="top: 100%">33 m</span>
+          </div>
+          <div class="water-column">
+            <div id="markers-container" class="markers-container"></div>
+            <div id="diver" class="diver" style="top: 0%">
+              <svg class="diver-svg" viewBox="0 0 64 36" width="56" height="32" aria-hidden="true">
+                <path d="M12 18 C12 10, 24 6, 44 6 C56 6, 60 12, 60 18 C60 24, 56 30, 44 30 C24 30, 12 26, 12 18 Z" fill="#E3C65A" stroke="#2C2406" stroke-width="2"/>
+                <rect x="28" y="2" width="10" height="5" rx="1.5" fill="#E3C65A" stroke="#2C2406" stroke-width="1.5"/>
+                <circle cx="46" cy="18" r="4.5" fill="#0B2C45" stroke="#EAF3F7" stroke-width="1.5"/>
+                <circle cx="34" cy="18" r="4.5" fill="#0B2C45" stroke="#EAF3F7" stroke-width="1.5"/>
+                <circle cx="22" cy="18" r="4.5" fill="#0B2C45" stroke="#EAF3F7" stroke-width="1.5"/>
+                <path d="M6 12 L12 18 L6 24 Z" fill="#A8612F"/>
+                <path d="M33 2 L33 -2 L37 -2" stroke="#2C2406" stroke-width="2" fill="none" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <section id="gate-section" class="card gate-card" hidden>
+        <h2 class="card-heading">Wie heißt du?</h2>
+        <p class="gate-desc">Dein Name wird mit deinen Antworten gespeichert und erscheint auf der Rangliste.</p>
+        <form id="gate-form" class="gate-form">
+          <label for="name-input" class="form-label">Spielername</label>
+          <div class="input-row">
+            <input type="text" id="name-input" class="search-input" maxlength="16" placeholder="Dein Spielername" autocomplete="nickname">
+            <button type="submit" id="btn-name-submit" class="btn btn-primary">Weiter</button>
+          </div>
+          <p id="name-error" class="error-msg" hidden>2–16 Zeichen: Buchstaben, Zahlen, Leerzeichen, _ . -</p>
+        </form>
+      </section>
+
+      <section id="play-section" class="card play-card">
+        <div id="q-progress" class="q-progress">Frage 1 von 3</div>
+        <h2 id="q-text" class="q-text"></h2>
+        <form id="answer-form" class="answer-form">
+          <label for="answer-input" id="answer-label" class="answer-label">Deine Antwort</label>
+          <div class="input-row">
+            <input type="text" id="answer-input" class="search-input" maxlength="40" autocomplete="off" autocapitalize="off" spellcheck="false">
+            <button type="submit" id="btn-submit" class="btn btn-primary">Abtauchen</button>
+          </div>
+        </form>
+      </section>
+
+      <section id="result-section" class="card result-card" hidden>
+        <div class="result-highlight">
+          <div id="result-answer" class="result-answer"></div>
+          <p id="result-rarity" class="result-rarity"></p>
+        </div>
+        <div id="top-answers-container" class="top-answers-container">
+          <h3 id="top-answers-title" class="top-answers-title">So haben andere geantwortet:</h3>
+          <ul id="top-answers-list" class="top-answers-list"></ul>
+        </div>
+        <button type="button" id="btn-next" class="btn btn-primary">Weiter</button>
+      </section>
+
+      <section id="end-view" class="end-view" hidden>
+        <div class="end-card">
+          <h2 class="end-title" id="end-title">Tauchgang beendet!</h2>
+          <p class="end-note" id="end-note"></p>
+          <div class="end-actions">
+            <button type="button" class="btn btn-primary" id="btn-share">Ergebnis teilen</button>
+            <button type="button" class="btn btn-secondary" id="btn-end-practice" hidden>Übungsrunde starten</button>
+            <button type="button" class="btn btn-secondary" id="btn-end-new-round" hidden>Neue Runde</button>
+          </div>
+        </div>
+      </section>
+
+      <details id="logbook" class="logbook card">
+        <summary class="logbook-summary">Logbuch</summary>
+        <div class="logbook-content">
+          <p id="logbook-stats" class="logbook-stats">Tiefster Tauchgang: 0 m · Gesamt: 0 Antworten</p>
+          <ul id="logbook-list" class="logbook-list"></ul>
+        </div>
+      </details>
+    </main>
+
+    <footer class="site-footer">
+      <button type="button" id="btn-privacy">Datenschutz</button>
+      <a href="https://spanani.de/impressum/" target="_blank" rel="noopener">Impressum</a>
+    </footer>
+  </div>
+
+  <dialog id="privacy-dialog" aria-labelledby="privacy-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="privacy-heading">Datenschutz</h2>
+      <button type="button" class="dialog-close" id="privacy-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p>Diese Seite setzt keine Cookies, nutzt kein Tracking und lädt nichts von fremden Diensten nach.</p>
+      <p>Spielstand, Statistik und dein Farbschema liegen in deinem Browser (localStorage). Wenn du in der Rangliste oder in Tiefsee einen Namen eingibst, werden dein Name, das Datum, das Spiel, dein Ergebnis (Versuche, Zeit) und in Tiefsee deine Antworten an unseren Server (Cloudflare, USA) gesendet und sind für alle in der Rangliste sichtbar. Wähle keinen echten Namen, wenn du das nicht willst. Browserdaten kannst du jederzeit über deine Browsereinstellungen löschen; einen Namen samt Ergebnissen löschen wir auf Anfrage (Kontakt: siehe Impressum).</p>
+      <p>Die Seite wird von GitHub Pages ausgeliefert (GitHub Inc., USA). Dabei verarbeitet GitHub technisch nötige Zugriffsdaten wie deine IP-Adresse.</p>
+      <p>Verantwortlicher und deine Rechte: siehe die <a href="https://spanani.de/datenschutz/" target="_blank" rel="noopener">Datenschutzerklärung von spanani.de</a>.</p>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" popover="manual"></div>
+
+  <script type="module" src="app.js"></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});</script>
+</body>
+</html>

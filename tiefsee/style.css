@@ -1,0 +1,410 @@
+/* Header specifics */
+.header-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.back-link {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--soft);
+  text-decoration: none;
+  width: fit-content;
+}
+
+.back-link:hover,
+.back-link:focus-visible {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Card base */
+.card {
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.card-heading {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/* Sea Scene & Meter */
+.sea-container {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  overflow: hidden;
+}
+
+.sea-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  background-color: var(--panel);
+  border-bottom: 1px solid var(--line);
+}
+
+.sea-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--soft);
+}
+
+.total-depth {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.3rem;
+  color: var(--huegel);
+}
+
+.sea-scene {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background: linear-gradient(180deg, #1e6091 0%, #134a6e 25%, #0f3854 50%, #092238 75%, #020b14 100%);
+  overflow: hidden;
+  user-select: none;
+}
+
+:root[data-theme="light"] .sea-scene,
+[data-theme="light"] .sea-scene {
+  background: linear-gradient(180deg, #7ec8e3 0%, #4ea3d8 25%, #2a6c94 50%, #134a6e 75%, #071e2e 100%);
+}
+
+/* Depth Scale */
+.depth-scale {
+  position: absolute;
+  left: 8px;
+  top: 14px;
+  bottom: 24px;
+  width: 44px;
+  pointer-events: none;
+  border-right: 1px dashed rgba(234, 243, 247, 0.3);
+}
+
+.depth-mark {
+  position: absolute;
+  left: 0;
+  transform: translateY(-50%);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--soft);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.7);
+}
+
+/* Water column track */
+.water-column {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 14px;
+  bottom: 24px;
+  pointer-events: none;
+}
+
+/* Markers container */
+.markers-container {
+  position: absolute;
+  left: 56px;
+  right: 12px;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+}
+
+.depth-marker {
+  position: absolute;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.marker-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(234, 243, 247, 0.4);
+}
+
+.marker-badge {
+  background: rgba(11, 44, 69, 0.85);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+/* Diver */
+.diver {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  pointer-events: none;
+  transition: top 1000ms cubic-bezier(0.2, 0.9, 0.3, 1);
+  z-index: 2;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.5));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diver {
+    transition: none !important;
+  }
+}
+
+.diver-svg {
+  display: block;
+}
+
+/* Forms & Inputs */
+.input-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+}
+
+@media (max-width: 440px) {
+  .input-row {
+    flex-direction: column;
+  }
+}
+
+.form-label,
+.answer-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--soft);
+}
+
+.gate-desc {
+  font-size: 0.95rem;
+  color: var(--soft);
+}
+
+.error-msg {
+  color: var(--warn);
+  font-size: 0.9rem;
+}
+
+/* Play Section */
+.q-progress {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.q-text {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.answer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Result Section */
+.result-card {
+  gap: 16px;
+}
+
+.result-highlight {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.result-answer {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  color: var(--huegel);
+}
+
+.result-rarity {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--ink);
+}
+
+.top-answers-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background-color: var(--page);
+  border: 1px solid var(--line);
+  padding: 12px 14px;
+}
+
+.top-answers-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: var(--soft);
+}
+
+.top-answers-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.top-answer-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+.top-answer-item.is-me {
+  background-color: var(--sea);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.top-answer-count {
+  font-variant-numeric: tabular-nums;
+  color: var(--soft);
+}
+
+.top-answer-item.is-me .top-answer-count {
+  color: var(--ink);
+}
+
+/* End view */
+.end-view {
+  width: 100%;
+}
+
+.end-card {
+  background-color: var(--panel);
+  border: 2px solid var(--line);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.end-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.end-note {
+  font-family: 'Source Serif 4', serif;
+  font-style: italic;
+  color: var(--soft);
+  font-size: 1rem;
+}
+
+.end-note:empty {
+  display: none;
+}
+
+.end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 280px;
+}
+
+/* Logbuch */
+.logbook {
+  cursor: pointer;
+}
+
+.logbook-summary {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--ink);
+  outline: none;
+}
+
+.logbook[open] .logbook-summary {
+  margin-bottom: 8px;
+}
+
+.logbook-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: default;
+}
+
+.logbook-stats {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.05rem;
+  color: var(--soft);
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 6px;
+}
+
+.logbook-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.logbook-item {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: var(--ink);
+  padding: 4px 0;
+  border-bottom: 1px dotted var(--line);
+}
+
+.logbook-item:last-child {
+  border-bottom: none;
+}
