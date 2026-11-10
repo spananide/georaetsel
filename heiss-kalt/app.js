@@ -7,6 +7,7 @@ import {
   initPrivacy,
   startClock,
   withTime,
+  reportRound,
 } from '../common.js';
 import { SHAPES } from '../data/world.js';
 import {
@@ -484,6 +485,7 @@ function renderGuessList(round) {
 
 function render() {
   const round = getActiveRound();
+  reportRound('heisskalt', round, mode);
   if (!round) return;
 
   renderMap(round);

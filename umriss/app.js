@@ -8,6 +8,7 @@ import {
   initPrivacy,
   startClock,
   withTime,
+  reportRound,
 } from '../common.js';
 import {
   MAX_GUESSES,
@@ -105,6 +106,7 @@ function setMode(newMode) {
 
 function render() {
   const round = getActiveRound();
+  reportRound('umriss', round, mode);
   if (!round) return;
 
   renderProgress(round);

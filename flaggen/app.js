@@ -7,6 +7,7 @@ import {
   initPrivacy,
   startClock,
   withTime,
+  reportRound,
 } from '../common.js';
 import {
   newRound,
@@ -101,6 +102,7 @@ function setMode(newMode) {
 
 function render() {
   const round = getActiveRound();
+  reportRound('flaggen', round, mode);
   if (!round) return;
 
   const gameView = document.getElementById('game-view');

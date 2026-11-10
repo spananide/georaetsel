@@ -1,10 +1,9 @@
 name = "spanani-games"
 main = "index.js"
 compatibility_date = "2026-05-01"
+routes = [{ pattern = "geo-api.spanani.de", custom_domain = true }]
 
 [[d1_databases]]
 binding = "DB"
 database_name = "spanani-games"
 database_id = "93d1d012-67fb-4dea-acab-bac832b35327"
-
-routes = [{ pattern = "api.geo.spanani.de", custom_domain = true }]

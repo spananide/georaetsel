@@ -8,6 +8,7 @@ import {
   initPrivacy,
   startClock,
   withTime,
+  reportRound,
 } from '../common.js';
 import {
   ROUND_SIZE,
@@ -92,6 +93,7 @@ function setMode(newMode) {
 
 function render() {
   const round = getActiveRound();
+  reportRound('hauptstaedte', round, mode);
   if (!round) return;
 
   const gameView = document.getElementById('game-view');

@@ -6,6 +6,7 @@ import {
   initPrivacy,
   startClock,
   withTime,
+  reportRound,
 } from '../common.js';
 import {
   TYPES,
@@ -65,6 +66,7 @@ function handleShare() {
 }
 
 function render() {
+  reportRound('mehr-weniger', game, 'practice');
   if (!game) return;
 
   const countryA = byId(game.pair.a);

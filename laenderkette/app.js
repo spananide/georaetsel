@@ -7,6 +7,7 @@ import {
   initPrivacy,
   startClock,
   withTime,
+  reportRound,
 } from '../common.js';
 import { SHAPES } from '../data/world.js';
 import {
@@ -314,6 +315,7 @@ function doShare() {
 
 function render() {
   const round = getActiveRound();
+  reportRound('laenderkette', round, mode);
   if (!round) return;
 
   const startCountry = byId(round.start);

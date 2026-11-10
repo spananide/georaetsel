@@ -12,7 +12,7 @@ import {
   search,
   LEVELS,
 } from './game.js';
-import { startClock, withTime } from '../common.js';
+import { startClock, withTime, reportRound } from '../common.js';
 
 let mode = 'daily';
 let practiceId = null;
@@ -238,6 +238,7 @@ function renderFilledCell(cellEl, data, coord, extraClass = '') {
 }
 
 function renderBoard() {
+  reportRound('georaetsel', game, mode);
   for (let c = 0; c < 3; c++) {
     const el = document.getElementById(`col-h-${c}`);
     if (el) {
