@@ -192,9 +192,13 @@ async function handleAnswer(request, env, origin) {
     return jsonResponse({ error: 'invalid answer' }, 400, origin);
   }
 
+  // several questions per day: question 0 uses the plain day, others "<day>:<q>"
+  const q = Number.isInteger(body?.q) && body.q >= 0 && body.q <= 9 ? body.q : 0;
+  const dayKey = q ? `${day}:${q}` : day;
+
   const existing = await env.DB.prepare(
     'SELECT answer FROM answered WHERE key = ? AND day = ?'
-  ).bind(key, day).first();
+  ).bind(key, dayKey).first();
 
   let finalAnswer;
   if (existing) {
@@ -202,10 +206,10 @@ async function handleAnswer(request, env, origin) {
   } else {
     finalAnswer = cleanAns;
     await env.DB.batch([
-      env.DB.prepare('INSERT INTO answered (key, day, answer) VALUES (?, ?, ?)').bind(key, day, cleanAns),
+      env.DB.prepare('INSERT INTO answered (key, day, answer) VALUES (?, ?, ?)').bind(key, dayKey, cleanAns),
       env.DB.prepare(
         'INSERT INTO answers (day, answer, n) VALUES (?, ?, 1) ON CONFLICT(day, answer) DO UPDATE SET n = n + 1'
-      ).bind(day, cleanAns)
+      ).bind(dayKey, cleanAns)
     ]);
   }
 
@@ -217,7 +221,7 @@ async function handleAnswer(request, env, origin) {
     FROM answers a
     WHERE day = ? AND answer = ?
   `;
-  const stats = await env.DB.prepare(statsSql).bind(day, day, day, finalAnswer).first();
+  const stats = await env.DB.prepare(statsSql).bind(dayKey, dayKey, dayKey, finalAnswer).first();
 
   return jsonResponse({
     answer: finalAnswer,
@@ -235,13 +239,16 @@ async function handleAnswers(url, env, origin) {
     return jsonResponse({ error: 'invalid day' }, 400, origin);
   }
 
+  const q = Number(url.searchParams.get('q')) || 0;
+  const dayKey = q >= 1 && q <= 9 ? `${day}:${q}` : day;
+
   const totalRow = await env.DB.prepare(
     'SELECT coalesce(sum(n), 0) as total FROM answers WHERE day = ?'
-  ).bind(day).first();
+  ).bind(dayKey).first();
 
   const topRows = await env.DB.prepare(
     'SELECT answer, n FROM answers WHERE day = ? ORDER BY n DESC, answer ASC LIMIT 20'
-  ).bind(day).all();
+  ).bind(dayKey).all();
 
   return jsonResponse({
     day,
