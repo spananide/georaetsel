@@ -137,6 +137,7 @@ export const GAME_INFO = {
   heisskalt:    { name: 'Heiß oder kalt',  unit: 'Versuche' },
   'mehr-weniger': { name: 'Mehr oder weniger', unit: 'Serie' },
   woertel:      { name: 'Wörtel',          unit: 'Versuche' },
+  rechnel:      { name: 'Rechnel',         unit: 'Versuche' },
 };
 
 export const dayOf = x => {
@@ -204,6 +205,12 @@ export function summarize(game, round) {
       return { over, tries, won: true };
     }
     case 'woertel': {
+      const over = round.state === 'won' || round.state === 'lost';
+      const tries = (round.guesses || []).length;
+      const won = round.state === 'won';
+      return { over, tries, won };
+    }
+    case 'rechnel': {
       const over = round.state === 'won' || round.state === 'lost';
       const tries = (round.guesses || []).length;
       const won = round.state === 'won';

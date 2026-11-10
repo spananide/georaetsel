@@ -133,6 +133,20 @@ assert.deepEqual(
   { over: true, tries: 6, won: false }
 );
 
+// 9. rechnel
+assert.deepEqual(
+  summarize('rechnel', { state: 'playing', guesses: ['12+35=47'] }),
+  { over: false, tries: 1, won: false }
+);
+assert.deepEqual(
+  summarize('rechnel', { state: 'won', guesses: ['10-2*3=4', '12+35=47'] }),
+  { over: true, tries: 2, won: true }
+);
+assert.deepEqual(
+  summarize('rechnel', { state: 'lost', guesses: ['1', '2', '3', '4', '5', '6'] }),
+  { over: true, tries: 6, won: false }
+);
+
 // reportRound is a no-op without a name (does not throw in Node when getName() is empty)
 assert.equal(getName(), '');
 await reportRound('georaetsel', { over: true, guessesLeft: 10, cells: [] }, 'daily');
