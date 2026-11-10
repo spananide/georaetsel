@@ -152,6 +152,12 @@
 }
 
 /* Links Badges */
+#links-layer {
+  position: absolute;
+  inset: 2px;
+  pointer-events: none;
+}
+
 .link-badge {
   position: absolute;
   transform: translate(-50%, -50%);

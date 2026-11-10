@@ -1,13 +1,13 @@
 :root {
-  --r0: #543d63;
-  --r1: #2a5a52;
-  --r2: #6b4c2b;
-  --r3: #2c4e78;
-  --r4: #5c3b44;
-  --r5: #3e5932;
-  --r6: #66483b;
-  --r7: #3b5866;
-  --r8: #615732;
+  --r0: #7a4d9c;
+  --r1: #1f7d6c;
+  --r2: #b06a28;
+  --r3: #2f65b0;
+  --r4: #b03d5a;
+  --r5: #5e8f2c;
+  --r6: #a89722;
+  --r7: #3a92ac;
+  --r8: #8a7468;
 }
 
 :root[data-theme="light"],
@@ -104,7 +104,7 @@
   padding: 0;
   margin: 0;
   border-style: solid;
-  border-color: var(--line);
+  border-color: color-mix(in srgb, var(--ink) 22%, transparent);
   border-width: 1px;
   display: flex;
   align-items: center;
@@ -127,10 +127,10 @@
 .cell[data-region="8"] { --cell-bg: var(--r8); }
 
 /* Boundary borders between regions */
-.cell.b-top { border-top: 3px solid var(--ink); }
-.cell.b-bottom { border-bottom: 3px solid var(--ink); }
-.cell.b-left { border-left: 3px solid var(--ink); }
-.cell.b-right { border-right: 3px solid var(--ink); }
+.cell.b-top { border-top: 2px solid var(--ink); }
+.cell.b-bottom { border-bottom: 2px solid var(--ink); }
+.cell.b-left { border-left: 2px solid var(--ink); }
+.cell.b-right { border-right: 2px solid var(--ink); }
 
 .cell:focus-visible {
   outline: 3px solid var(--ink);
