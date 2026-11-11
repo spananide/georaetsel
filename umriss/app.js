@@ -55,17 +55,12 @@ function startPractice() {
 }
 
 function toggleTheme() {
-  const current = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  const root = document.documentElement;
+  const current = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
   const nextTheme = current === 'light' ? 'dark' : 'light';
-  if (nextTheme === 'light') {
-    document.documentElement.setAttribute('data-theme', 'light');
-    const m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', '#CFE6F2');
-  } else {
-    document.documentElement.removeAttribute('data-theme');
-    const m = document.querySelector('meta[name="theme-color"]');
-    if (m) m.setAttribute('content', '#0B2C45');
-  }
+  root.setAttribute('data-theme', nextTheme);
+  const m = document.querySelector('meta[name="theme-color"]');
+  if (m) m.setAttribute('content', nextTheme === 'dark' ? '#1d1b18' : '#f4efe3');
   try {
     localStorage.setItem('georaetsel.theme', nextTheme);
   } catch (e) {}

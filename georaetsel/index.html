@@ -7,7 +7,7 @@
   <meta name="description" content="Finde jeden Tag neun Länder für ein 3×3-Raster. Ein Geografie-Rätsel auf Deutsch.">
   <meta property="og:title" content="GeoRätsel: Das tägliche Geografie-Rätsel">
   <meta property="og:description" content="Finde jeden Tag neun Länder für ein 3×3-Raster. Ein Geografie-Rätsel auf Deutsch.">
-  <meta name="theme-color" content="#0B2C45">
+  <meta name="theme-color" content="#f4efe3">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <meta property="og:type" content="website">
@@ -23,12 +23,10 @@
   <script>
     try {
       var t = localStorage.getItem('georaetsel.theme');
-      if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) t = 'light';
-      if (t === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        var m = document.querySelector('meta[name="theme-color"]');
-        if (m) m.setAttribute('content', '#CFE6F2');
-      }
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', dark ? '#1d1b18' : '#f4efe3');
     } catch (e) {}
   </script>
 </head>
