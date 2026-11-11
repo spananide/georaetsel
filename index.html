@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tagesspiele</title>
   <meta name="description" content="Tägliche Rätsel auf Deutsch: Geo, Wörter und Logik.">
-  <meta name="theme-color" content="#0B2C45">
+  <meta name="theme-color" content="#f4efe3">
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <meta property="og:type" content="website">
@@ -24,861 +24,391 @@
   <script>
     try {
       var t = localStorage.getItem('georaetsel.theme');
-      if (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) t = 'light';
-      if (t === 'light') {
-        document.documentElement.setAttribute('data-theme', 'light');
-        var m = document.querySelector('meta[name="theme-color"]');
-        if (m) m.setAttribute('content', '#CFE6F2');
+      if (t === 'light' || t === 'dark') {
+        document.documentElement.setAttribute('data-theme', t);
       }
+      var isDark = t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', isDark ? '#1d1b18' : '#f4efe3');
     } catch (e) {}
   </script>
-  <style>
-    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:500;font-display:swap;src:url('georaetsel/assets/fonts/barlow-condensed-latin-500-normal.woff2') format('woff2');}
-    @font-face{font-family:'Barlow Condensed';font-style:normal;font-weight:700;font-display:swap;src:url('georaetsel/assets/fonts/barlow-condensed-latin-700-normal.woff2') format('woff2');}
-    @font-face{font-family:'Source Serif 4';font-style:normal;font-weight:400;font-display:swap;src:url('georaetsel/assets/fonts/source-serif-4-latin-400-normal.woff2') format('woff2');}
-    @font-face{font-family:'Source Serif 4';font-style:italic;font-weight:400;font-display:swap;src:url('georaetsel/assets/fonts/source-serif-4-latin-400-italic.woff2') format('woff2');}
-
-    :root {
-      --page: #0B2C45; --sea: #134A6E; --line: #2A6C94; --ink: #EAF3F7; --soft: #A9C8D8; --panel: #0F3854;
-      --tief: #5E9E4E; --huegel: #E3C65A; --hoch: #A8612F;
-    }
-    :root[data-theme="light"] {
-      --page: #CFE6F2; --sea: #A9D3E8; --line: #6FAECF; --ink: #0E2F45; --soft: #3A6379; --panel: #E4F1F8;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; }
-
-    [hidden] { display: none !important; }
-
-    body {
-      margin: 0;
-      padding: 16px;
-      min-height: 100dvh;
-      background: var(--page);
-      color: var(--ink);
-      font-family: 'Source Serif 4', serif;
-      overflow-x: hidden;
-    }
-
-    .bg-contours {
-      position: fixed; inset: 0; width: 100%; height: 100%;
-      pointer-events: none; z-index: 0;
-    }
-    .bg-contours path { stroke: var(--line); fill: none; stroke-width: 1.5; opacity: 0.35; }
-
-    .wrap {
-      position: relative; z-index: 1; max-width: 920px;
-      margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 28px;
-    }
-
-    header { display: flex; flex-direction: column; gap: 4px; }
-    .wordmark {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700; font-size: 2.75rem; letter-spacing: -0.01em;
-      line-height: 1.05; margin: 0; color: var(--ink);
-    }
-    @media (min-width: 720px) { .wordmark { font-size: 4rem; } }
-    .subtitle {
-      font-family: 'Source Serif 4', serif; font-style: italic;
-      font-size: 1.1rem; color: var(--soft); margin: 0;
-    }
-
-    .daybar {
-      background: var(--panel);
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      padding: 14px 18px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 28px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.15rem;
-      font-weight: 500;
-      color: var(--ink);
-    }
-
-    main {
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-    }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .chip {
-      background: var(--panel);
-      color: var(--ink);
-      border: 1px solid var(--line);
-      border-radius: 9999px;
-      padding: 6px 14px;
-      min-height: 44px;
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 500;
-      font-size: 1.05rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      line-height: 1.2;
-      transition: border-color 120ms ease, background 120ms ease;
-    }
-    .chip:hover {
-      border-color: var(--huegel);
-    }
-    .chip:focus-visible {
-      outline: 3px solid var(--ink);
-      outline-offset: 2px;
-    }
-    .chip[aria-pressed="true"] {
-      border-color: var(--huegel);
-      background: color-mix(in srgb, var(--huegel) 20%, transparent);
-      color: var(--ink);
-      font-weight: 700;
-    }
-    .chip-count {
-      font-size: 0.85em;
-      color: var(--soft);
-      font-weight: 500;
-    }
-    .chip[aria-pressed="true"] .chip-count {
-      color: var(--ink);
-    }
-
-    .filter-status {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.05rem;
-      font-weight: 500;
-      color: var(--soft);
-      margin-top: -14px;
-      min-height: 1.3em;
-    }
-
-    .grid { display: grid; gap: 16px; grid-template-columns: 1fr; }
-    @media (min-width: 640px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
-      .grid > .card.card-wide { grid-column: 1 / -1; }
-    }
-
-    .grid-empty {
-      grid-column: 1 / -1;
-      text-align: center;
-      color: var(--soft);
-      font-family: 'Source Serif 4', serif;
-      font-size: 1.15rem;
-      font-style: italic;
-      padding: 36px 16px;
-      margin: 0;
-    }
-
-    .card {
-      background: var(--panel); border: 2px solid var(--line);
-      border-radius: 14px; padding: 20px; display: flex;
-      flex-direction: column; gap: 12px; color: inherit;
-      text-decoration: none; transition: border-color 120ms ease, transform 120ms ease;
-    }
-    a.card:hover, a.card:focus-visible { border-color: var(--huegel); transform: translateY(-2px); }
-    .card:focus-visible { outline: 3px solid var(--ink); outline-offset: 2px; }
-    @media (prefers-reduced-motion: reduce) {
-      .card, a.card:hover, a.card:focus-visible, .chip { transition: none; transform: none; }
-    }
-
-    .card-wide {
-      width: 100%;
-    }
-
-    .featured {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .section-title {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--soft);
-      margin: 0;
-      line-height: 1.2;
-    }
-    .featured-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-    .card-featured {
-      border-color: var(--huegel);
-      background: color-mix(in srgb, var(--huegel) 8%, var(--panel));
-      gap: 12px;
-      min-width: 0;
-    }
-    :root[data-theme="light"] .card-featured {
-      border-color: #8C6500;
-      background: color-mix(in srgb, #8C6500 8%, var(--panel));
-    }
-    a.card-featured:hover,
-    a.card-featured:focus-visible {
-      border-color: var(--huegel);
-      transform: translateY(-2px);
-    }
-    :root[data-theme="light"] a.card-featured:hover,
-    :root[data-theme="light"] a.card-featured:focus-visible {
-      border-color: #8C6500;
-    }
-    .card-featured:focus-visible {
-      outline: 3px solid var(--ink);
-      outline-offset: 2px;
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .card-featured,
-      a.card-featured:hover,
-      a.card-featured:focus-visible {
-        transition: none;
-        transform: none;
-      }
-    }
-    .card-featured .card-title {
-      min-width: 0;
-      word-break: break-word;
-      hyphens: auto;
-    }
-    .card-featured .card-desc {
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-    .card-featured .badge {
-      margin-top: auto;
-      align-self: flex-start;
-      min-width: 0;
-      max-width: 100%;
-      box-sizing: border-box;
-    }
-
-    .preview { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; width: 96px; }
-    .preview span { aspect-ratio: 1; border-radius: 6px; }
-    .preview .t { background: var(--tief); }
-    .preview .h { background: var(--huegel); }
-    .preview .r { background: var(--hoch); }
-    .preview .s { background: var(--sea); }
-
-    .preview-flag { width: 96px; height: 96px; display: flex; align-items: center; }
-    .preview-flag img { width: 96px; height: 64px; object-fit: cover; border: 2px solid var(--line); border-radius: 6px; }
-    .preview-bars { width: 96px; height: 96px; display: flex; align-items: flex-end; gap: 10px; }
-    .preview-bars span { flex: 1; border-radius: 6px 6px 0 0; }
-    .preview-bars .hi { height: 90%; background: var(--tief); }
-    .preview-bars .lo { height: 50%; background: var(--hoch); }
-
-    .preview-shape { width: 96px; height: 96px; display: flex; align-items: center; }
-    .preview-shape svg { width: 96px; height: 96px; }
-    .preview-shape path { fill: var(--huegel); }
-    .preview-list { width: 96px; height: 96px; display: flex; flex-direction: column; gap: 6px; }
-    .preview-list span { flex: 1; border: 2px solid var(--line); border-radius: 6px; }
-    .preview-list .ok { border-color: var(--tief); background: var(--tief); }
-    .preview-chain { width: 96px; height: 96px; }
-    .preview-chain line { stroke: var(--line); stroke-width: 3; }
-    .preview-chain circle { stroke: var(--ink); stroke-width: 0; }
-    .preview-heat { width: 96px; height: 96px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
-    .preview-heat span { border-radius: 6px; }
-
-    .preview-podium,
-    .preview-woertel,
-    .preview-rechnel,
-    .preview-vierer,
-    .preview-wabe,
-    .preview-sudoku,
-    .preview-kronen,
-    .preview-sonne-mond,
-    .preview-tiefsee {
-      width: 96px;
-      height: 96px;
-      display: block;
-    }
-
-    .card-title {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 700;
-      font-size: 2rem; line-height: 1.1; margin: 0; color: var(--ink);
-    }
-    .card-desc {
-      font-family: 'Source Serif 4', serif; font-size: 1rem;
-      line-height: 1.45; color: var(--soft); margin: 0;
-    }
-
-    .tags { display: flex; flex-wrap: wrap; gap: 8px; }
-    .tag, .badge {
-      font-family: 'Barlow Condensed', sans-serif; font-weight: 500;
-      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em;
-      border: 1px solid var(--line); border-radius: 9999px;
-      padding: 2px 10px; line-height: 1.4;
-    }
-    .tag {
-      color: var(--ink);
-      cursor: pointer;
-    }
-    .tag:hover {
-      border-color: var(--huegel);
-    }
-    .tag:focus-visible {
-      outline: 2px solid var(--ink);
-      outline-offset: 2px;
-    }
-    .badge {
-      color: var(--soft);
-      border-color: var(--line);
-    }
-    .badge.done {
-      border-color: var(--tief);
-      color: var(--ink);
-      background: color-mix(in srgb, var(--tief) 30%, transparent);
-    }
-
-    .cta {
-      margin-top: auto; font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700; font-size: 1.25rem; color: var(--huegel);
-    }
-    :root[data-theme="light"] .cta { color: #8C6500; }
-
-    @media (max-width: 639px) {
-      .card {
-        display: grid;
-        grid-template-columns: 56px 1fr;
-        column-gap: 14px;
-        row-gap: 2px;
-        padding: 14px 16px;
-        align-items: start;
-      }
-      .preview, .preview-flag, .preview-bars, .preview-shape, .preview-list, .preview-chain, .preview-heat,
-      .preview-podium, .preview-woertel, .preview-rechnel, .preview-vierer, .preview-wabe, .preview-sudoku, .preview-kronen, .preview-sonne-mond, .preview-tiefsee {
-        width: 56px;
-        height: 56px;
-        grid-column: 1;
-        grid-row: 1 / span 3;
-      }
-      .preview-flag img { width: 56px; height: 38px; }
-      .preview-shape svg, .preview-chain { width: 56px; height: 56px; }
-      .preview { gap: 4px; }
-      .preview-heat, .preview-list { gap: 4px; }
-      .preview-bars { gap: 6px; }
-      .card-title { font-size: 1.5rem; }
-      .card-desc {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-      }
-      .tags .tag { display: none; }
-      .cta { display: none; }
-
-      .card.card-featured {
-        display: flex;
-        flex-direction: column;
-        padding: 10px 6px;
-        gap: 6px;
-        align-items: flex-start;
-      }
-      .card-featured .preview,
-      .card-featured .preview-woertel,
-      .card-featured .preview-tiefsee {
-        width: 56px;
-        height: 56px;
-        grid-column: auto;
-        grid-row: auto;
-      }
-      .card-featured .card-title {
-        font-size: 1.25rem;
-        line-height: 1.15;
-        margin: 0;
-      }
-      .card-featured .card-desc {
-        display: none;
-      }
-      .card-featured .badge {
-        margin-top: auto;
-        align-self: stretch;
-        text-align: center;
-        font-size: 0.72rem;
-        padding: 3px 4px;
-        letter-spacing: 0.03em;
-        line-height: 1.2;
-        white-space: normal;
-        word-break: break-word;
-      }
-    }
-
-    footer {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      align-items: center;
-      gap: 8px 20px;
-      color: var(--soft);
-      font-size: 0.9rem;
-      padding-top: 8px;
-    }
-    footer a, footer button {
-      background: none;
-      border: none;
-      font: inherit;
-      color: inherit;
-      text-decoration: underline;
-      cursor: pointer;
-      padding: 8px 4px;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-    }
-    footer a:focus-visible, footer button:focus-visible {
-      outline: 3px solid var(--ink);
-      outline-offset: 2px;
-      border-radius: 4px;
-    }
-
-    dialog {
-      background: var(--panel);
-      color: var(--ink);
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      padding: 0;
-      width: min(92vw, 520px);
-    }
-    dialog::backdrop {
-      background: rgb(0 0 0 / 0.6);
-    }
-    .dialog-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 20px;
-    }
-    .dialog-heading {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-weight: 700;
-      font-size: 1.5rem;
-      margin: 0;
-      color: var(--ink);
-    }
-    .dialog-close {
-      background: none;
-      border: none;
-      width: 44px;
-      height: 44px;
-      color: inherit;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-      border-radius: 6px;
-    }
-    .dialog-close:focus-visible {
-      outline: 3px solid var(--ink);
-      outline-offset: 2px;
-    }
-    .dialog-body {
-      padding: 0 20px 20px;
-      line-height: 1.5;
-    }
-    .dialog-body p {
-      margin: 0 0 12px;
-    }
-    .dialog-body p:last-child {
-      margin-bottom: 0;
-    }
-    .dialog-body a {
-      color: var(--huegel);
-    }
-    :root[data-theme="light"] .dialog-body a {
-      color: #8C6500;
-    }
-    @media (max-width: 359px) {
-      .card-featured .card-title { font-size: 1.05rem; hyphens: manual; }
-    }
-  </style>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="hub.css">
 </head>
 <body>
-  <svg class="bg-contours" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <path d="M 800 360 C 800 395, 785 425, 760 430 C 725 435, 685 425, 660 410 C 645 395, 635 375, 640 350 C 645 320, 655 295, 670 290 C 700 280, 735 280, 760 290 C 785 300, 800 325, 800 360 Z"/>
-    <path d="M 870 360 C 870 425, 855 480, 820 490 C 770 505, 640 490, 600 465 C 570 440, 555 390, 565 345 C 575 290, 585 245, 615 235 C 665 215, 765 215, 810 235 C 850 255, 870 305, 870 360 Z"/>
-    <path d="M 955 360 C 955 455, 935 545, 890 560 C 820 585, 590 565, 535 530 C 485 490, 465 410, 480 340 C 495 260, 510 185, 550 170 C 625 140, 810 140, 875 170 C 930 200, 955 275, 955 360 Z"/>
-    <path d="M 1055 360 C 1055 490, 1030 620, 970 640 C 880 675, 525 650, 455 605 C 390 550, 365 435, 385 335 C 405 220, 425 115, 475 95 C 580 55, 865 55, 950 95 C 1025 135, 1055 235, 1055 360 Z"/>
-    <path d="M 1170 360 C 1170 535, 1135 700, 1060 730 C 945 775, 450 745, 365 690 C 285 620, 250 470, 275 330 C 300 170, 330 35, 390 10 C 525 -40, 930 -40, 1035 10 C 1130 60, 1170 190, 1170 360 Z"/>
-    <path d="M 1295 360 C 1295 590, 1250 795, 1160 830 C 1020 885, 365 850, 265 785 C 170 700, 125 510, 155 320 C 185 110, 225 -55, 295 -85 C 465 -150, 1005 -150, 1130 -85 C 1245 -20, 1295 135, 1295 360 Z"/>
-  </svg>
-
-  <div class="wrap">
-    <header>
-      <h1 class="wordmark">Tagesspiele</h1>
-      <p class="subtitle">Täglich neue Rätsel auf Deutsch: Geo, Wörter und Logik.</p>
+  <div class="page-container hub">
+    <header class="sheet-head">
+      <div class="holes" aria-hidden="true"><i></i><i></i></div>
+      <div class="sheet-body">
+        <div class="sheet-date">
+          <span id="d-num"></span>
+          <div class="date-stack">
+            <span id="d-month"></span>
+            <span id="d-weekday"></span>
+          </div>
+        </div>
+        <div class="sheet-title">
+          <h1 class="wordmark">Tagesspiele</h1>
+          <p class="sheetno">Blatt <b id="d-doy"></b> · <span id="day-timer"></span></p>
+        </div>
+      </div>
+      <div class="sheet-punch">
+        <ol class="punch" id="punch" aria-label="Heute gelöst"></ol>
+        <p class="punch-text"><span id="day-count"></span> <span id="day-streak" hidden></span></p>
+      </div>
     </header>
 
-    <div class="daybar">
-      <span id="day-count"></span>
-      <span id="day-streak" hidden></span>
-      <span id="day-timer"></span>
-    </div>
-
-    <main>
-      <section class="featured" aria-labelledby="featured-title">
-        <h2 id="featured-title" class="section-title">Empfohlen</h2>
-        <div class="featured-grid">
-          <a class="card card-featured" href="woertel/" data-game="woertel">
-            <svg class="preview-woertel" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-              <rect x="3.0" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="22.5" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="42.0" y="18" width="15" height="16" rx="4" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="61.5" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="81.0" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="3.0" y="38" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="22.5" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="42.0" y="38" width="15" height="16" rx="4" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="61.5" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="81.0" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="3.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="22.5" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="42.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="61.5" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-              <rect x="81.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            </svg>
-            <h3 class="card-title">Wörtel</h3>
-            <p class="card-desc">Errate das Wort mit fünf Buchstaben in sechs Versuchen.</p>
+    <section class="featured" aria-labelledby="featured-title">
+      <h2 id="featured-title" class="section-title">Empfohlen</h2>
+      <div class="covers">
+        <a class="cover cover-woertel" href="woertel/" data-game="woertel">
+          <svg class="glyph" viewBox="0 0 96 96" width="56" height="56" aria-hidden="true">
+            <rect x="5" y="15" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="23" y="15" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="41" y="15" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="59" y="15" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="77" y="15" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="5" y="39" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="23" y="39" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="41" y="39" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="59" y="39" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="77" y="39" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="5" y="63" width="14" height="18" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="23" y="63" width="14" height="18" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="41" y="63" width="14" height="18" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="59" y="63" width="14" height="18" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="77" y="63" width="14" height="18" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+          </svg>
+          <div class="cover-bottom">
+            <h3 class="cover-title">Wörtel</h3>
             <span class="badge" hidden></span>
-          </a>
+          </div>
+        </a>
 
-          <a class="card card-featured" href="tiefsee/" data-game="tiefsee">
-            <svg class="preview-tiefsee" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-              <path d="M4 20 q8 -7 16 0 t16 0 t16 0 t16 0 t16 0 t12 0" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
-              <path d="M4 32 q8 -6 16 0 t16 0 t16 0 t16 0 t16 0 t12 0" fill="none" stroke="var(--soft)" stroke-width="2" stroke-linecap="round" opacity=".6"/>
-              <line x1="20" y1="34" x2="20" y2="88" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 4"/>
-              <rect x="50" y="52" width="12" height="9" rx="3" fill="var(--huegel)"/>
-              <ellipse cx="56" cy="68" rx="25" ry="12" fill="var(--huegel)"/>
-              <circle cx="45" cy="68" r="3.5" fill="var(--sea)"/><circle cx="56" cy="68" r="3.5" fill="var(--sea)"/><circle cx="67" cy="68" r="3.5" fill="var(--sea)"/>
-              <circle cx="22" cy="58" r="2.5" fill="var(--soft)"/><circle cx="14" cy="48" r="2" fill="var(--soft)"/><circle cx="26" cy="44" r="1.8" fill="var(--soft)"/>
-            </svg>
-            <h3 class="card-title">Tiefsee</h3>
-            <p class="card-desc">Je seltener deine Antwort, desto tiefer tauchst du.</p>
+        <a class="cover cover-tiefsee" href="tiefsee/" data-game="tiefsee">
+          <svg class="glyph" viewBox="0 0 96 96" width="56" height="56" aria-hidden="true">
+            <path d="M 6 20 Q 18 12 30 20 T 54 20 T 78 20 T 90 20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 6 34 Q 18 26 30 34 T 54 34 T 78 34 T 90 34" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+            <path d="M 16 64 C 28 48 54 48 66 64 C 54 80 28 80 16 64 Z" fill="none" stroke="currentColor" stroke-width="3"/>
+            <path d="M 64 64 L 84 50 L 80 64 L 84 78 Z" fill="currentColor" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>
+            <circle cx="28" cy="62" r="3" fill="currentColor"/>
+          </svg>
+          <div class="cover-bottom">
+            <h3 class="cover-title">Tiefsee</h3>
             <span class="badge" hidden></span>
-          </a>
+          </div>
+        </a>
 
-          <a class="card card-featured" href="georaetsel/" data-game="georaetsel">
-            <div class="preview" aria-hidden="true">
-              <span class="t"></span><span class="h"></span><span class="r"></span>
-              <span class="h"></span><span class="t"></span><span class="s"></span>
-              <span class="s"></span><span class="h"></span><span class="t"></span>
-            </div>
-            <h3 class="card-title">GeoRätsel</h3>
-            <p class="card-desc">Jeden Tag ein neues 3×3-Raster: Finde neun Länder, die zu je zwei Kategorien passen.</p>
+        <a class="cover cover-georaetsel" href="georaetsel/" data-game="georaetsel">
+          <svg class="glyph" viewBox="0 0 96 96" width="56" height="56" aria-hidden="true">
+            <rect x="9" y="9" width="22" height="22" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="37" y="9" width="22" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="65" y="9" width="22" height="22" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="9" y="37" width="22" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="37" y="37" width="22" height="22" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="65" y="37" width="22" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="9" y="65" width="22" height="22" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+            <rect x="37" y="65" width="22" height="22" rx="2" fill="none" stroke="currentColor" stroke-width="3"/>
+            <rect x="65" y="65" width="22" height="22" rx="2" fill="currentColor" stroke="currentColor" stroke-width="3"/>
+          </svg>
+          <div class="cover-bottom">
+            <h3 class="cover-title">Geo&shy;Rät&shy;sel</h3>
             <span class="badge" hidden></span>
-          </a>
-        </div>
-      </section>
+          </div>
+        </a>
+      </div>
 
-      <a class="card card-wide" href="rangliste/">
-        <svg class="preview-podium" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-          <rect x="8" y="42" width="22" height="46" rx="4" fill="var(--soft)"/>
-          <rect x="37" y="24" width="22" height="64" rx="4" fill="var(--huegel)"/>
-          <rect x="66" y="54" width="22" height="34" rx="4" fill="var(--hoch)"/>
+      <a class="row row-meta" href="rangliste/">
+        <svg class="glyph" viewBox="0 0 96 96" width="56" height="56" aria-hidden="true">
+          <rect x="8" y="38" width="24" height="50" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+          <rect x="36" y="18" width="24" height="70" rx="2" fill="var(--huegel)" stroke="var(--ink)" stroke-width="3"/>
+          <rect x="64" y="52" width="24" height="36" rx="2" fill="var(--hoch)" stroke="var(--ink)" stroke-width="3"/>
         </svg>
-        <h2 class="card-title">Rangliste</h2>
-        <p class="card-desc">Wer hat heute wie viele Versuche gebraucht? Gib einen Namen ein und vergleiche dich mit anderen.</p>
-        <span class="cta">Öffnen →</span>
+        <div class="row-text">
+          <h3 class="row-title">Rangliste</h3>
+          <p class="row-desc">Wer hat heute wie viele Versuche gebraucht?</p>
+        </div>
+        <span class="row-action">Öffnen →</span>
       </a>
+    </section>
 
+    <section class="games-section" aria-label="Spiele">
       <div class="filters" role="group" aria-label="Spiele filtern">
-        <button type="button" class="chip" data-filter="all" aria-pressed="true">Alle</button>
-        <button type="button" class="chip" data-filter="open" aria-pressed="false">Heute offen</button>
-        <button type="button" class="chip" data-tag="geografie" aria-pressed="false">Geografie <span class="chip-count"></span></button>
-        <button type="button" class="chip" data-tag="wörter" aria-pressed="false">Wörter <span class="chip-count"></span></button>
-        <button type="button" class="chip" data-tag="zahlen" aria-pressed="false">Zahlen <span class="chip-count"></span></button>
-        <button type="button" class="chip" data-tag="logik" aria-pressed="false">Logik <span class="chip-count"></span></button>
-        <button type="button" class="chip" data-tag="raten" aria-pressed="false">Raten <span class="chip-count"></span></button>
-        <button type="button" class="chip" data-tag="quiz" aria-pressed="false">Quiz <span class="chip-count"></span></button>
-        <button type="button" class="chip" data-tag="raster" aria-pressed="false">Raster <span class="chip-count"></span></button>
-        <button type="button" class="chip" data-tag="endlos" aria-pressed="false">Endlos <span class="chip-count"></span></button>
+        <button type="button" class="ftab" data-filter="all" aria-pressed="true">Alle</button>
+        <button type="button" class="ftab" data-filter="open" aria-pressed="false">Heute offen</button>
+        <button type="button" class="ftab" data-tag="geografie" aria-pressed="false">Geografie <sup class="chip-count"></sup></button>
+        <button type="button" class="ftab" data-tag="wörter" aria-pressed="false">Wörter <sup class="chip-count"></sup></button>
+        <button type="button" class="ftab" data-tag="zahlen" aria-pressed="false">Zahlen <sup class="chip-count"></sup></button>
+        <button type="button" class="ftab" data-tag="logik" aria-pressed="false">Logik <sup class="chip-count"></sup></button>
+        <button type="button" class="ftab" data-tag="raten" aria-pressed="false">Raten <sup class="chip-count"></sup></button>
+        <button type="button" class="ftab" data-tag="quiz" aria-pressed="false">Quiz <sup class="chip-count"></sup></button>
+        <button type="button" class="ftab" data-tag="raster" aria-pressed="false">Raster <sup class="chip-count"></sup></button>
+        <button type="button" class="ftab" data-tag="endlos" aria-pressed="false">Endlos <sup class="chip-count"></sup></button>
       </div>
 
       <div class="filter-status" aria-live="polite"></div>
 
-      <div class="grid">
-        <a class="card" href="georaetsel/" data-game="georaetsel" data-tags="geografie raster">
-          <div class="preview" aria-hidden="true">
-            <span class="t"></span><span class="h"></span><span class="r"></span>
-            <span class="h"></span><span class="t"></span><span class="s"></span>
-            <span class="s"></span><span class="h"></span><span class="t"></span>
-          </div>
-          <h2 class="card-title">GeoRätsel</h2>
-          <p class="card-desc">Jeden Tag ein neues 3×3-Raster: Finde neun Länder, die zu je zwei Kategorien passen.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="geografie">Geografie</span>
-            <span class="tag" role="button" tabindex="0" data-tag="raster">Raster</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+      <ol class="list">
+        <li>
+          <article class="row" data-game="georaetsel" data-tags="geografie raster">
+            <svg class="glyph" viewBox="0 0 96 96" width="56" height="56" aria-hidden="true">
+              <rect x="9" y="9" width="22" height="22" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="37" y="9" width="22" height="22" rx="2" fill="var(--huegel)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="65" y="9" width="22" height="22" rx="2" fill="var(--hoch)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="9" y="37" width="22" height="22" rx="2" fill="var(--huegel)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="37" y="37" width="22" height="22" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="65" y="37" width="22" height="22" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="9" y="65" width="22" height="22" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="37" y="65" width="22" height="22" rx="2" fill="var(--huegel)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="65" y="65" width="22" height="22" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+            </svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="georaetsel/">GeoRätsel</a></h3>
+              <p class="row-desc">Jeden Tag ein neues 3×3-Raster: Finde neun Länder, die zu je zwei Kategorien passen.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="geografie">geografie</button>
+                <button type="button" class="tag" data-tag="raster">raster</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="woertel/" data-game="woertel" data-tags="wörter raten">
-          <svg class="preview-woertel" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <rect x="3.0" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="22.5" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="42.0" y="18" width="15" height="16" rx="4" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="61.5" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="81.0" y="18" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="3.0" y="38" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="22.5" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="42.0" y="38" width="15" height="16" rx="4" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="61.5" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="81.0" y="38" width="15" height="16" rx="4" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="3.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="22.5" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="42.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="61.5" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="81.0" y="58" width="15" height="16" rx="4" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-          </svg>
-          <h2 class="card-title">Wörtel</h2>
-          <p class="card-desc">Errate das Wort mit fünf Buchstaben in sechs Versuchen.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="wörter">Wörter</span>
-            <span class="tag" role="button" tabindex="0" data-tag="raten">Raten</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="woertel" data-tags="wörter raten">
+            <svg class="glyph" viewBox="0 0 96 96" width="56" height="56" aria-hidden="true">
+              <rect x="5" y="15" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="23" y="15" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="41" y="15" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="59" y="15" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="77" y="15" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="5" y="39" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="23" y="39" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="41" y="39" width="14" height="18" rx="2" fill="var(--huegel)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="59" y="39" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="77" y="39" width="14" height="18" rx="2" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="5" y="63" width="14" height="18" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="23" y="63" width="14" height="18" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="41" y="63" width="14" height="18" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="59" y="63" width="14" height="18" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+              <rect x="77" y="63" width="14" height="18" rx="2" fill="var(--tief)" stroke="var(--ink)" stroke-width="3"/>
+            </svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="woertel/">Wörtel</a></h3>
+              <p class="row-desc">Errate das Wort mit fünf Buchstaben in sechs Versuchen.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="wörter">wörter</button>
+                <button type="button" class="tag" data-tag="raten">raten</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="flaggen/" data-game="flaggen" data-tags="geografie quiz">
-          <div class="preview-flag" aria-hidden="true"><img src="georaetsel/assets/flags/fr.svg" alt=""></div>
-          <h2 class="card-title">Flaggenjagd</h2>
-          <p class="card-desc">Zehn Flaggen am Tag. Drei Versuche pro Flagge, mit Tipps, wenn es knapp wird.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="geografie">Geografie</span>
-            <span class="tag" role="button" tabindex="0" data-tag="quiz">Quiz</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="flaggen" data-tags="geografie quiz">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="flaggen/">Flaggenjagd</a></h3>
+              <p class="row-desc">Zehn Flaggen am Tag. Drei Versuche pro Flagge, mit Tipps, wenn es knapp wird.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="geografie">geografie</button>
+                <button type="button" class="tag" data-tag="quiz">quiz</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="sudoku/" data-game="sudoku" data-tags="zahlen logik">
-          <svg class="preview-sudoku" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <rect x="12" y="12" width="72" height="72" rx="4" fill="var(--panel)" stroke="var(--line)" stroke-width="2"/>
-            <line x1="36" y1="12" x2="36" y2="84" stroke="var(--line)" stroke-width="1.5"/>
-            <line x1="60" y1="12" x2="60" y2="84" stroke="var(--line)" stroke-width="1.5"/>
-            <line x1="12" y1="36" x2="84" y2="36" stroke="var(--line)" stroke-width="1.5"/>
-            <line x1="12" y1="60" x2="84" y2="60" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="24" y="24" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed', sans-serif" font-weight="700" font-size="18" fill="var(--ink)">5</text>
-            <text x="72" y="48" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed', sans-serif" font-weight="700" font-size="18" fill="var(--huegel)">3</text>
-            <text x="48" y="72" text-anchor="middle" dominant-baseline="central" font-family="'Barlow Condensed', sans-serif" font-weight="700" font-size="18" fill="var(--ink)">8</text>
-          </svg>
-          <h2 class="card-title">Sudoku</h2>
-          <p class="card-desc">Das klassische Zahlenrätsel, täglich neu und eindeutig lösbar.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="zahlen">Zahlen</span>
-            <span class="tag" role="button" tabindex="0" data-tag="logik">Logik</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="sudoku" data-tags="zahlen logik">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="sudoku/">Sudoku</a></h3>
+              <p class="row-desc">Das klassische Zahlenrätsel, täglich neu und eindeutig lösbar.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="zahlen">zahlen</button>
+                <button type="button" class="tag" data-tag="logik">logik</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="vierer/" data-game="vierer" data-tags="wörter logik">
-          <svg class="preview-vierer" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <rect x="4" y="8" width="88" height="16" rx="4" fill="var(--huegel)"/>
-            <rect x="4" y="29" width="88" height="16" rx="4" fill="var(--tief)"/>
-            <rect x="4" y="50" width="88" height="16" rx="4" fill="var(--sea)"/>
-            <rect x="4" y="71" width="88" height="16" rx="4" fill="#9a6cc0"/>
-          </svg>
-          <h2 class="card-title">Vierer</h2>
-          <p class="card-desc">Sortiere 16 Wörter in vier versteckte Gruppen.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="wörter">Wörter</span>
-            <span class="tag" role="button" tabindex="0" data-tag="logik">Logik</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="vierer" data-tags="wörter logik">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="vierer/">Vierer</a></h3>
+              <p class="row-desc">Sortiere 16 Wörter in vier versteckte Gruppen.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="wörter">wörter</button>
+                <button type="button" class="tag" data-tag="logik">logik</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="umriss/" data-game="umriss" data-tags="geografie raten">
-          <div class="preview-shape" aria-hidden="true"><svg viewBox="513.78 76.08 33.7 37.03" preserveAspectRatio="xMidYMid meet"><path d="M 516.6 81.59 L 516.87 81.73 L 517.82 81.43 L 518.42 81.6 L 518.89 81.32 L 519.18 80.87 L 519.09 80.54 L 519.84 80.01 L 519.95 80.61 L 520.41 81.03 L 520.83 81.13 L 520.75 81.38 L 521.19 81.89 L 521.4 81.74 L 521.27 81.32 L 521.82 80.49 L 521.91 79.85 L 522.2 79.9 L 522.47 80.43 L 523.42 80.26 L 523.79 80.67 L 523.94 80.59 L 523.64 79.89 L 523.73 79.54 L 523.99 79.47 L 524.55 79.69 L 524.55 78.73 L 525.83 79 L 526.13 78.52 L 526.38 78.4 L 527.62 78.37 L 528.53 78.08 L 528.53 78.52 L 529.13 79.23 L 532.25 79.78 L 531.56 80.57 L 532.18 80.83 L 531.88 81.4 L 532.15 81.42 L 532.15 81.94 L 532.89 82.55 L 532.53 82.63 L 532.66 82.5 L 532.26 82.07 L 531.89 82.25 L 531.27 82.06 L 530.88 82.48 L 529.5 82.99 L 529.73 82.76 L 529.62 82.75 L 529.13 83.06 L 529.05 83.69 L 529.82 84.53 L 529.53 85.06 L 529.27 84.95 L 529.22 85.3 L 529.68 86.84 L 530.43 87.56 L 532.62 88.88 L 533.89 91.65 L 535.29 93.06 L 536.88 94.05 L 538.82 94.03 L 539.32 94.17 L 539.32 94.61 L 538.78 95.04 L 538.77 95.39 L 541.82 96.83 L 542.79 97.54 L 544.02 98.14 L 545.38 99.54 L 545.48 99.91 L 545.21 100.83 L 544.52 100.45 L 543.91 99.35 L 542.94 99.24 L 542.38 98.96 L 542.17 98.63 L 541.79 98.59 L 541.56 98.77 L 541.01 99.81 L 540.74 101.07 L 540.96 101.42 L 541.53 101.62 L 542.29 102.26 L 542.54 103.5 L 542.38 103.76 L 542.01 103.7 L 541.21 104.15 L 541.09 104.43 L 541.13 105.43 L 540.51 105.95 L 540.03 106.97 L 539.2 106.97 L 538.99 106.66 L 538.95 106.2 L 539.07 105.91 L 539.36 105.78 L 539.52 105.18 L 539.43 104.76 L 539.63 104.44 L 540.19 104.29 L 540.17 103.69 L 539.9 103.42 L 539.6 102.35 L 538.64 100.29 L 538.36 100.08 L 537.64 100.03 L 536.75 99.48 L 536.7 98.74 L 536.2 98.1 L 535.17 98.32 L 535.44 97.9 L 535.05 97.63 L 534.4 97.63 L 533.54 96.27 L 532.35 96.1 L 531.85 96.18 L 531.35 95.72 L 530.81 95.53 L 529.36 94.03 L 528.68 93.58 L 528.23 92.92 L 527.38 92.49 L 527.01 92.6 L 527.05 92.14 L 526.11 91.29 L 525.86 90.88 L 525.39 90.78 L 525.36 90.03 L 524.83 89.06 L 524.6 88 L 524.08 87.48 L 523.31 87.23 L 522.22 86.55 L 520.95 86.23 L 520.45 86.46 L 519.21 87.93 L 518 88.27 L 517.96 87.96 L 518.4 87.28 L 518.29 87.03 L 517.53 87.11 L 516.5 86.49 L 516.35 85.95 L 516.77 85.31 L 516.67 84.97 L 516.05 84.68 L 515.78 84.22 L 515.91 83.99 L 516.27 84.02 L 516.83 83.7 L 516.97 83.26 L 516.08 82.16 L 516.11 81.93 L 516.6 81.59 Z M 525.12 91.12 L 525.21 91.58 L 524.99 91.42 L 524.5 91.48 L 524.48 91.27 L 525.12 91.12 Z M 538.77 106.05 L 538.01 107.48 L 537.75 108.56 L 537.82 108.96 L 538.12 109.26 L 537.99 109.38 L 538.33 109.89 L 537.92 110.61 L 537.95 111.11 L 537.1 111.03 L 536.39 110.74 L 536.02 110.16 L 535.43 109.73 L 534.84 109.74 L 532.92 108.49 L 532.28 108.19 L 531.58 108.11 L 531.03 107.37 L 531.26 106.6 L 531.7 106.17 L 532.15 106.66 L 532.5 106.5 L 532.76 106.15 L 533.24 106.18 L 533.33 106.36 L 534.37 106.84 L 535 106.64 L 536.14 106.62 L 536.82 106.23 L 537.64 106.27 L 538.56 105.82 L 538.9 105.9 L 538.77 106.05 Z M 523.58 97.41 L 524.06 98.64 L 523.7 99.38 L 523.9 100.2 L 523.67 102.96 L 523.48 103.05 L 522.4 102.72 L 522.22 103.62 L 522.02 103.78 L 521.44 103.74 L 520.83 102.83 L 520.75 101.93 L 520.84 101.15 L 521.06 101.12 L 521.07 100.77 L 520.71 100.52 L 520.82 99.3 L 520.08 98.15 L 520.08 97.44 L 520.13 97.31 L 520.74 97.56 L 521.3 97.36 L 522.54 96.21 L 523.52 96.98 L 523.38 97.25 L 523.58 97.41 Z M 521 103.28 L 520.87 103.6 L 520.72 103.12 L 521 103.28 Z M 520.26 96.9 L 520.08 97.04 L 520.34 96.64 L 520.26 96.9 Z"/></svg></div>
-          <h2 class="card-title">Umriss</h2>
-          <p class="card-desc">Erkenne ein Land an seiner Form. Sechs Versuche, mit Entfernung und Richtung als Hilfe.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="geografie">Geografie</span>
-            <span class="tag" role="button" tabindex="0" data-tag="raten">Raten</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="umriss" data-tags="geografie raten">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="umriss/">Umriss</a></h3>
+              <p class="row-desc">Erkenne ein Land an seiner Form. Sechs Versuche, mit Entfernung und Richtung als Hilfe.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="geografie">geografie</button>
+                <button type="button" class="tag" data-tag="raten">raten</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="kronen/" data-game="kronen" data-tags="logik">
-          <svg class="preview-kronen" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <rect x="12" y="12" width="72" height="72" rx="4" fill="var(--panel)"/>
-            <rect x="12" y="12" width="24" height="24" fill="var(--sea)"/>
-            <rect x="36" y="12" width="24" height="24" fill="var(--sea)"/>
-            <rect x="12" y="36" width="24" height="24" fill="var(--sea)"/>
-            <rect x="36" y="36" width="24" height="24" fill="var(--sea)"/>
-            <rect x="60" y="12" width="24" height="24" fill="var(--hoch)"/>
-            <rect x="60" y="36" width="24" height="24" fill="var(--hoch)"/>
-            <rect x="12" y="60" width="24" height="24" fill="var(--tief)"/>
-            <rect x="36" y="60" width="24" height="24" fill="var(--tief)"/>
-            <rect x="60" y="60" width="24" height="24" fill="var(--tief)"/>
-            <line x1="36" y1="12" x2="36" y2="84" stroke="var(--line)" stroke-width="1.5"/>
-            <line x1="60" y1="12" x2="60" y2="84" stroke="var(--line)" stroke-width="1.5"/>
-            <line x1="12" y1="36" x2="84" y2="36" stroke="var(--line)" stroke-width="1.5"/>
-            <line x1="12" y1="60" x2="84" y2="60" stroke="var(--line)" stroke-width="1.5"/>
-            <rect x="12" y="12" width="72" height="72" rx="4" fill="none" stroke="var(--line)" stroke-width="2"/>
-            <path transform="translate(39, 39) scale(0.75)" d="M5 19h14v2H5v-2zm14-13l-3.5 6-3.5-6-3.5 6L5 6l2 11h10l2-11z" fill="var(--huegel)"/>
-          </svg>
-          <h2 class="card-title">Kronen</h2>
-          <p class="card-desc">Setze in jede Reihe, Spalte und Farbe genau eine Krone.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="logik">Logik</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="kronen" data-tags="logik">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="kronen/">Kronen</a></h3>
+              <p class="row-desc">Setze in jede Reihe, Spalte und Farbe genau eine Krone.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="logik">logik</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="rechnel/" data-game="rechnel" data-tags="zahlen raten">
-          <svg class="preview-rechnel" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <rect x="4" y="22" width="20" height="22" rx="5" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="14" y="38" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" fill="var(--ink)">4</text>
-            <rect x="28" y="22" width="20" height="22" rx="5" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="38" y="38" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" fill="var(--ink)">+</text>
-            <rect x="52" y="22" width="20" height="22" rx="5" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="62" y="38" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" fill="var(--ink)">7</text>
-            <rect x="76" y="22" width="20" height="22" rx="5" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="86" y="38" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" fill="var(--ink)">=</text>
-            <rect x="4" y="50" width="20" height="22" rx="5" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="14" y="66" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" fill="var(--ink)">1</text>
-            <rect x="28" y="50" width="20" height="22" rx="5" fill="var(--tief)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="38" y="66" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" fill="var(--ink)">1</text>
-            <rect x="52" y="50" width="20" height="22" rx="5" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="62" y="66" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" fill="var(--ink)">×</text>
-            <rect x="76" y="50" width="20" height="22" rx="5" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5"/>
-          </svg>
-          <h2 class="card-title">Rechnel</h2>
-          <p class="card-desc">Finde die versteckte Gleichung mit acht Zeichen.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="zahlen">Zahlen</span>
-            <span class="tag" role="button" tabindex="0" data-tag="raten">Raten</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="rechnel" data-tags="zahlen raten">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="rechnel/">Rechnel</a></h3>
+              <p class="row-desc">Finde die versteckte Gleichung mit acht Zeichen.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="zahlen">zahlen</button>
+                <button type="button" class="tag" data-tag="raten">raten</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="hauptstaedte/" data-game="hauptstaedte" data-tags="geografie quiz">
-          <div class="preview-list" aria-hidden="true"><span></span><span class="ok"></span><span></span><span></span></div>
-          <h2 class="card-title">Hauptstädte</h2>
-          <p class="card-desc">Zehn Länder, vier Antworten: Welche Stadt ist die Hauptstadt?</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="geografie">Geografie</span>
-            <span class="tag" role="button" tabindex="0" data-tag="quiz">Quiz</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="hauptstaedte" data-tags="geografie quiz">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="hauptstaedte/">Hauptstädte</a></h3>
+              <p class="row-desc">Zehn Länder, vier Antworten: Welche Stadt ist die Hauptstadt?</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="geografie">geografie</button>
+                <button type="button" class="tag" data-tag="quiz">quiz</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="wabe/" data-game="wabe" data-tags="wörter">
-          <svg class="preview-wabe" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <polygon points="61.0,48.0 54.5,59.3 41.5,59.3 35.0,48.0 41.5,36.7 54.5,36.7" fill="var(--huegel)" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
-            <polygon points="82.0,60.1 75.5,71.4 62.5,71.4 56.0,60.1 62.5,48.8 75.5,48.8" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
-            <polygon points="61.0,72.2 54.5,83.5 41.5,83.5 35.0,72.2 41.5,60.9 54.5,60.9" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
-            <polygon points="40.0,60.1 33.5,71.4 20.5,71.4 14.0,60.1 20.5,48.8 33.5,48.8" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
-            <polygon points="40.0,35.9 33.5,47.2 20.5,47.2 14.0,35.9 20.5,24.6 33.5,24.6" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
-            <polygon points="61.0,23.8 54.5,35.1 41.5,35.1 35.0,23.8 41.5,12.5 54.5,12.5" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
-            <polygon points="82.0,35.9 75.5,47.2 62.5,47.2 56.0,35.9 62.5,24.6 75.5,24.6" fill="var(--sea)" stroke="var(--line)" stroke-width="1.5" stroke-linejoin="round"/>
-          </svg>
-          <h2 class="card-title">Wabe</h2>
-          <p class="card-desc">Finde möglichst viele Wörter aus sieben Buchstaben.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="wörter">Wörter</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="wabe" data-tags="wörter">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="wabe/">Wabe</a></h3>
+              <p class="row-desc">Finde möglichst viele Wörter aus sieben Buchstaben.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="wörter">wörter</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="laenderkette/" data-game="laenderkette" data-tags="geografie logik">
-          <svg class="preview-chain" viewBox="0 0 96 96" aria-hidden="true"><line x1="14" y1="72" x2="44" y2="30"/><line x1="44" y1="30" x2="82" y2="58"/><circle cx="14" cy="72" r="11" fill="#E3C65A"/><circle cx="44" cy="30" r="11" fill="#5E9E4E"/><circle cx="82" cy="58" r="11" fill="#E3C65A"/></svg>
-          <h2 class="card-title">Länderkette</h2>
-          <p class="card-desc">Verbinde zwei Länder über ihre Nachbarn, mit möglichst wenigen Fehlern.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="geografie">Geografie</span>
-            <span class="tag" role="button" tabindex="0" data-tag="logik">Logik</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="laenderkette" data-tags="geografie logik">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="laenderkette/">Länderkette</a></h3>
+              <p class="row-desc">Verbinde zwei Länder über ihre Nachbarn, mit möglichst wenigen Fehlern.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="geografie">geografie</button>
+                <button type="button" class="tag" data-tag="logik">logik</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="sonne-mond/" data-game="sonne-mond" data-tags="logik">
-          <svg class="preview-sonne-mond" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <rect x="4" y="26" width="40" height="44" rx="6" fill="var(--panel)" stroke="var(--line)" stroke-width="2"/>
-            <rect x="52" y="26" width="40" height="44" rx="6" fill="var(--panel)" stroke="var(--line)" stroke-width="2"/>
-            <circle cx="24" cy="48" r="8" fill="var(--huegel)"/><line x1="36.0" y1="48.0" x2="40.0" y2="48.0" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/><line x1="32.5" y1="56.5" x2="35.3" y2="59.3" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/><line x1="24.0" y1="60.0" x2="24.0" y2="64.0" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/><line x1="15.5" y1="56.5" x2="12.7" y2="59.3" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/><line x1="12.0" y1="48.0" x2="8.0" y2="48.0" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/><line x1="15.5" y1="39.5" x2="12.7" y2="36.7" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/><line x1="24.0" y1="36.0" x2="24.0" y2="32.0" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/><line x1="32.5" y1="39.5" x2="35.3" y2="36.7" stroke="var(--huegel)" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M76 36 A13 13 0 1 0 76 60 A10 10 0 1 1 76 36 Z" fill="var(--soft)"/>
-            <circle cx="48" cy="48" r="7" fill="var(--page)" stroke="var(--line)" stroke-width="1.5"/>
-            <text x="48" y="52" text-anchor="middle" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="11" fill="var(--ink)">×</text>
-          </svg>
-          <h2 class="card-title">Sonne & Mond</h2>
-          <p class="card-desc">Fülle das Raster mit Sonnen und Monden, ohne dass drei gleiche nebeneinanderliegen.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="logik">Logik</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="sonne-mond" data-tags="logik">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="sonne-mond/">Sonne & Mond</a></h3>
+              <p class="row-desc">Fülle das Raster mit Sonnen und Monden, ohne dass drei gleiche nebeneinanderliegen.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="logik">logik</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="heiss-kalt/" data-game="heisskalt" data-tags="geografie raten">
-          <div class="preview-heat" aria-hidden="true"><span style="background:#C0392B"></span><span style="background:#E8641B"></span><span style="background:#F0B429"></span><span style="background:#9CCB6B"></span><span style="background:#4FA3A5"></span><span style="background:#5C6BC0"></span></div>
-          <h2 class="card-title">Heiß oder kalt</h2>
-          <p class="card-desc">Ein Land ist geheim. Jeder Tipp färbt die Karte, je heißer, desto näher.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="geografie">Geografie</span>
-            <span class="tag" role="button" tabindex="0" data-tag="raten">Raten</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="heisskalt" data-tags="geografie raten">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="heiss-kalt/">Heiß oder kalt</a></h3>
+              <p class="row-desc">Ein Land ist geheim. Jeder Tipp färbt die Karte, je heißer, desto näher.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="geografie">geografie</button>
+                <button type="button" class="tag" data-tag="raten">raten</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="tiefsee/" data-game="tiefsee" data-tags="wörter quiz">
-          <svg class="preview-tiefsee" viewBox="0 0 96 96" width="96" height="96" aria-hidden="true">
-            <path d="M4 20 q8 -7 16 0 t16 0 t16 0 t16 0 t16 0 t12 0" fill="none" stroke="var(--ink)" stroke-width="2.5" stroke-linecap="round"/>
-            <path d="M4 32 q8 -6 16 0 t16 0 t16 0 t16 0 t16 0 t12 0" fill="none" stroke="var(--soft)" stroke-width="2" stroke-linecap="round" opacity=".6"/>
-            <line x1="20" y1="34" x2="20" y2="88" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="3 4"/>
-            <rect x="50" y="52" width="12" height="9" rx="3" fill="var(--huegel)"/>
-            <ellipse cx="56" cy="68" rx="25" ry="12" fill="var(--huegel)"/>
-            <circle cx="45" cy="68" r="3.5" fill="var(--sea)"/><circle cx="56" cy="68" r="3.5" fill="var(--sea)"/><circle cx="67" cy="68" r="3.5" fill="var(--sea)"/>
-            <circle cx="22" cy="58" r="2.5" fill="var(--soft)"/><circle cx="14" cy="48" r="2" fill="var(--soft)"/><circle cx="26" cy="44" r="1.8" fill="var(--soft)"/>
-          </svg>
-          <h2 class="card-title">Tiefsee</h2>
-          <p class="card-desc">Je seltener deine Antwort, desto tiefer tauchst du.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="wörter">Wörter</span>
-            <span class="tag" role="button" tabindex="0" data-tag="quiz">Quiz</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="tiefsee" data-tags="wörter quiz">
+            <svg class="glyph" viewBox="0 0 96 96" width="56" height="56" aria-hidden="true">
+              <path d="M 6 20 Q 18 12 30 20 T 54 20 T 78 20 T 90 20" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 6 34 Q 18 26 30 34 T 54 34 T 78 34 T 90 34" fill="none" stroke="var(--ink)" stroke-width="3" stroke-linecap="round"/>
+              <path d="M 16 64 C 28 48 54 48 66 64 C 54 80 28 80 16 64 Z" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/>
+              <path d="M 64 64 L 84 50 L 80 64 L 84 78 Z" fill="var(--huegel)" stroke="var(--ink)" stroke-width="3" stroke-linejoin="round"/>
+              <circle cx="28" cy="62" r="3" fill="var(--ink)"/>
+            </svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="tiefsee/">Tiefsee</a></h3>
+              <p class="row-desc">Je seltener deine Antwort, desto tiefer tauchst du.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="wörter">wörter</button>
+                <button type="button" class="tag" data-tag="quiz">quiz</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
 
-        <a class="card" href="mehr-weniger/" data-game="mehrweniger" data-tags="geografie quiz endlos">
-          <div class="preview-bars" aria-hidden="true"><span class="hi"></span><span class="lo"></span></div>
-          <h2 class="card-title">Mehr oder weniger</h2>
-          <p class="card-desc">Welches Land liegt vorn? Baue eine möglichst lange Serie, ein Fehler beendet sie.</p>
-          <div class="tags">
-            <span class="tag" role="button" tabindex="0" data-tag="geografie">Geografie</span>
-            <span class="tag" role="button" tabindex="0" data-tag="quiz">Quiz</span>
-            <span class="tag" role="button" tabindex="0" data-tag="endlos">Endlos</span>
-            <span class="badge" hidden></span>
-          </div>
-          <span class="cta">Spielen →</span>
-        </a>
+        <li>
+          <article class="row" data-game="mehrweniger" data-tags="geografie quiz endlos">
+            <svg class="glyph" viewBox="0 0 96 96" aria-hidden="true"><rect x="8" y="8" width="80" height="80" fill="var(--sea)" stroke="var(--ink)" stroke-width="3"/></svg>
+            <div class="row-text">
+              <h3 class="row-title"><a class="row-link" href="mehr-weniger/">Mehr oder weniger</a></h3>
+              <p class="row-desc">Welches Land liegt vorn? Baue eine möglichst lange Serie, ein Fehler beendet sie.</p>
+              <p class="row-tags">
+                <button type="button" class="tag" data-tag="geografie">geografie</button>
+                <button type="button" class="tag" data-tag="quiz">quiz</button>
+                <button type="button" class="tag" data-tag="endlos">endlos</button>
+              </p>
+            </div>
+            <span class="status"></span>
+          </article>
+        </li>
+      </ol>
 
-        <p class="grid-empty" hidden>Keine Spiele für diesen Filter.</p>
-      </div>
-    </main>
+      <p class="grid-empty" hidden>Keine Spiele für diesen Filter.</p>
+    </section>
 
-    <footer>
+    <footer class="site-footer">
       <a href="https://spanani.de/" target="_blank" rel="noopener">spanani.de</a>
       <button type="button" id="btn-privacy">Datenschutz</button>
       <a href="https://spanani.de/impressum/" target="_blank" rel="noopener">Impressum</a>
@@ -999,51 +529,50 @@
       } catch (e) {}
     }
 
-    const cards = Array.from(document.querySelectorAll('.grid > .card[data-game]'));
+    const rows = Array.from(document.querySelectorAll('.list .row[data-game]'));
     const statusEl = document.querySelector('.filter-status');
     const gridEmptyEl = document.querySelector('.grid-empty');
-    const chipAll = document.querySelector('.chip[data-filter="all"]');
-    const chipOpen = document.querySelector('.chip[data-filter="open"]');
-    const tagChips = Array.from(document.querySelectorAll('.chip[data-tag]'));
+    const ftabAll = document.querySelector('.ftab[data-filter="all"]');
+    const ftabOpen = document.querySelector('.ftab[data-filter="open"]');
+    const tagFtabs = Array.from(document.querySelectorAll('.ftab[data-tag]'));
 
-    // Compute tag counts from cards at runtime
+    // Compute tag counts from rows at runtime
     const tagCounts = {};
     VALID_TAGS.forEach(t => { tagCounts[t] = 0; });
-    cards.forEach(card => {
-      const tags = (card.getAttribute('data-tags') || '').split(/\s+/).filter(Boolean);
+    rows.forEach(row => {
+      const tags = (row.getAttribute('data-tags') || '').split(/\s+/).filter(Boolean);
       tags.forEach(t => {
         if (tagCounts[t] !== undefined) tagCounts[t]++;
       });
     });
 
-    tagChips.forEach(chip => {
-      const t = chip.getAttribute('data-tag');
-      const countSpan = chip.querySelector('.chip-count');
+    tagFtabs.forEach(tab => {
+      const t = tab.getAttribute('data-tag');
+      const countSpan = tab.querySelector('.chip-count');
       if (countSpan) {
         countSpan.textContent = tagCounts[t] !== undefined ? tagCounts[t] : 0;
       }
     });
 
     function applyFilters() {
-      if (chipAll) {
-        chipAll.setAttribute('aria-pressed', filterState.tag === null ? 'true' : 'false');
+      if (ftabAll) {
+        ftabAll.setAttribute('aria-pressed', filterState.tag === null ? 'true' : 'false');
       }
-      if (chipOpen) {
-        chipOpen.setAttribute('aria-pressed', filterState.open ? 'true' : 'false');
+      if (ftabOpen) {
+        ftabOpen.setAttribute('aria-pressed', filterState.open ? 'true' : 'false');
       }
-      tagChips.forEach(chip => {
-        const t = chip.getAttribute('data-tag');
-        chip.setAttribute('aria-pressed', filterState.tag === t ? 'true' : 'false');
+      tagFtabs.forEach(tab => {
+        const t = tab.getAttribute('data-tag');
+        tab.setAttribute('aria-pressed', filterState.tag === t ? 'true' : 'false');
       });
 
       let visibleCount = 0;
-      let lastVisibleCard = null;
 
-      cards.forEach(card => {
-        const game = card.getAttribute('data-game');
-        const cardTags = (card.getAttribute('data-tags') || '').split(/\s+/).filter(Boolean);
+      rows.forEach(row => {
+        const game = row.getAttribute('data-game');
+        const rowTags = (row.getAttribute('data-tags') || '').split(/\s+/).filter(Boolean);
 
-        const matchTag = !filterState.tag || cardTags.includes(filterState.tag);
+        const matchTag = !filterState.tag || rowTags.includes(filterState.tag);
         let matchOpen = true;
         if (filterState.open) {
           if (game === 'mehrweniger') {
@@ -1054,18 +583,14 @@
         }
 
         const visible = matchTag && matchOpen;
-        card.hidden = !visible;
-        card.classList.remove('card-wide');
+        row.hidden = !visible;
+        const li = row.closest('li');
+        if (li) li.hidden = !visible;
 
         if (visible) {
           visibleCount++;
-          lastVisibleCard = card;
         }
       });
-
-      if (visibleCount % 2 === 1 && lastVisibleCard) {
-        lastVisibleCard.classList.add('card-wide');
-      }
 
       let statusText = '';
       if (visibleCount === 0) {
@@ -1084,25 +609,25 @@
       }
     }
 
-    if (chipAll) {
-      chipAll.addEventListener('click', () => {
+    if (ftabAll) {
+      ftabAll.addEventListener('click', () => {
         filterState.tag = null;
         saveFilter();
         applyFilters();
       });
     }
 
-    if (chipOpen) {
-      chipOpen.addEventListener('click', () => {
+    if (ftabOpen) {
+      ftabOpen.addEventListener('click', () => {
         filterState.open = !filterState.open;
         saveFilter();
         applyFilters();
       });
     }
 
-    tagChips.forEach(chip => {
-      const tag = chip.getAttribute('data-tag');
-      chip.addEventListener('click', () => {
+    tagFtabs.forEach(tab => {
+      const tag = tab.getAttribute('data-tag');
+      tab.addEventListener('click', () => {
         if (filterState.tag === tag) {
           filterState.tag = null;
         } else {
@@ -1113,20 +638,14 @@
       });
     });
 
-    document.querySelectorAll('.grid .card .tag[data-tag]').forEach(pill => {
+    document.querySelectorAll('.row .tag[data-tag]').forEach(pill => {
       const tag = pill.getAttribute('data-tag');
-      const selectTag = e => {
+      pill.addEventListener('click', e => {
         e.preventDefault();
         e.stopPropagation();
         filterState.tag = tag;
         saveFilter();
         applyFilters();
-      };
-      pill.addEventListener('click', selectTag);
-      pill.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          selectTag(e);
-        }
       });
     });
 
@@ -1134,33 +653,69 @@
       const now = new Date();
       currentSeed = seed(now);
 
-      document.querySelectorAll('.card[data-game]').forEach(card => {
-        const game = card.getAttribute('data-game');
-        const badge = card.querySelector('.badge');
+      const dNumEl = document.getElementById('d-num');
+      const dMonthEl = document.getElementById('d-month');
+      const dWeekdayEl = document.getElementById('d-weekday');
+      const dDoyEl = document.getElementById('d-doy');
+
+      if (dNumEl) dNumEl.textContent = new Intl.DateTimeFormat('de-DE', { day: 'numeric' }).format(now);
+      if (dMonthEl) dMonthEl.textContent = new Intl.DateTimeFormat('de-DE', { month: 'long' }).format(now);
+      if (dWeekdayEl) dWeekdayEl.textContent = new Intl.DateTimeFormat('de-DE', { weekday: 'long' }).format(now);
+      if (dDoyEl) {
+        const doy = Math.floor((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(now.getFullYear(), 0, 1)) / 86400000) + 1;
+        dDoyEl.textContent = doy;
+      }
+
+      const punchEl = document.getElementById('punch');
+      if (punchEl) {
+        punchEl.innerHTML = '';
+        DAILY_GAMES.forEach(g => {
+          const li = document.createElement('li');
+          if (finished(g, currentSeed)) {
+            li.classList.add('done');
+          }
+          punchEl.appendChild(li);
+        });
+      }
+
+      document.querySelectorAll('.cover[data-game]').forEach(cover => {
+        const game = cover.getAttribute('data-game');
+        const badge = cover.querySelector('.badge');
         if (!badge) return;
+        const done = finished(game, currentSeed);
+        if (done) {
+          badge.className = 'badge done';
+          const r = roundOf(game, currentSeed);
+          badge.textContent = r && r.ms >= 1000 ? 'gelöst ' + fmt(r.ms) : 'gelöst';
+        } else {
+          badge.className = 'badge';
+          badge.textContent = 'offen';
+        }
+        badge.hidden = false;
+      });
+
+      document.querySelectorAll('.list .row[data-game]').forEach(row => {
+        const game = row.getAttribute('data-game');
+        const statusSpan = row.querySelector('.status');
+        if (!statusSpan) return;
 
         if (game === 'mehrweniger') {
           const best = read('mehrweniger.best');
           const num = typeof best === 'number' ? best : Number(best);
           if (typeof num === 'number' && !isNaN(num) && num > 0) {
-            badge.className = 'badge';
-            badge.textContent = 'Rekord: ' + num;
-            badge.hidden = false;
+            statusSpan.textContent = 'Rekord: ' + num;
           } else {
-            badge.className = 'badge';
-            badge.hidden = true;
+            statusSpan.textContent = '';
           }
         } else {
           const done = finished(game, currentSeed);
           if (done) {
-            badge.className = 'badge done';
             const r = roundOf(game, currentSeed);
-            badge.textContent = r && r.ms >= 1000 ? '✓ Heute gelöst · ' + fmt(r.ms) : '✓ Heute gelöst';
+            const timeStr = r && r.ms >= 1000 ? ' ' + fmt(r.ms) : '';
+            statusSpan.innerHTML = `<span class="stamp">Gelöst${timeStr}</span>`;
           } else {
-            badge.className = 'badge';
-            badge.textContent = 'Heute offen';
+            statusSpan.textContent = 'offen';
           }
-          badge.hidden = false;
         }
       });
 
@@ -1204,21 +759,15 @@
     const btnTheme = document.getElementById('btn-theme');
     if (btnTheme) {
       btnTheme.addEventListener('click', () => {
-        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+        const root = document.documentElement;
+        const cur = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const next = cur === 'light' ? 'dark' : 'light';
+        root.setAttribute('data-theme', next);
         const meta = document.querySelector('meta[name="theme-color"]');
-        if (isLight) {
-          document.documentElement.removeAttribute('data-theme');
-          if (meta) meta.setAttribute('content', '#0B2C45');
-          try {
-            localStorage.setItem('georaetsel.theme', 'dark');
-          } catch (e) {}
-        } else {
-          document.documentElement.setAttribute('data-theme', 'light');
-          if (meta) meta.setAttribute('content', '#CFE6F2');
-          try {
-            localStorage.setItem('georaetsel.theme', 'light');
-          } catch (e) {}
-        }
+        if (meta) meta.setAttribute('content', next === 'dark' ? '#1d1b18' : '#f4efe3');
+        try {
+          localStorage.setItem('georaetsel.theme', next);
+        } catch (e) {}
       });
     }
 
