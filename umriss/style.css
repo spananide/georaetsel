@@ -1,24 +1,3 @@
-/* Header specifics */
-.header-title-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.back-link {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
-  font-size: 0.95rem;
-  color: var(--soft);
-  text-decoration: none;
-  width: fit-content;
-}
-
-.back-link:hover,
-.back-link:focus-visible {
-  color: var(--ink);
-  text-decoration: underline;
-}
-
 /* Main Content */
 .main-content {
   display: flex;
@@ -36,10 +15,9 @@
 }
 
 .progress-text {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
+  font-family: var(--body);
   color: var(--soft);
-  font-size: 1rem;
+  font-size: 0.9375rem;
 }
 
 .progress-dots {
@@ -51,21 +29,37 @@
 .dot {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: 0;
   background-color: var(--sea);
+  border: 1px solid var(--rule);
   box-sizing: border-box;
-  transition: background-color 150ms ease;
 }
 
 .dot.current {
+  border-color: var(--ink);
   outline: 2px solid var(--ink);
   outline-offset: 1px;
 }
 
-.dot.dot-correct { background-color: var(--tief); }
-.dot.dot-high { background-color: var(--huegel); }
-.dot.dot-mid { background-color: var(--hoch); }
-.dot.dot-low { background-color: var(--warn); }
+.dot.dot-correct {
+  background-color: var(--tief);
+  border-color: var(--tief);
+}
+
+.dot.dot-high {
+  background-color: var(--huegel);
+  border-color: var(--huegel);
+}
+
+.dot.dot-mid {
+  background-color: var(--hoch);
+  border-color: var(--hoch);
+}
+
+.dot.dot-low {
+  background-color: var(--warn);
+  border-color: var(--warn);
+}
 
 /* Silhouette Stage */
 .silhouette-stage {
@@ -74,9 +68,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: var(--panel);
-  border: 2px solid var(--line);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: var(--sea);
+  border: 2px solid var(--ink);
+  border-radius: 0;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -88,6 +82,7 @@
 }
 
 .silhouette-stage path {
+  fill: var(--tief);
   stroke: none;
 }
 
@@ -98,10 +93,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.35rem;
   line-height: 1.2;
+  letter-spacing: -0.02em;
 }
 
 .status-msg:empty {
@@ -115,7 +111,7 @@
 .status-msg.lost {
   color: var(--ink);
   background-color: var(--panel);
-  border: 1px solid var(--line);
+  border: 2px solid var(--ink);
   padding: 6px 14px;
   border-radius: 2px;
   width: fit-content;
@@ -128,9 +124,10 @@
   align-items: center;
   justify-content: center;
   gap: 10px;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
   font-size: 1.3rem;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
@@ -141,15 +138,16 @@
 .revealed-flag {
   width: 36px;
   height: 27px;
-  border: 1px solid rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--ink);
+  border-radius: 0;
   object-fit: cover;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .revealed-name {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
   font-size: 1.35rem;
+  letter-spacing: -0.02em;
 }
 
 /* Play Controls */
@@ -161,9 +159,10 @@
 }
 
 .search-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
@@ -176,12 +175,13 @@
   flex: 1;
 }
 
-/* Guess list & rows */
+/* Guess list as printed table with direction/distance in tabular-nums */
 .guess-list {
   display: flex;
   flex-direction: column;
-  gap: 8px;
   width: 100%;
+  border-top: 2px solid var(--ink);
+  border-bottom: 2px solid var(--ink);
 }
 
 .guess-list:empty {
@@ -192,29 +192,35 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 12px;
-  background-color: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 2px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.15rem;
+  padding: 8px 4px;
+  background-color: transparent;
+  border-bottom: 1px solid var(--rule);
+  border-radius: 0;
+  font-family: var(--body);
+  font-size: 1rem;
   color: var(--ink);
 }
 
+.guess-row:last-child {
+  border-bottom: none;
+}
+
 .guess-row.row-correct {
-  border-color: var(--tief);
+  background-color: var(--panel);
 }
 
 .guess-flag {
   width: 28px;
   height: 21px;
-  border: 1px solid rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--rule);
+  border-radius: 0;
   object-fit: cover;
   flex-shrink: 0;
 }
 
 .guess-name {
-  font-weight: 500;
+  font-family: var(--body);
+  font-weight: 600;
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -223,13 +229,15 @@
 }
 
 .guess-distance {
+  font-family: var(--body);
+  font-variant-numeric: tabular-nums;
   color: var(--soft);
   white-space: nowrap;
-  font-size: 1.05rem;
+  font-size: 0.9375rem;
 }
 
 .guess-dir {
-  font-size: 1.3rem;
+  font-size: 1.2rem;
   width: 24px;
   text-align: center;
   flex-shrink: 0;
@@ -237,7 +245,10 @@
 }
 
 .guess-prox {
+  font-family: var(--display);
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
   min-width: 48px;
   text-align: right;
   white-space: nowrap;
@@ -254,52 +265,57 @@
 }
 
 .end-card {
-  background-color: var(--panel);
-  border: 2px solid var(--line);
-  padding: 32px 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
+  align-items: flex-start;
+  gap: 16px;
+  text-align: left;
+  border: none;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  background: none;
+  padding: 20px 0 0;
+  width: 100%;
 }
 
 .end-score-block {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  justify-content: center;
 }
 
 .end-score-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 4rem;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(3rem, 10vw, 4.5rem);
   line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
 }
 
 .end-score-max {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 500;
-  font-size: 1.8rem;
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
   color: var(--soft);
 }
 
 .end-grid-emojis {
-  font-size: 2.2rem;
-  line-height: 1.25;
-  letter-spacing: 6px;
+  font-size: 1.75rem;
+  line-height: 1.3;
+  letter-spacing: 4px;
   white-space: pre-line;
   font-family: monospace, sans-serif;
   margin: 4px 0;
 }
 
 .end-note {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
+  font-family: var(--body);
   color: var(--soft);
   font-size: 1rem;
+  line-height: 1.4;
 }
 
 .end-note:empty {
@@ -309,7 +325,7 @@
 .end-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   max-width: 280px;
 }
