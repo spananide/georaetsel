@@ -1,5 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
-  <rect width="32" height="32" fill="#134A6E"/>
-  <path d="M7 16 C6 11 11 7 17 8 C23 9 26 13 25 18 C24 23 19 25 14 25 C9 25 8 20 7 16 Z" fill="#E3C65A"/>
-  <path d="M12 16 C11 13 14 11 17 12 C20 13 21 16 20 19 C19 21 16 21 14 20 C12 19 12 17 12 16 Z" fill="#A8612F"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="6" fill="#f4efe3"/>
+  <path d="M 0,6 A 6,6 0 0 1 6,0 L 58,0 A 6,6 0 0 1 64,6 L 64,13 L 0,13 Z" fill="#c2351f"/>
+  <circle cx="18" cy="6.5" r="2.5" fill="#f4efe3" stroke="#1b1a17" stroke-width="1.5"/>
+  <circle cx="46" cy="6.5" r="2.5" fill="#f4efe3" stroke="#1b1a17" stroke-width="1.5"/>
+  <text x="32" y="41" font-family="'Bricolage Grotesque', system-ui, sans-serif" font-weight="800" font-size="34" letter-spacing="-0.04em" fill="#1b1a17" text-anchor="middle" dominant-baseline="central">12</text>
 </svg>
