@@ -1,29 +1,8 @@
-/* Header specifics */
-.header-title-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.back-link {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
-  font-size: 0.95rem;
-  color: var(--soft);
-  text-decoration: none;
-  width: fit-content;
-}
-
-.back-link:hover,
-.back-link:focus-visible {
-  color: var(--ink);
-  text-decoration: underline;
-}
-
 /* Main Content */
 .main-content {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
   width: 100%;
 }
 
@@ -31,7 +10,7 @@
 .game-progress {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -44,9 +23,10 @@
 }
 
 .rank-badge {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.3rem;
+  font-family: var(--display);
+  font-size: 1.25rem;
   font-weight: 700;
+  letter-spacing: -0.02em;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -59,13 +39,14 @@
 
 .rank-score {
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 
 .words-count {
-  font-family: 'Source Serif 4', serif;
-  font-size: 0.95rem;
-  font-style: italic;
+  font-family: var(--body);
+  font-size: 0.9375rem;
   color: var(--soft);
+  font-variant-numeric: tabular-nums;
 }
 
 .rank-dots {
@@ -84,19 +65,18 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: var(--line);
+  background-color: var(--ink);
   z-index: 0;
 }
 
 .rank-dot {
   width: 12px;
   height: 12px;
-  border-radius: 50%;
+  border-radius: 0;
   background-color: var(--page);
-  border: 2px solid var(--line);
+  border: 2px solid var(--ink);
   z-index: 1;
   position: relative;
-  transition: background-color 150ms ease, border-color 150ms ease;
 }
 
 .rank-dot.active {
@@ -106,12 +86,11 @@
 
 .rank-dot.current {
   background-color: var(--huegel);
-  border-color: var(--huegel);
-  box-shadow: 0 0 0 2px var(--page), 0 0 0 4px var(--huegel);
+  border-color: var(--ink);
 }
 
 .recent-words {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-size: 1.05rem;
   color: var(--soft);
   min-height: 1.4em;
@@ -122,16 +101,17 @@
 
 /* Collapsible found words */
 .found-details {
-  background-color: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 2px;
-  padding: 8px 14px;
+  border: none;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 8px 0;
 }
 
 .found-details summary {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
   cursor: pointer;
   color: var(--ink);
   user-select: none;
@@ -139,22 +119,24 @@
 
 .found-details[open] summary {
   margin-bottom: 8px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 1px solid var(--rule);
   padding-bottom: 4px;
 }
 
 .found-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 14px;
+  gap: 6px 12px;
   max-height: 140px;
   overflow-y: auto;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.1rem;
+  font-family: var(--body);
+  font-size: 1rem;
 }
 
 .found-item {
   color: var(--ink);
+  border-bottom: 1px solid var(--rule);
+  padding: 2px 4px;
 }
 
 .found-item.is-pangram {
@@ -177,11 +159,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-family: var(--display);
+  font-size: 2.25rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: -0.02em;
   margin: 4px 0 8px;
   color: var(--ink);
   user-select: none;
@@ -195,10 +177,9 @@
   display: inline-block;
   width: 3px;
   height: 1.15em;
-  background-color: var(--huegel);
+  background-color: var(--ink);
   vertical-align: middle;
   margin-left: 3px;
-  animation: caret-blink 1s step-start infinite;
 }
 
 @keyframes caret-blink {
@@ -211,13 +192,10 @@
   40%, 80% { transform: translateX(6px); }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .caret {
-    animation: none;
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
+  .caret {
+    animation: caret-blink 1s step-start infinite;
+  }
   .word-display.shake {
     animation: display-shake 300ms ease-in-out;
   }
@@ -244,45 +222,67 @@
 }
 
 .hex-btn {
+  position: relative;
   width: 68px;
   height: 76px;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-  background-color: var(--panel);
+  background-color: var(--ink);
   color: var(--ink);
   border: none;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
+  font-family: var(--display);
+  font-weight: 800;
   font-size: 1.85rem;
+  line-height: 1;
+  letter-spacing: -0.02em;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   touch-action: manipulation;
-  transition: transform 80ms ease, filter 80ms ease;
   padding: 0;
   border-radius: 0;
+  isolation: isolate;
+  user-select: none;
 }
 
-.hex-btn:hover:not(:disabled) {
-  filter: brightness(1.15);
+.hex-btn::before {
+  content: '';
+  position: absolute;
+  inset: 2px;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  background-color: var(--sea);
+  z-index: -1;
+  pointer-events: none;
 }
 
-.hex-btn:active {
-  transform: scale(0.93);
+.hex-btn:hover:not(:disabled):not(.hex-center)::before {
+  background-color: var(--panel);
 }
 
 .hex-btn:focus-visible {
-  filter: drop-shadow(0 0 3px var(--ink));
-  outline: none;
+  outline: 3px solid var(--blau);
+  outline-offset: 2px;
 }
 
 .hex-btn.hex-center {
-  background-color: var(--huegel);
   color: var(--huegel-ink);
 }
 
-.hex-btn.hex-center:hover:not(:disabled) {
-  filter: brightness(1.08);
+.hex-btn.hex-center::before {
+  background-color: var(--huegel);
+}
+
+.hex-btn.hex-center:hover:not(:disabled)::before {
+  background-color: var(--huegel);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .hex-btn {
+    transition: transform 80ms ease;
+  }
+  .hex-btn:active:not(:disabled) {
+    transform: scale(0.95);
+  }
 }
 
 /* Action buttons */
@@ -298,8 +298,8 @@
 .action-btn {
   flex: 1;
   min-height: 44px;
-  padding: 8px 10px;
-  font-size: 1.1rem;
+  padding: 8px 6px;
+  font-size: 1rem;
 }
 
 /* Finish button */
@@ -311,13 +311,13 @@
 
 .btn-finish {
   min-height: 44px;
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   padding: 6px 16px;
   color: var(--soft);
-  border-color: var(--line);
+  border-color: var(--ink);
 }
 
-.btn-finish:hover,
+.btn-finish:hover:not(:disabled),
 .btn-finish:focus-visible {
   color: var(--warn);
   border-color: var(--warn);
@@ -329,35 +329,41 @@
 }
 
 .end-card {
-  background-color: var(--panel);
-  border: 2px solid var(--line);
-  padding: 24px 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 14px;
-  text-align: center;
+  align-items: flex-start;
+  gap: 16px;
+  text-align: left;
+  border: none;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  background: none;
+  padding: 20px 0 0;
+  width: 100%;
 }
 
 .end-title {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 1.7rem;
-  line-height: 1.2;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
   color: var(--ink);
 }
 
 .end-score {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
+  font-weight: 700;
   font-size: 1.25rem;
-  color: var(--soft);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
 }
 
 .end-note {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
+  font-family: var(--body);
   color: var(--soft);
   font-size: 1rem;
+  line-height: 1.4;
 }
 
 .end-note:empty {
@@ -367,7 +373,7 @@
 .end-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   max-width: 280px;
 }
@@ -376,18 +382,22 @@
   width: 100%;
   text-align: left;
   margin-top: 8px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--rule);
   padding-top: 12px;
 }
 
 .all-words summary {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
   cursor: pointer;
   color: var(--ink);
-  text-align: center;
   user-select: none;
+}
+
+.all-words[open] summary {
+  margin-bottom: 8px;
 }
 
 .words-grid {
@@ -396,13 +406,14 @@
   gap: 6px 12px;
   max-height: 220px;
   overflow-y: auto;
-  margin-top: 10px;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.1rem;
+  font-family: var(--body);
+  font-size: 1rem;
 }
 
 .word-entry {
   color: var(--soft);
+  border-bottom: 1px solid var(--rule);
+  padding: 2px 4px;
 }
 
 .word-entry.found {
