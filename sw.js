@@ -1,5 +1,5 @@
 // network first so a deploy is always picked up; cache only makes it work offline
-const CACHE = 'geo-v1';
+const CACHE = 'geo-v2';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

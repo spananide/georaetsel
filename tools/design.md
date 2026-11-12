@@ -30,10 +30,10 @@ The site is a tear-off day calendar. Every day is a new sheet; the puzzles are w
 | `--line` | #1b1a17 | #f3eee2 | = ink, borders are strong |
 | `--rule` | #cfc7b3 | #3d3a33 | hairline only inside lists/grids (never for text) |
 | `--warn` | #b8321f | #ff6a50 | errors |
-| `--hoch` | #d8402a | #ff6a50 | red ink |
+| `--hoch` | #c2351f | #ff6a50 | red ink |
 | `--blau` | #2c4fd0 | #6f8cff | blue ink |
 | `--huegel` | #f0b323 | #ffc93d | yellow ink |
-| `--tief` | #1f8c5a | #46c487 | green ink |
+| `--tief` | #1b7f52 | #46c487 | green ink |
 | `--hoch-ink --blau-ink --huegel-ink --tief-ink` | text colour on that ink: `#fff` for red/blue/green, `#1b1a17` for yellow (dark theme: `#1b1a17` for all four) |
 
 Theme: light is the `:root` default; dark applies under `@media (prefers-color-scheme: dark)` for `:root:not([data-theme="light"])` and under `:root[data-theme="dark"]`. Both blocks must hold the same dark values.

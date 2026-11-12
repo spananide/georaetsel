@@ -31,13 +31,13 @@
   --rule: #cfc7b3;
   --warn: #b8321f;
 
-  --hoch: #d8402a;
+  --hoch: #c2351f;
   --hoch-ink: #fff;
   --blau: #2c4fd0;
   --blau-ink: #fff;
   --huegel: #f0b323;
   --huegel-ink: #1b1a17;
-  --tief: #1f8c5a;
+  --tief: #1b7f52;
   --tief-ink: #fff;
 }
 
@@ -144,6 +144,7 @@ body {
 }
 
 .header-title-group {
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
@@ -306,7 +307,8 @@ body {
   margin-top: auto;
   padding: 32px 0 16px;
   display: flex;
-  gap: 24px;
+  gap: 8px 20px;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   font-size: 0.8125rem;
@@ -552,4 +554,10 @@ dialog::backdrop {
     animation: none !important;
     transition: none !important;
   }
+}
+
+@media (max-width: 359px) {
+  .wordmark { font-size: 1.9rem; }
+  .clock { min-width: 3.2em; }
+  .header-actions { gap: 0; }
 }
