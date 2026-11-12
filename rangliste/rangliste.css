@@ -1,0 +1,474 @@
+/* Rangliste / Abreißkalender */
+
+.page-container {
+  max-width: 720px;
+}
+
+/* Header */
+.site-header {
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 12px;
+}
+
+.site-header .header-top {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.subtitle {
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--soft);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Main Content */
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* Reset base card */
+.card {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+/* Gate section (Name entry) */
+.card.gate-card {
+  padding: 20px 0;
+  border-bottom: 2px solid var(--ink);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 540px;
+}
+
+.card-title {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 5vw, 2.25rem);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin: 0;
+}
+
+.card-desc {
+  font-family: var(--body);
+  font-size: 1rem;
+  line-height: 1.4;
+  color: var(--soft);
+  margin: 0;
+}
+
+.gate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.gate-label {
+  font-family: var(--body);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: stretch;
+}
+
+.text-input {
+  flex: 1 1 200px;
+  min-width: 0;
+  height: 44px;
+  padding: 8px 12px;
+  background-color: var(--panel);
+  border: 2px solid var(--ink);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1rem;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.text-input:focus-visible {
+  outline: 3px solid var(--blau);
+  outline-offset: 2px;
+}
+
+.gate-form .btn {
+  background-color: var(--ink);
+  color: var(--page);
+}
+
+.gate-form .btn:hover:not(:disabled) {
+  background-color: var(--page);
+  color: var(--ink);
+}
+
+.gate-form .btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.form-error {
+  color: var(--warn);
+  font-family: var(--body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* Board section */
+.board-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+/* User bar */
+.user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-family: var(--body);
+  font-size: 0.9375rem;
+  color: var(--soft);
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.user-bar strong {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  color: var(--soft);
+  text-decoration: underline;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  padding: 8px 0;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.btn-text:hover {
+  color: var(--ink);
+}
+
+.btn-text:focus-visible {
+  outline: 3px solid var(--blau);
+  outline-offset: 2px;
+}
+
+/* Stat card */
+.card.stat-card {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--ink);
+  border-radius: 0;
+  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.stat-number {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(3rem, 10vw, 4.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.stat-label {
+  font-family: var(--body);
+  font-size: 1rem;
+  color: var(--soft);
+}
+
+/* Legend */
+.board-legend {
+  font-family: var(--body);
+  font-size: 0.8125rem;
+  color: var(--soft);
+  line-height: 1.4;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--ink);
+}
+
+/* Day navigation */
+.day-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid var(--ink);
+  border-radius: 0;
+  padding: 8px 0 16px;
+}
+
+.nav-btn {
+  background-color: transparent;
+  color: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  font-family: var(--display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.nav-btn:hover:not(:disabled) {
+  background-color: var(--sea);
+}
+
+.nav-btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.nav-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+  pointer-events: none;
+}
+
+.day-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  text-align: center;
+}
+
+#day-text {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(0.95rem, 3.5vw, 1.25rem);
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+.today-badge {
+  font-family: var(--body);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 2px 6px;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  color: var(--ink);
+  background-color: var(--panel);
+  line-height: 1.2;
+}
+
+/* Board status (loading, empty, error) */
+.board-status {
+  text-align: center;
+  font-family: var(--body);
+  font-size: 1.125rem;
+  color: var(--soft);
+  padding: 28px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.board-status .btn {
+  background-color: var(--ink);
+  color: var(--page);
+}
+
+.board-status .btn:hover:not(:disabled) {
+  background-color: var(--page);
+  color: var(--ink);
+}
+
+.board-status .btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+/* Leaderboard results table */
+.players-list {
+  counter-reset: player-rank;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.players-list:not(:empty) {
+  border-bottom: 2px solid var(--ink);
+}
+
+.card.player-card {
+  counter-increment: player-rank;
+  background: transparent;
+  border: none;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  padding: 12px 8px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  column-gap: 12px;
+  row-gap: 8px;
+  align-items: baseline;
+  box-sizing: border-box;
+}
+
+.card.player-card::before {
+  content: counter(player-rank);
+  grid-row: 1 / -1;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.6rem, 5vw, 2.25rem);
+  line-height: 1;
+  color: var(--soft);
+  font-variant-numeric: tabular-nums;
+  min-width: 1.8ch;
+  text-align: right;
+  align-self: start;
+  padding-top: 2px;
+}
+
+.player-header {
+  grid-column: 2;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  width: 100%;
+}
+
+.player-name {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 1.4rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  word-break: break-word;
+}
+
+.player-total {
+  margin-left: auto;
+  font-family: var(--display);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-size: 1.125rem;
+  color: var(--soft);
+  white-space: nowrap;
+  text-align: right;
+}
+
+.player-chips {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+
+/* .is-me row */
+.card.player-card.is-me {
+  background-color: var(--sea);
+  border-bottom: 2px solid var(--ink);
+  margin-bottom: -2px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Game chips */
+.game-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--body);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  padding: 3px 6px;
+  border-radius: 2px;
+  border: 2px solid var(--ink);
+  box-sizing: border-box;
+}
+
+.chip-won {
+  background-color: var(--tief);
+  color: var(--tief-ink);
+}
+
+.chip-lost {
+  background-color: transparent;
+  color: var(--soft);
+  text-decoration: none;
+}
+
+.chip-time {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.75rem;
+}
+
+.chip-won .chip-time {
+  color: var(--tief-ink);
+  opacity: 0.9;
+}
+
+.chip-lost .chip-time {
+  color: var(--soft);
+}
+
+/* Footer */
+.site-footer {
+  flex-wrap: wrap;
+}
+
+.site-footer a,
+.site-footer button {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}

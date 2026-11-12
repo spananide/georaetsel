@@ -267,21 +267,15 @@ initPrivacy();
 const btnTheme = document.getElementById('btn-theme');
 if (btnTheme) {
   btnTheme.addEventListener('click', () => {
-    const isLight = document.documentElement.getAttribute('data-theme') === 'light';
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (isLight) {
-      document.documentElement.removeAttribute('data-theme');
-      if (meta) meta.setAttribute('content', '#0B2C45');
-      try {
-        localStorage.setItem('georaetsel.theme', 'dark');
-      } catch (e) {}
-    } else {
-      document.documentElement.setAttribute('data-theme', 'light');
-      if (meta) meta.setAttribute('content', '#CFE6F2');
-      try {
-        localStorage.setItem('georaetsel.theme', 'light');
-      } catch (e) {}
-    }
+    const root = document.documentElement;
+    const current = root.getAttribute('data-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    const nextTheme = current === 'light' ? 'dark' : 'light';
+    root.setAttribute('data-theme', nextTheme);
+    const m = document.querySelector('meta[name="theme-color"]');
+    if (m) m.setAttribute('content', nextTheme === 'dark' ? '#1d1b18' : '#f4efe3');
+    try {
+      localStorage.setItem('georaetsel.theme', nextTheme);
+    } catch (e) {}
   });
 }
 
