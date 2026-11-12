@@ -1,24 +1,3 @@
-/* Header specifics */
-.header-title-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.back-link {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
-  font-size: 0.95rem;
-  color: var(--soft);
-  text-decoration: none;
-  width: fit-content;
-}
-
-.back-link:hover,
-.back-link:focus-visible {
-  color: var(--ink);
-  text-decoration: underline;
-}
-
 /* Main Content */
 .main-content {
   display: flex;
@@ -41,12 +20,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.35rem;
+  font-family: var(--display);
+  font-size: 1.25rem;
   font-weight: 700;
-  letter-spacing: 0.02em;
+  letter-spacing: -0.01em;
   color: var(--ink);
-  transition: color 150ms ease;
 }
 
 .status-msg.correct {
@@ -61,11 +39,10 @@
 .map-wrapper {
   position: relative;
   width: 100%;
-  border: 2px solid var(--line);
-  border-radius: 6px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
   overflow: hidden;
   background-color: var(--sea);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .map-toolbar {
@@ -73,44 +50,48 @@
   top: 8px;
   right: 8px;
   display: flex;
-  gap: 6px;
+  gap: 4px;
   z-index: 5;
 }
 
 .map-ctrl-btn {
-  background: var(--panel);
+  background-color: var(--panel);
   color: var(--ink);
-  border: 1px solid var(--line);
-  border-radius: 4px;
-  min-width: 32px;
-  height: 32px;
-  font-family: inherit;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
+  min-width: 44px;
+  min-height: 44px;
+  height: 44px;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 0 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: background-color 150ms, border-color 150ms, transform 100ms;
 }
 
-.map-ctrl-btn:hover,
+.map-ctrl-btn:hover {
+  background-color: var(--sea);
+}
+
 .map-ctrl-btn:focus-visible {
-  background: var(--page);
-  border-color: var(--ink);
+  outline: 3px solid var(--blau);
+  outline-offset: 2px;
 }
 
 .map-ctrl-btn:active {
-  transform: scale(0.96);
+  transform: translate(1px, 1px);
 }
 
 .map-ctrl-reset {
-  font-size: 0.85rem;
+  font-family: var(--body);
+  font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.02em;
+  min-width: fit-content;
+  padding: 0 10px;
 }
 
 /* SVG World Map */
@@ -133,21 +114,21 @@
 
 .map-country {
   fill: var(--panel);
-  stroke: var(--line);
-  stroke-width: 0.3;
+  stroke: var(--ink);
+  stroke-width: 1px;
+  vector-effect: non-scaling-stroke;
   stroke-linejoin: round;
-  transition: fill 200ms ease;
 }
 
 .map-country.is-guessed {
   stroke: var(--ink);
-  stroke-width: 0.6;
+  stroke-width: 1px;
 }
 
 .map-country.is-target {
   fill: var(--huegel) !important;
   stroke: var(--ink);
-  stroke-width: 0.6;
+  stroke-width: 2px;
 }
 
 /* Heat Legend */
@@ -156,21 +137,22 @@
   align-items: center;
   justify-content: space-between;
   gap: 6px;
-  padding: 6px 10px;
+  padding: 8px 12px;
   background-color: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  font-size: 0.8rem;
+  border: 2px solid var(--ink);
+  border-radius: 0;
+  font-size: 0.8125rem;
   flex-wrap: wrap;
 }
 
 .legend-item {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   color: var(--soft);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.95rem;
+  font-family: var(--display);
+  font-size: 0.9375rem;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -180,7 +162,7 @@
   border-radius: 2px;
   display: inline-block;
   flex-shrink: 0;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--ink);
 }
 
 /* Target Reveal */
@@ -190,8 +172,8 @@
   justify-content: center;
   gap: 12px;
   background-color: var(--panel);
-  border: 2px solid var(--huegel);
-  border-radius: 8px;
+  border: 2px solid var(--ink);
+  border-radius: 0;
   padding: 12px 16px;
 }
 
@@ -199,14 +181,15 @@
   width: 48px;
   height: 36px;
   object-fit: cover;
-  border: 1px solid var(--line);
+  border: 1px solid var(--rule);
   display: block;
 }
 
 .target-name {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.8rem;
-  font-weight: 700;
+  font-family: var(--display);
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
   color: var(--ink);
   line-height: 1;
 }
@@ -220,11 +203,10 @@
 }
 
 .search-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.15rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
   color: var(--soft);
 }
 
@@ -236,18 +218,19 @@
 
 .search-input {
   flex: 1;
+  height: 44px;
   background-color: var(--panel);
-  border: 2px solid var(--line);
+  border: 2px solid var(--ink);
   color: var(--ink);
-  padding: 10px 14px;
-  font-size: 1.05rem;
-  font-family: inherit;
-  border-radius: 4px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  font-family: var(--body);
+  border-radius: 0;
 }
 
 .search-input:focus {
-  outline: none;
-  border-color: var(--ink);
+  outline: 3px solid var(--blau);
+  outline-offset: 2px;
 }
 
 /* Search results dropdown */
@@ -257,12 +240,11 @@
   left: 0;
   right: 0;
   background-color: var(--panel);
-  border: 2px solid var(--line);
+  border: 2px solid var(--ink);
   border-top: none;
   max-height: 240px;
   overflow-y: auto;
   z-index: 20;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .search-results:empty {
@@ -272,29 +254,34 @@
 .result-btn {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
   padding: 8px 12px;
   border: none;
-  background: none;
+  border-bottom: 1px solid var(--rule);
+  background-color: transparent;
   color: var(--ink);
   cursor: pointer;
   text-align: left;
-  font-family: inherit;
+  font-family: var(--body);
   font-size: 1rem;
+  border-radius: 0;
 }
 
-.result-btn:hover,
-.result-btn:focus {
+.result-btn:hover {
   background-color: var(--sea);
-  outline: none;
+}
+
+.result-btn:focus-visible {
+  outline: 3px solid var(--blau);
+  outline-offset: -2px;
 }
 
 .result-flag {
   width: 28px;
   height: 21px;
   object-fit: cover;
-  border: 1px solid var(--line);
+  border: 1px solid var(--rule);
   display: block;
   flex-shrink: 0;
 }
@@ -307,11 +294,13 @@
 }
 
 .result-name {
+  font-family: var(--body);
   font-weight: 600;
 }
 
 .result-via {
-  font-size: 0.85rem;
+  font-family: var(--body);
+  font-size: 0.8125rem;
   color: var(--soft);
   font-style: italic;
 }
@@ -328,10 +317,10 @@
 }
 
 .hint-text {
-  font-family: 'Source Serif 4', serif;
+  font-family: var(--body);
   font-style: italic;
   color: var(--soft);
-  font-size: 1.05rem;
+  font-size: 1rem;
   padding: 4px 0;
 }
 
@@ -347,27 +336,30 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 4px;
 }
 
 .guesses-heading {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.3rem;
+  font-family: var(--display);
+  font-size: 1.25rem;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--soft);
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 
 .guesses-count {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 1.1rem;
+  font-family: var(--display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: var(--soft);
 }
 
 .guesses-list {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
   width: 100%;
 }
 
@@ -381,32 +373,31 @@
   align-items: center;
   gap: 12px;
   background-color: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  border: 2px solid var(--ink);
+  border-radius: 2px;
   padding: 8px 12px;
-  transition: background-color 150ms ease, box-shadow 150ms ease;
-}
-
-.guess-row.just-added {
-  animation: guess-highlight 1.2s ease-out;
 }
 
 @keyframes guess-highlight {
   0% {
-    background-color: var(--line);
-    box-shadow: 0 0 0 2px var(--ink);
+    background-color: var(--sea);
   }
   100% {
     background-color: var(--panel);
-    box-shadow: 0 0 0 0 transparent;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .guess-row.just-added {
+    animation: guess-highlight 300ms ease-out;
   }
 }
 
 .guess-swatch {
   width: 18px;
   height: 18px;
-  border-radius: 3px;
-  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-radius: 2px;
+  border: 1px solid var(--ink);
   flex-shrink: 0;
 }
 
@@ -414,14 +405,14 @@
   width: 28px;
   height: 21px;
   object-fit: cover;
-  border: 1px solid var(--line);
+  border: 1px solid var(--rule);
   display: block;
   flex-shrink: 0;
 }
 
 .guess-name {
-  font-family: 'Source Serif 4', serif;
-  font-size: 1.05rem;
+  font-family: var(--body);
+  font-size: 1rem;
   font-weight: 600;
   color: var(--ink);
   overflow: hidden;
@@ -437,31 +428,39 @@
 }
 
 .guess-dist {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1.125rem;
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
   line-height: 1.1;
 }
 
 .guess-label {
+  font-family: var(--body);
   font-size: 0.75rem;
   color: var(--soft);
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
 
-/* End Panel */
+/* End view */
+.end-view {
+  width: 100%;
+}
+
 .end-card {
-  background-color: var(--panel);
-  border: 2px solid var(--line);
-  border-radius: 8px;
-  padding: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
-  text-align: center;
+  text-align: left;
+  border: none;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  background: none;
+  padding: 20px 0 0;
+  width: 100%;
 }
 
 .end-score-block {
@@ -471,9 +470,12 @@
 }
 
 .end-score-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 2.2rem;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
   color: var(--ink);
 }
 
@@ -487,17 +489,22 @@
 }
 
 .end-note {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
+  font-family: var(--body);
   color: var(--soft);
-  font-size: 1.05rem;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.end-note:empty {
+  display: none;
 }
 
 .end-actions {
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  max-width: 280px;
 }
 
 /* Responsive adjustments */
@@ -508,16 +515,16 @@
     padding: 6px 8px;
   }
   .legend-item {
-    font-size: 0.85rem;
+    font-size: 0.8125rem;
   }
   .guess-row {
     gap: 8px;
     padding: 6px 10px;
   }
   .guess-name {
-    font-size: 0.95rem;
+    font-size: 0.9375rem;
   }
   .guess-dist {
-    font-size: 1.05rem;
+    font-size: 1rem;
   }
 }

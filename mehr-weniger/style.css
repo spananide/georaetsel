@@ -1,24 +1,3 @@
-/* Header specifics */
-.header-title-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.back-link {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
-  font-size: 0.95rem;
-  color: var(--soft);
-  text-decoration: none;
-  width: fit-content;
-}
-
-.back-link:hover,
-.back-link:focus-visible {
-  color: var(--ink);
-  text-decoration: underline;
-}
-
 /* Main Content */
 .main-content {
   display: flex;
@@ -33,29 +12,32 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 8px;
 }
 
 .score-text {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
+  font-family: var(--body);
   color: var(--soft);
-  font-size: 1rem;
+  font-size: 0.9375rem;
 }
 
 .score-text strong {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
   font-style: normal;
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
-  font-size: 1.15rem;
+  font-size: 1.25rem;
 }
 
 /* Question */
 .question {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 1.8rem;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.35rem, 4.5vw, 1.8rem);
   line-height: 1.2;
+  letter-spacing: -0.02em;
   text-align: center;
   color: var(--ink);
   margin: 4px 0;
@@ -72,7 +54,7 @@
 /* Card Button */
 .card-btn {
   background-color: var(--panel);
-  border: 2px solid var(--line);
+  border: 2px solid var(--ink);
   color: var(--ink);
   padding: 16px 12px;
   display: flex;
@@ -82,12 +64,21 @@
   gap: 10px;
   cursor: pointer;
   border-radius: 2px;
-  transition: border-color 150ms ease;
   width: 100%;
+  min-height: 180px;
 }
 
 .card-btn:hover:not(:disabled) {
-  border-color: var(--huegel);
+  background-color: var(--sea);
+}
+
+.card-btn:active:not(:disabled) {
+  transform: translate(1px, 1px);
+}
+
+.card-btn:focus-visible {
+  outline: 3px solid var(--blau);
+  outline-offset: 2px;
 }
 
 .card-btn:disabled {
@@ -96,34 +87,39 @@
 
 .card-btn.is-correct {
   border-color: var(--tief);
+  background-color: color-mix(in srgb, var(--tief) 12%, var(--panel));
 }
 
 .card-btn.is-wrong {
   border-color: var(--warn);
+  background-color: color-mix(in srgb, var(--warn) 12%, var(--panel));
 }
 
 .card-flag {
   max-width: 100%;
-  height: 90px;
+  height: 80px;
   object-fit: contain;
-  border: 1px solid var(--line);
+  border: 1px solid var(--rule);
   display: block;
 }
 
 .card-name {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   line-height: 1.15;
+  letter-spacing: -0.01em;
   text-align: center;
   color: var(--ink);
 }
 
 .card-val {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.3rem;
+  font-size: 1.25rem;
   line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
   text-align: center;
   color: var(--ink);
 }
@@ -139,9 +135,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.35rem;
+  letter-spacing: -0.01em;
   line-height: 1.2;
 }
 
@@ -167,7 +164,7 @@
 .btn-large {
   width: 100%;
   max-width: 320px;
-  font-size: 1.3rem;
+  font-size: 1.125rem;
   min-height: 48px;
 }
 
@@ -177,58 +174,85 @@
 }
 
 .end-card {
-  background-color: var(--panel);
-  border: 2px solid var(--line);
-  padding: 24px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 16px;
-  text-align: center;
+  text-align: left;
+  border: none;
+  border-top: 2px solid var(--ink);
+  border-radius: 0;
+  background: none;
+  padding: 20px 0 0;
+  width: 100%;
 }
 
 .end-streak-block {
   display: flex;
   align-items: baseline;
-  justify-content: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .end-streak-label {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
   color: var(--soft);
 }
 
 .end-score-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 4rem;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 3.5rem;
   line-height: 1;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
   color: var(--ink);
 }
 
 .end-new-record {
-  font-family: 'Barlow Condensed', sans-serif;
+  font-family: var(--display);
   font-weight: 700;
-  font-size: 1.4rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
   color: var(--tief);
-  letter-spacing: 0.02em;
+}
+
+.end-new-record[hidden] {
+  display: none !important;
 }
 
 .end-record-line {
-  font-family: 'Source Serif 4', serif;
-  font-style: italic;
-  font-size: 1.05rem;
+  font-family: var(--body);
+  font-size: 1rem;
   color: var(--soft);
 }
 
 .end-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   max-width: 280px;
-  margin-top: 4px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 380px) {
+  .cards-grid {
+    gap: 8px;
+  }
+  .card-btn {
+    padding: 12px 8px;
+    min-height: 160px;
+  }
+  .card-flag {
+    height: 60px;
+  }
+  .card-name {
+    font-size: 1.1rem;
+  }
+  .card-val {
+    font-size: 1.1rem;
+  }
 }
