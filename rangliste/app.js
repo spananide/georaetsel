@@ -62,7 +62,7 @@ function showBoard(name) {
   loggedNameEl.textContent = name;
 }
 
-const UNIT_SHORT = { Punkte: 'P.', Züge: 'Z.', Fehler: 'F.', Wörter: 'W.', Meter: 'm' };
+const UNIT_SHORT = { Punkte: 'P.', Züge: 'Z.', Fehler: 'F.', Wörter: 'W.', Meter: 'm', Blöcke: 'Bl.' };
 
 function renderChip(gameId, gameData) {
   const info = GAME_INFO[gameId] || { name: gameId, unit: 'Versuche' };

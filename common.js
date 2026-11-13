@@ -144,6 +144,7 @@ export const GAME_INFO = {
   sudoku:       { name: 'Sudoku',          unit: 'Fehler' },
   vierer:       { name: 'Vierer',          unit: 'Fehler' },
   tiefsee:      { name: 'Tiefsee',         unit: 'Meter' },
+  kippe:        { name: 'Kippe',           unit: 'Blöcke' },
 };
 
 export const dayOf = x => {
@@ -249,6 +250,11 @@ export function summarize(game, round) {
       const over = round.state === 'done';
       const totalDepth = (round.answers || []).reduce((sum, a) => sum + (a && typeof a.depth === 'number' ? a.depth : 0), 0);
       const tries = Math.min(99, totalDepth);
+      return { over, tries, won: true };
+    }
+    case 'kippe': {
+      const over = round.state === 'lost';
+      const tries = Math.min(99, round.placed ?? 0);
       return { over, tries, won: true };
     }
     default:

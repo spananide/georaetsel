@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { GAMES, cleanName, nameKey, cleanAnswer, dayOk, cleanResult } from './logic.js';
 
 // GAMES array check
-assert.equal(GAMES.length, 15);
+assert.equal(GAMES.length, 16);
 assert.ok(GAMES.includes('georaetsel'));
 assert.ok(GAMES.includes('tiefsee'));
 

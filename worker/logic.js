@@ -13,7 +13,8 @@ export const GAMES = [
   'sudoku',
   'wabe',
   'vierer',
-  'tiefsee'
+  'tiefsee',
+  'kippe'
 ];
 
 export function cleanName(s) {

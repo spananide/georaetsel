@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kippe – balanciere die Wippe, bis sie kippt</title>
+  <meta name="description" content="Kippe – balanciere die Wippe, bis sie kippt">
+  <meta name="theme-color" content="#f4efe3">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="de_DE">
+  <meta property="og:site_name" content="Tagesspiele">
+  <meta property="og:title" content="Kippe – balanciere die Wippe, bis sie kippt">
+  <meta property="og:description" content="Kippe – balanciere die Wippe, bis sie kippt">
+  <meta property="og:url" content="https://geo.spanani.de/kippe/">
+  <meta property="og:image" content="https://geo.spanani.de/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="../georaetsel/assets/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="style.css">
+  <script>
+    try {
+      var t = localStorage.getItem('georaetsel.theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+      var dark = t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.setAttribute('content', dark ? '#1d1b18' : '#f4efe3');
+    } catch (e) {}
+  </script>
+</head>
+<body>
+  <div class="page-container">
+    <header class="site-header">
+      <div class="header-top">
+        <div class="header-title-group">
+          <a href="../" class="back-link">← Alle Spiele</a>
+          <h1 class="wordmark">Kippe</h1>
+        </div>
+        <div class="header-actions">
+          <span id="clock" class="clock" role="timer" aria-label="Spielzeit">0:00</span>
+          <button type="button" class="icon-btn" id="btn-theme" aria-label="Hell/Dunkel" title="Hell/Dunkel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M12 2 A10 10 0 0 0 12 22 Z" fill="currentColor"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <nav class="tabs" role="tablist">
+        <button type="button" class="tab-btn" id="tab-daily" role="tab" aria-selected="true" aria-current="page">Tagesrätsel</button>
+        <button type="button" class="tab-btn" id="tab-practice" role="tab" aria-selected="false">Unbegrenzt</button>
+      </nav>
+    </header>
+
+    <main class="main-content">
+      <section id="game-view" class="game-view">
+        <div class="top-stats-row">
+          <div class="stats-group">
+            <span class="stat-item"><span class="stat-label">Blöcke</span> <strong id="stat-placed" class="stat-val">0</strong></span>
+            <span class="stat-item"><span class="stat-label">Punkte</span> <strong id="stat-score" class="stat-val">0</strong></span>
+            <span class="stat-item" id="stat-record-item" hidden><span class="stat-label">Rekord</span> <strong id="stat-record" class="stat-val">0</strong></span>
+          </div>
+
+          <div class="queue-group" aria-label="Kommende Blöcke">
+            <div class="queue-item queue-current">
+              <span class="queue-label">Jetzt:</span>
+              <div id="tile-current" class="preview-slot" aria-label="Aktueller Block"></div>
+            </div>
+            <div class="queue-item queue-next">
+              <span class="queue-label">Nächste:</span>
+              <div class="next-tiles">
+                <div id="tile-next-1" class="preview-slot small" aria-label="Nächster Block 1"></div>
+                <div id="tile-next-2" class="preview-slot small" aria-label="Nächster Block 2"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="gauge-section">
+          <div class="gauge-header">
+            <span class="gauge-label">Neigung</span>
+            <span id="gauge-text" class="gauge-val">0 / 14</span>
+          </div>
+          <div id="gauge-track" class="gauge-track" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="14">
+            <div id="gauge-fill" class="gauge-fill"></div>
+          </div>
+          <div id="gauge-sr" class="sr-only" aria-live="polite">Neigung 0 von 14</div>
+        </div>
+
+        <div class="board-stage">
+          <div id="floating-feedback" class="floating-feedback" aria-hidden="true"></div>
+
+          <div id="board-assembly" class="board-assembly">
+            <div id="board-grid" class="board-grid" role="group" aria-label="Wippen-Spielfeld">
+              <!-- Column buttons injected by app.js -->
+            </div>
+            <div class="beam-bar" aria-hidden="true"></div>
+            <div class="arm-marks" aria-hidden="true">
+              <span>−4</span>
+              <span>−3</span>
+              <span>−2</span>
+              <span>−1</span>
+              <span>0</span>
+              <span>+1</span>
+              <span>+2</span>
+              <span>+3</span>
+              <span>+4</span>
+            </div>
+          </div>
+          <div class="fulcrum" aria-hidden="true"></div>
+        </div>
+      </section>
+
+      <section id="end-view" class="end-view" hidden>
+        <div class="end-card">
+          <h2 class="end-title">Gekippt!</h2>
+          <div class="end-stats-line" id="end-stats-line">0 Blöcke · 0 Punkte</div>
+          <div class="end-combo-line" id="end-combo-line">Beste Kette: 0x</div>
+          <div class="end-record-line" id="end-record-line"></div>
+          <div class="end-actions">
+            <button type="button" class="btn btn-primary" id="btn-share">Ergebnis teilen</button>
+            <button type="button" class="btn btn-primary btn-large" id="btn-restart" hidden>Nochmal</button>
+            <button type="button" class="btn btn-secondary" id="btn-end-practice" hidden>Unbegrenzt weiterspielen</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <button type="button" id="btn-privacy">Datenschutz</button>
+      <a href="https://spanani.de/impressum/" target="_blank" rel="noopener">Impressum</a>
+    </footer>
+  </div>
+
+  <dialog id="privacy-dialog" aria-labelledby="privacy-heading">
+    <div class="dialog-header">
+      <h2 class="dialog-heading" id="privacy-heading">Datenschutz</h2>
+      <button type="button" class="dialog-close" id="privacy-close" aria-label="Schließen">
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="dialog-body">
+      <p>Diese Seite setzt keine Cookies, nutzt kein Tracking und lädt nichts von fremden Diensten nach.</p>
+      <p>Spielstand, Statistik und dein Farbschema liegen in deinem Browser (localStorage). Wenn du in der Rangliste oder in Tiefsee einen Namen eingibst, werden dein Name, das Datum, das Spiel, dein Ergebnis (Versuche, Zeit) und in Tiefsee deine Antworten an unseren Server (Cloudflare, USA) gesendet und sind für alle in der Rangliste sichtbar. Wähle keinen echten Namen, wenn du das nicht willst. Browserdaten kannst du jederzeit über deine Browsereinstellungen löschen; einen Namen samt Ergebnissen löschen wir auf Anfrage (Kontakt: siehe Impressum).</p>
+      <p>Die Seite wird von GitHub Pages ausgeliefert (GitHub Inc., USA). Dabei verarbeitet GitHub technisch nötige Zugriffsdaten wie deine IP-Adresse.</p>
+      <p>Verantwortlicher und deine Rechte: siehe die <a href="https://spanani.de/datenschutz/" target="_blank" rel="noopener">Datenschutzerklärung von spanani.de</a>.</p>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" popover="manual"></div>
+
+  <script type="module" src="app.js"></script>
+  <script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(function () {});</script>
+</body>
+</html>

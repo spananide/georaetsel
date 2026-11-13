@@ -206,6 +206,11 @@
   color: var(--blau-ink);
 }
 
+.cover-kippe {
+  background-color: var(--huegel);
+  color: var(--huegel-ink);
+}
+
 .cover-georaetsel {
   background-color: var(--hoch);
   color: var(--hoch-ink);
